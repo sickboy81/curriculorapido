@@ -9,6 +9,8 @@ import { AdPlaceholder } from './components/AdPlaceholder';
 import { ResumeData, INITIAL_DATA, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from './types';
 import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Globe, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical } from 'lucide-react';
 import { LanguageProvider, useLanguage, Language } from './LanguageContext';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const AppContent = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -67,32 +69,62 @@ const AppContent = () => {
     if (typeof window !== 'undefined') {
       setIsGeneratingPdf(true);
 
-      const element = document.getElementById('resume-to-pdf');
-      if (!element) {
-        setIsGeneratingPdf(false);
-        return;
-      }
-
-      // Format filename
-      const safeName = resumeData.fullName
-        ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()
-        : 'curriculo';
-      const fileName = `${safeName}_cv.pdf`;
-
-      const opt = {
-        margin: 0,
-        filename: fileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
       try {
-        // @ts-ignore - html2pdf is loaded via CDN script
-        await window.html2pdf().set(opt).from(element).save();
+        // Get the print area
+        const printArea = document.querySelector('.print-area') as HTMLElement;
+        if (!printArea) {
+          throw new Error('Print area not found');
+        }
+
+        // Temporarily show the print area for capture
+        const originalDisplay = printArea.style.display;
+        printArea.style.display = 'block';
+        printArea.style.position = 'relative';
+        printArea.style.width = '210mm';
+        printArea.style.height = 'auto';
+        printArea.style.background = 'white';
+
+        // Wait for layout
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Capture with html2canvas
+        const canvas = await html2canvas(printArea, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+          windowWidth: 794,  // A4 width in pixels at 96 DPI
+          windowHeight: 1123 // A4 height in pixels at 96 DPI
+        });
+
+        // Restore original display
+        printArea.style.display = originalDisplay;
+        printArea.style.position = '';
+        printArea.style.width = '';
+        printArea.style.height = '';
+
+        // Convert canvas to PDF
+        const imgData = canvas.toDataURL('image/jpeg', 0.98);
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+
+        // Save with filename
+        const safeName = resumeData.fullName
+          ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()
+          : 'curriculo';
+        pdf.save(`${safeName}_cv.pdf`);
+
       } catch (error) {
         console.error("PDF generation failed:", error);
-        alert("Error generating PDF. Please try again.");
+        alert("Erro ao gerar PDF. Por favor, tente novamente.");
       } finally {
         setIsGeneratingPdf(false);
       }
@@ -448,6 +480,11 @@ const AppContent = () => {
           >
             {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
           </button>
+        </div>
+
+        {/* PRINT AREA - Only visible when printing */}
+        <div className="print-area">
+          <ResumePreview data={resumeData} template={template} />
         </div>
       </div>
 

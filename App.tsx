@@ -7,7 +7,7 @@ import { ResumeTips } from './components/ResumeTips';
 import { CareerBlog } from './components/CareerBlog';
 import { AdPlaceholder } from './components/AdPlaceholder';
 import { ResumeData, INITIAL_DATA, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from './types';
-import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Globe, Share2, Facebook, Linkedin, Twitter } from 'lucide-react';
+import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Globe, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical } from 'lucide-react';
 import { LanguageProvider, useLanguage, Language } from './LanguageContext';
 
 const AppContent = () => {
@@ -42,11 +42,12 @@ const AppContent = () => {
     }
     return 'modern';
   });
-  
+
   // Modal states
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
-  
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+
   // Confirmation Modal State
   const [confirmType, setConfirmType] = useState<'clear' | 'example' | null>(null);
 
@@ -65,7 +66,7 @@ const AppContent = () => {
   const handleDownloadPdf = async () => {
     if (typeof window !== 'undefined') {
       setIsGeneratingPdf(true);
-      
+
       const element = document.getElementById('resume-to-pdf');
       if (!element) {
         setIsGeneratingPdf(false);
@@ -73,8 +74,8 @@ const AppContent = () => {
       }
 
       // Format filename
-      const safeName = resumeData.fullName 
-        ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase() 
+      const safeName = resumeData.fullName
+        ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()
         : 'curriculo';
       const fileName = `${safeName}_cv.pdf`;
 
@@ -128,7 +129,7 @@ const AppContent = () => {
       let exampleData = INITIAL_DATA_PT;
       if (language === 'en') exampleData = INITIAL_DATA_EN;
       if (language === 'es') exampleData = INITIAL_DATA_ES;
-      
+
       setResumeData(exampleData);
       localStorage.setItem('resume_builder_data', JSON.stringify(exampleData));
     }
@@ -157,12 +158,12 @@ const AppContent = () => {
 
   return (
     <div className="font-sans text-slate-900 bg-slate-50">
-      
+
       {/* --- SCREEN AREA --- */}
       <div className="screen-area min-h-screen flex flex-col">
-        
+
         {/* Navbar */}
-        <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-4 sticky top-0 z-50 shadow-sm">
+        <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-3 sticky top-0 z-50 shadow-sm">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="bg-purple-600 p-2 rounded-lg">
@@ -171,48 +172,50 @@ const AppContent = () => {
               <h1 className="text-xl font-bold tracking-tight text-slate-900 hidden sm:block">Currículo Rápido</h1>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto custom-scrollbar pb-1 sm:pb-0">
-               {/* Language Selector */}
-               <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
-                  <Globe className="w-4 h-4 text-slate-500 ml-2" />
-                  <select 
-                    value={language} 
-                    onChange={(e) => setLanguage(e.target.value as Language)}
-                    className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-1"
-                  >
-                    <option value="pt">PT</option>
-                    <option value="en">EN</option>
-                    <option value="es">ES</option>
-                  </select>
-               </div>
+            <div className="flex items-center gap-2 sm:gap-4">
+              {/* Desktop: Language Selector */}
+              <div className="hidden lg:flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+                <Globe className="w-4 h-4 text-slate-500 ml-2" />
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as Language)}
+                  className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-1"
+                >
+                  <option value="pt">PT</option>
+                  <option value="en">EN</option>
+                  <option value="es">ES</option>
+                </select>
+              </div>
 
-              <div className="flex items-center border-r border-slate-200 pr-3 mr-1 gap-1">
-                <button 
+              {/* Desktop: Clear/Example Actions */}
+              <div className="hidden lg:flex items-center border-r border-slate-200 pr-3 mr-1 gap-1">
+                <button
                   onClick={() => setConfirmType('clear')}
                   type="button"
                   className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2"
                   title={t('nav.clear')}
                 >
                   <Trash2 className="w-4 h-4" />
-                  <span className="text-xs font-medium hidden md:inline">{t('nav.clear')}</span>
+                  <span className="text-xs font-medium">{t('nav.clear')}</span>
                 </button>
-                <button 
+                <button
                   onClick={() => setConfirmType('example')}
                   type="button"
                   className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors flex items-center gap-2"
                   title={t('nav.example')}
                 >
                   <Wand2 className="w-4 h-4" />
-                  <span className="text-xs font-medium hidden md:inline">{t('nav.example')}</span>
+                  <span className="text-xs font-medium">{t('nav.example')}</span>
                 </button>
               </div>
 
+              {/* Template Selector - Always Visible but Adaptive */}
               <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200">
                 <LayoutTemplate className="w-4 h-4 text-slate-500 ml-2" />
-                <select 
-                  value={template} 
+                <select
+                  value={template}
                   onChange={(e) => setTemplate(e.target.value as TemplateType)}
-                  className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-2 max-w-[100px] sm:max-w-none"
+                  className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-2 max-w-[110px] sm:max-w-none"
                 >
                   <optgroup label={t('templates.groups.classic')}>
                     <option value="modern">{t('templates.modern')}</option>
@@ -239,11 +242,12 @@ const AppContent = () => {
                 </select>
               </div>
 
-              <button 
+              {/* Download Button - Icon on Mobile, Text on Desktop */}
+              <button
                 onClick={handleDownloadPdf}
                 disabled={isGeneratingPdf}
                 type="button"
-                className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm text-sm"
+                className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-700 text-white px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors shadow-sm text-sm"
               >
                 {isGeneratingPdf ? (
                   <>
@@ -257,13 +261,63 @@ const AppContent = () => {
                   </>
                 )}
               </button>
+
+              {/* Mobile Menu Toggle */}
+              <div className="relative lg:hidden">
+                <button
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                >
+                  {showMobileMenu ? <X className="w-5 h-5" /> : <MoreVertical className="w-5 h-5" />}
+                </button>
+
+                {/* Mobile Dropdown Menu */}
+                {showMobileMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-2 z-50 flex flex-col gap-1">
+                    <div className="px-4 py-2 border-b border-slate-100">
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <Globe className="w-4 h-4" />
+                        <select
+                          value={language}
+                          onChange={(e) => setLanguage(e.target.value as Language)}
+                          className="w-full bg-transparent focus:outline-none cursor-pointer"
+                        >
+                          <option value="pt">Português</option>
+                          <option value="en">English</option>
+                          <option value="es">Español</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setConfirmType('clear');
+                        setShowMobileMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-red-600 flex items-center gap-2"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      {t('nav.clear')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setConfirmType('example');
+                        setShowMobileMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-purple-600 flex items-center gap-2"
+                    >
+                      <Wand2 className="w-4 h-4" />
+                      {t('nav.example')}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </nav>
 
         {/* Main Content */}
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
-          
+
           {/* Intro Section */}
           <div className="text-center mb-8">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
@@ -271,27 +325,27 @@ const AppContent = () => {
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto" dangerouslySetInnerHTML={{ __html: t('hero.subtitle') }}>
             </p>
-            
+
             {/* Social Sharing */}
             <div className="flex items-center justify-center gap-4 mt-6">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('social.share')}</span>
               <button onClick={() => handleShare('whatsapp')} className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors" title="WhatsApp">
-                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg>
               </button>
               <button onClick={() => handleShare('facebook')} className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors" title="Facebook">
-                 <Facebook className="w-4 h-4" />
+                <Facebook className="w-4 h-4" />
               </button>
               <button onClick={() => handleShare('linkedin')} className="p-2 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors" title="LinkedIn">
-                 <Linkedin className="w-4 h-4" />
+                <Linkedin className="w-4 h-4" />
               </button>
               <button onClick={() => handleShare('twitter')} className="p-2 bg-sky-500 text-white rounded-full hover:bg-sky-600 transition-colors" title="Twitter/X">
-                 <Twitter className="w-4 h-4" />
+                <Twitter className="w-4 h-4" />
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
+
             {/* Left Column: Form */}
             <div className="lg:col-span-5 xl:col-span-4 space-y-6">
               <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -300,7 +354,7 @@ const AppContent = () => {
                 </div>
                 <ResumeForm data={resumeData} onChange={setResumeData} />
               </div>
-              
+
               {/* Ad Slot - Sidebar Mobile/Desktop */}
               <div className="mt-6">
                 <AdPlaceholder slotId="sidebar-ad-1" format="rectangle" />
@@ -311,9 +365,9 @@ const AppContent = () => {
             <div className="lg:col-span-7 xl:col-span-8 lg:sticky lg:top-24">
               <div className="flex flex-col items-center">
                 <div className="mb-4 text-sm text-slate-500 font-medium flex items-center gap-2">
-                   {t('preview.realtime')}
+                  {t('preview.realtime')}
                 </div>
-                
+
                 {/* Preview Container with Scaling */}
                 <div className="bg-slate-200/50 rounded-xl p-4 sm:p-8 border border-slate-200 shadow-inner w-full flex justify-center overflow-hidden h-[540px] sm:h-[685px] md:h-[800px] lg:h-[850px] xl:h-[970px] transition-all duration-300">
                   <div className="origin-top transform scale-[0.45] sm:scale-[0.55] md:scale-[0.65] lg:scale-[0.70] xl:scale-[0.80] shadow-2xl bg-white">
@@ -323,7 +377,7 @@ const AppContent = () => {
 
                 {/* Ad Slot - Under Preview */}
                 <div className="w-full mt-6 max-w-2xl">
-                   <AdPlaceholder slotId="preview-bottom-ad" format="auto" />
+                  <AdPlaceholder slotId="preview-bottom-ad" format="auto" />
                 </div>
               </div>
             </div>
@@ -344,14 +398,14 @@ const AppContent = () => {
                 <span className="font-semibold text-slate-900">Currículo Rápido</span> &copy; {new Date().getFullYear()}
               </div>
               <div className="flex items-center gap-6">
-                <button 
-                  onClick={() => setShowPrivacy(true)} 
+                <button
+                  onClick={() => setShowPrivacy(true)}
                   className="hover:text-slate-900 transition-colors cursor-pointer"
                 >
                   {t('footer.privacy')}
                 </button>
-                <button 
-                  onClick={() => setShowTerms(true)} 
+                <button
+                  onClick={() => setShowTerms(true)}
                   className="hover:text-slate-900 transition-colors cursor-pointer"
                 >
                   {t('footer.terms')}
@@ -361,10 +415,10 @@ const AppContent = () => {
                 {t('footer.madeWith')} <Heart className="w-3 h-3 text-red-500 fill-current" />
               </div>
             </div>
-            
+
             {/* Footer Ad Slot */}
             <div className="mt-8">
-               <AdPlaceholder slotId="footer-ad-responsive" className="bg-transparent border-slate-200" />
+              <AdPlaceholder slotId="footer-ad-responsive" className="bg-transparent border-slate-200" />
             </div>
           </div>
         </footer>
@@ -372,8 +426,8 @@ const AppContent = () => {
         {/* Modals */}
         <PrivacyModal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} />
         <TermsModal isOpen={showTerms} onClose={() => setShowTerms(false)} />
-        
-        <ConfirmModal 
+
+        <ConfirmModal
           isOpen={confirmType !== null}
           onClose={() => setConfirmType(null)}
           onConfirm={onConfirmAction}
@@ -385,14 +439,14 @@ const AppContent = () => {
 
         {/* Floating Action Button for Mobile */}
         <div className="lg:hidden fixed bottom-6 right-6 z-50">
-          <button 
+          <button
             onClick={handleDownloadPdf}
             disabled={isGeneratingPdf}
             type="button"
             className="bg-purple-600 text-white p-4 rounded-full shadow-lg shadow-purple-600/30 flex items-center gap-2 hover:bg-purple-700 transition-all active:scale-95 disabled:bg-purple-400"
             aria-label={t('nav.download')}
           >
-             {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
+            {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
           </button>
         </div>
       </div>

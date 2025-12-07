@@ -219,27 +219,7 @@ const AppContent = () => {
                 </select>
               </div>
 
-              {/* Desktop: Clear/Example Actions */}
-              <div className="hidden lg:flex items-center border-r border-slate-200 pr-3 mr-1 gap-1">
-                <button
-                  onClick={() => setConfirmType('clear')}
-                  type="button"
-                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2"
-                  title={t('nav.clear')}
-                >
-                  <Trash2 className="w-4 h-4" />
-                  <span className="text-xs font-medium">{t('nav.clear')}</span>
-                </button>
-                <button
-                  onClick={() => setConfirmType('example')}
-                  type="button"
-                  className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors flex items-center gap-2"
-                  title={t('nav.example')}
-                >
-                  <Wand2 className="w-4 h-4" />
-                  <span className="text-xs font-medium">{t('nav.example')}</span>
-                </button>
-              </div>
+
 
               {/* Template Selector - Always Visible but Adaptive */}
               <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200">
@@ -320,26 +300,7 @@ const AppContent = () => {
                         </select>
                       </div>
                     </div>
-                    <button
-                      onClick={() => {
-                        setConfirmType('clear');
-                        setShowMobileMenu(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-red-600 flex items-center gap-2"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      {t('nav.clear')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setConfirmType('example');
-                        setShowMobileMenu(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-purple-600 flex items-center gap-2"
-                    >
-                      <Wand2 className="w-4 h-4" />
-                      {t('nav.example')}
-                    </button>
+
                   </div>
                 )}
               </div>
@@ -380,6 +341,27 @@ const AppContent = () => {
 
             {/* Left Column: Form */}
             <div className="lg:col-span-5 xl:col-span-4 space-y-6">
+
+              {/* Form Actions - Moved here */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setConfirmType('example')}
+                  type="button"
+                  className="flex-1 py-2.5 px-4 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl transition-colors flex items-center justify-center gap-2 font-medium text-sm border border-purple-200"
+                >
+                  <Wand2 className="w-4 h-4" />
+                  {t('nav.example')}
+                </button>
+                <button
+                  onClick={() => setConfirmType('clear')}
+                  type="button"
+                  className="flex-1 py-2.5 px-4 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 rounded-xl transition-colors flex items-center justify-center gap-2 font-medium text-sm border border-slate-200 hover:border-red-200"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  {t('nav.clear')}
+                </button>
+              </div>
+
               <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                   <h3 className="font-semibold text-slate-800">{t('form.title')}</h3>

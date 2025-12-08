@@ -9,11 +9,13 @@ import { AdPlaceholder } from './components/AdPlaceholder';
 import { ResumeData, INITIAL_DATA, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from './types';
 import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Globe, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical } from 'lucide-react';
 import { LanguageProvider, useLanguage, Language } from './LanguageContext';
+import { useResumeCounter } from './hooks/useResumeCounter';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const AppContent = () => {
   const { t, language, setLanguage } = useLanguage();
+  const { count, incrementCount } = useResumeCounter();
 
   // Initialize state from localStorage if available, otherwise use defaults
   const [resumeData, setResumeData] = useState<ResumeData>(() => {
@@ -121,6 +123,9 @@ const AppContent = () => {
           ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()
           : 'curriculo';
         pdf.save(`${safeName}_cv.pdf`);
+
+        // Increment global counter
+        incrementCount();
 
       } catch (error) {
         console.error("PDF generation failed:", error);
@@ -427,6 +432,10 @@ const AppContent = () => {
               </div>
               <div className="flex items-center gap-1">
                 {t('footer.madeWith')} <Heart className="w-3 h-3 text-red-500 fill-current" />
+              </div>
+              <div className="flex items-center gap-1.5 text-xs bg-slate-100 px-2 py-1 rounded-full border border-slate-200" title="Currículos gerados hoje">
+                <FileText className="w-3 h-3 text-slate-400" />
+                <span className="font-medium text-slate-600">{count.toLocaleString()} currículos criados</span>
               </div>
             </div>
 

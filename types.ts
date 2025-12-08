@@ -37,21 +37,19 @@ export interface ResumeData {
   photo?: string; // Base64 string for the photo
 }
 
-export type TemplateType = 
-  | 'modern' 
-  | 'classic' 
-  | 'sidebar' 
-  | 'minimalist' 
-  | 'executive' 
-  | 'creative' 
-  | 'tech' 
-  | 'compact' 
-  | 'elegant' 
+export type TemplateType =
+  | 'modern'
+  | 'classic'
+  | 'sidebar'
+  | 'minimalist'
+  | 'executive'
+  | 'creative'
+  | 'tech'
+  | 'compact'
+  | 'elegant'
   | 'bold'
   | 'timeline'
   | 'swiss'
-  | 'corporate'
-  | 'focal'
   | 'grid';
 
 export const INITIAL_DATA_PT: ResumeData = {
@@ -94,7 +92,7 @@ export const INITIAL_DATA_PT: ResumeData = {
       description: "Graduado com honras. Trabalho de conclusão focado em Engenharia de Software."
     }
   ],
-  themeColor: "#7c3aed", 
+  themeColor: "#7c3aed",
   photo: ""
 };
 
@@ -138,7 +136,7 @@ export const INITIAL_DATA_EN: ResumeData = {
       description: "Graduated with honors. Senior thesis focused on Software Engineering."
     }
   ],
-  themeColor: "#7c3aed", 
+  themeColor: "#7c3aed",
   photo: ""
 };
 
@@ -182,7 +180,7 @@ export const INITIAL_DATA_ES: ResumeData = {
       description: "Graduado con honores. Trabajo de fin de grado enfocado en Ingeniería de Software."
     }
   ],
-  themeColor: "#7c3aed", 
+  themeColor: "#7c3aed",
   photo: ""
 };
 

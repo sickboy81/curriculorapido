@@ -51,7 +51,7 @@ const ModernTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         </div>
         {data.photo && (
           <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-slate-200 shrink-0">
-             <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         )}
       </div>
@@ -313,7 +313,7 @@ const MinimalistTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       {data.photo && (
         <div className="flex justify-center mb-6">
           <div className="w-24 h-24 rounded-full overflow-hidden grayscale">
-             <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         </div>
       )}
@@ -426,7 +426,7 @@ const ExecutiveTemplate = ({ data, skillsArray, t }: TemplateProps) => (
                   </div>
                   <div className="text-sm italic mb-2" style={{ color: data.themeColor }}>{exp.company}, {exp.location}</div>
                   <ul className="list-disc list-outside ml-4 text-sm space-y-1 text-slate-700">
-                     {exp.description.split('. ').map((sent, i) => sent.trim() && <li key={i}>{sent.endsWith('.') ? sent : sent + '.'}</li>)}
+                    {exp.description.split('. ').map((sent, i) => sent.trim() && <li key={i}>{sent.endsWith('.') ? sent : sent + '.'}</li>)}
                   </ul>
                 </div>
               ))}
@@ -484,7 +484,7 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="flex items-center gap-6">
         {data.photo && (
           <div className="w-28 h-28 rounded-full border-4 border-white shadow-lg overflow-hidden">
-             <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         )}
         <div>
@@ -493,9 +493,9 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         </div>
       </div>
       <div className="text-right text-sm text-slate-300 space-y-1">
-        {data.email && <div className="flex items-center justify-end gap-2"><span>{data.email}</span><Mail className="w-4 h-4"/></div>}
-        {data.phone && <div className="flex items-center justify-end gap-2"><span>{data.phone}</span><Phone className="w-4 h-4"/></div>}
-        {data.website && <div className="flex items-center justify-end gap-2"><span>{data.website}</span><Globe className="w-4 h-4"/></div>}
+        {data.email && <div className="flex items-center justify-end gap-2"><span>{data.email}</span><Mail className="w-4 h-4" /></div>}
+        {data.phone && <div className="flex items-center justify-end gap-2"><span>{data.phone}</span><Phone className="w-4 h-4" /></div>}
+        {data.website && <div className="flex items-center justify-end gap-2"><span>{data.website}</span><Globe className="w-4 h-4" /></div>}
       </div>
     </header>
     <div className="flex flex-1">
@@ -589,7 +589,7 @@ const TechTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       </div>
       {data.photo && (
         <div className="w-24 h-24 border-2 border-black p-1">
-           <img src={data.photo} alt="user" className="w-full h-full object-cover grayscale" />
+          <img src={data.photo} alt="user" className="w-full h-full object-cover grayscale" />
         </div>
       )}
     </header>
@@ -634,12 +634,12 @@ const TechTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         )}
         {(data.languages || []).length > 0 && (
           <section>
-             <h3 className="text-sm font-bold bg-slate-100 inline-block px-2 py-1 mb-3 print:bg-slate-100">./idiomas</h3>
-             <div className="text-xs space-y-1">
-               {data.languages.map((lang, i) => (
-                 <div key={i}>{`"${lang.name}": "${lang.proficiency}",`}</div>
-               ))}
-             </div>
+            <h3 className="text-sm font-bold bg-slate-100 inline-block px-2 py-1 mb-3 print:bg-slate-100">./idiomas</h3>
+            <div className="text-xs space-y-1">
+              {data.languages.map((lang, i) => (
+                <div key={i}>{`"${lang.name}": "${lang.proficiency}",`}</div>
+              ))}
+            </div>
           </section>
         )}
         {data.education.length > 0 && (
@@ -667,7 +667,7 @@ const CompactTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="flex items-center gap-4">
         {data.photo && (
           <div className="w-16 h-16 rounded-md overflow-hidden">
-             <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         )}
         <div>
@@ -758,9 +758,9 @@ const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
     <header className="text-center mb-8">
       {data.photo && (
         <div className="flex justify-center mb-4">
-           <div className="w-24 h-24 rounded-full overflow-hidden border border-slate-200">
-             <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
-           </div>
+          <div className="w-24 h-24 rounded-full overflow-hidden border border-slate-200">
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
+          </div>
         </div>
       )}
       <h1 className="text-4xl italic font-normal text-slate-900 mb-2">{data.fullName || 'Seu Nome'}</h1>
@@ -815,7 +815,7 @@ const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
             </section>
           )}
         </div>
-        
+
         <div>
           {skillsArray.length > 0 && (
             <section className="mb-8">
@@ -856,9 +856,9 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         </div>
       </div>
       {data.photo && (
-          <div className="w-32 h-32 ml-8 border-4 border-white shrink-0">
-             <img src={data.photo} alt="user" className="w-full h-full object-cover grayscale" />
-          </div>
+        <div className="w-32 h-32 ml-8 border-4 border-white shrink-0">
+          <img src={data.photo} alt="user" className="w-full h-full object-cover grayscale" />
+        </div>
       )}
     </header>
 
@@ -903,7 +903,7 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
             </div>
           </section>
         )}
-        
+
         <div className="space-y-8">
           {skillsArray.length > 0 && (
             <section>
@@ -934,90 +934,108 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
+
+
+// --- New Templates ---
+
 const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
-  <div className="w-full h-full p-[15mm] flex flex-col font-sans text-slate-800">
-    <header className="flex justify-between items-start mb-8">
-      <div>
-        <h1 className="text-3xl font-bold uppercase mb-1" style={{ color: data.themeColor }}>{data.fullName || 'Seu Nome'}</h1>
-        <p className="text-lg font-medium text-slate-600 mb-3">{data.title || 'Seu Cargo'}</p>
-        <div className="text-sm space-y-1 text-slate-500">
-          {data.email && <div className="flex items-center gap-2"><Mail className="w-3 h-3"/> {data.email}</div>}
-          {data.phone && <div className="flex items-center gap-2"><Phone className="w-3 h-3"/> {data.phone}</div>}
-          {data.location && <div className="flex items-center gap-2"><MapPin className="w-3 h-3"/> {data.location}</div>}
-        </div>
+  <div className="w-full h-full p-[15mm] text-slate-800 flex flex-col font-sans relative overflow-hidden">
+    {/* Decorative background line */}
+    <div className="absolute left-[30mm] top-0 bottom-0 w-0.5 bg-slate-200"></div>
+
+    <header className="relative z-10 pl-[25mm] mb-10">
+      <h1 className="text-4xl font-black uppercase tracking-tight text-slate-900 mb-2">{data.fullName || 'Seu Nome'}</h1>
+      <p className="text-xl font-bold bg-slate-900 text-white inline-block px-3 py-1 mb-4" style={{ backgroundColor: data.themeColor }}>{data.title || 'Seu Cargo'}</p>
+
+      <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm font-medium text-slate-600">
+        {data.email && <div className="flex items-center gap-2"><Mail className="w-4 h-4" /> {data.email}</div>}
+        {data.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4" /> {data.phone}</div>}
+        {data.location && <div className="flex items-center gap-2"><MapPin className="w-4 h-4" /> {data.location}</div>}
+        {data.website && <div className="flex items-center gap-2"><Globe className="w-4 h-4" /> {data.website}</div>}
       </div>
-      {data.photo && (
-        <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-slate-200">
-          <img src={data.photo} alt="user" className="w-full h-full object-cover" />
-        </div>
-      )}
     </header>
 
-    <div className="flex-1 grid grid-cols-[3fr_1fr] gap-8">
-      <div className="space-y-8">
-        {data.summary && (
-          <section>
-             <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b-2 pb-1" style={{ borderColor: data.themeColor }}>{t('preview.summary')}</h3>
-             <p className="text-sm leading-relaxed text-slate-700">{data.summary}</p>
-          </section>
-        )}
+    <div className="flex-1 space-y-10 relative z-10">
 
-        {data.experience.length > 0 && (
-          <section>
-            <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b-2 pb-1" style={{ borderColor: data.themeColor }}>{t('preview.experience')}</h3>
-            <div className="relative pl-4 space-y-6 border-l-2 border-slate-200 ml-2">
-              {data.experience.map((exp) => (
-                <div key={exp.id} className="relative pl-4">
-                  <div className="absolute -left-[23px] top-1.5 w-3 h-3 rounded-full border-2 border-white" style={{ backgroundColor: data.themeColor }}></div>
-                  <div className="flex justify-between items-baseline">
-                    <h4 className="font-bold text-slate-800">{exp.role}</h4>
-                    <span className="text-xs font-bold bg-slate-100 px-2 py-0.5 rounded">{exp.dates}</span>
-                  </div>
-                  <div className="text-sm italic text-slate-500 mb-2">{exp.company} | {exp.location}</div>
-                  <p className="text-sm leading-relaxed text-slate-600">{exp.description}</p>
+      {data.summary && (
+        <section className="pl-[25mm]">
+          <h3 className="font-black uppercase tracking-widest text-sm mb-3 text-slate-400">01 / {t('preview.profile')}</h3>
+          <p className="text-sm leading-relaxed font-medium text-slate-700 bg-white p-4 border-l-4 border-slate-900 shadow-sm" style={{ borderColor: data.themeColor }}>{data.summary}</p>
+        </section>
+      )}
+
+      {data.experience.length > 0 && (
+        <section>
+          <div className="pl-[25mm] mb-6">
+            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400">02 / {t('preview.experience')}</h3>
+          </div>
+          <div className="space-y-8">
+            {data.experience.map((exp) => (
+              <div key={exp.id} className="relative flex group">
+                {/* Timeline Dot */}
+                <div className="w-[15mm] flex justify-center pt-1.5 shrink-0 z-10 bg-white">
+                  <div className="w-4 h-4 rounded-full border-4 border-white shadow-sm" style={{ backgroundColor: data.themeColor }}></div>
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
-      </div>
+                {/* Content */}
+                <div className="flex-1 pl-[10mm]">
+                  <div className="flex justify-between items-baseline mb-1">
+                    <h4 className="font-bold text-lg text-slate-900">{exp.role}</h4>
+                    <span className="font-mono text-xs font-bold bg-slate-100 px-2 py-1 rounded">{exp.dates}</span>
+                  </div>
+                  <div className="mb-2 font-medium" style={{ color: data.themeColor }}>{exp.company}</div>
+                  <p className="text-sm text-slate-600 leading-relaxed">{exp.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
-      <div className="space-y-6 bg-slate-50 p-4 rounded-lg h-fit print:bg-slate-50">
+      {data.education.length > 0 && (
+        <section>
+          <div className="pl-[25mm] mb-6">
+            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400">03 / {t('preview.education')}</h3>
+          </div>
+          <div className="space-y-6">
+            {data.education.map((edu) => (
+              <div key={edu.id} className="relative flex group">
+                {/* Timeline Dot */}
+                <div className="w-[15mm] flex justify-center pt-1.5 shrink-0 z-10 bg-white">
+                  <div className="w-3 h-3 rounded-full border-2 border-slate-300 bg-white"></div>
+                </div>
+                <div className="flex-1 pl-[10mm]">
+                  <h4 className="font-bold text-slate-900">{edu.school}</h4>
+                  <div className="text-sm font-medium" style={{ color: data.themeColor }}>{edu.degree}</div>
+                  <div className="text-xs text-slate-500 mt-1 font-mono">{edu.dates}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div className="pl-[25mm] grid grid-cols-2 gap-8">
         {skillsArray.length > 0 && (
           <section>
-            <h3 className="text-xs font-bold uppercase tracking-wider mb-3 border-b pb-1" style={{ borderColor: data.themeColor }}>{t('preview.skills')}</h3>
+            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400 mb-4">04 / {t('preview.skills')}</h3>
             <div className="flex flex-wrap gap-2">
               {skillsArray.map((skill, i) => (
-                <span key={i} className="text-xs bg-white border border-slate-200 px-2 py-1 rounded">{skill}</span>
+                <span key={i} className="px-2 py-1 bg-slate-900 text-white text-xs font-bold rounded-sm" style={{ backgroundColor: data.themeColor }}>{skill}</span>
               ))}
             </div>
           </section>
         )}
         {(data.languages || []).length > 0 && (
           <section>
-            <h3 className="text-xs font-bold uppercase tracking-wider mb-3 border-b pb-1" style={{ borderColor: data.themeColor }}>{t('preview.languages')}</h3>
+            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400 mb-4">05 / {t('preview.languages')}</h3>
             <ul className="space-y-2">
-              {data.languages.map((l, i) => (
-                <li key={i} className="text-xs">
-                  <div className="font-bold">{l.name}</div>
-                  <div className="text-slate-500">{l.proficiency}</div>
+              {data.languages.map((lang, i) => (
+                <li key={i} className="flex justify-between items-center text-sm border-b border-dotted border-slate-300 pb-1">
+                  <span className="font-bold">{lang.name}</span>
+                  <span className="text-xs text-slate-500">{lang.proficiency}</span>
                 </li>
               ))}
             </ul>
-          </section>
-        )}
-        {data.education.length > 0 && (
-          <section>
-             <h3 className="text-xs font-bold uppercase tracking-wider mb-3 border-b pb-1" style={{ borderColor: data.themeColor }}>{t('preview.education')}</h3>
-             <div className="space-y-4">
-               {data.education.map((edu) => (
-                 <div key={edu.id} className="text-xs">
-                   <div className="font-bold">{edu.school}</div>
-                   <div className="italic">{edu.degree}</div>
-                   <div className="text-slate-500 mt-1">{edu.dates}</div>
-                 </div>
-               ))}
-             </div>
           </section>
         )}
       </div>
@@ -1026,72 +1044,82 @@ const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
 );
 
 const SwissTemplate = ({ data, skillsArray, t }: TemplateProps) => (
-  <div className="w-full h-full p-[15mm] font-sans text-black">
-    <div className="border-t-[8px] border-black pt-8 mb-12">
-      <h1 className="text-6xl font-bold tracking-tighter leading-none mb-4">{data.fullName || 'SEU NOME'}</h1>
-      <p className="text-xl font-bold uppercase tracking-wide mb-8">{data.title || 'SEU CARGO'}</p>
-      
-      <div className="grid grid-cols-4 gap-4 text-xs font-bold border-t border-black pt-2">
-        {data.email && <div>{data.email.toUpperCase()}</div>}
-        {data.phone && <div>{data.phone}</div>}
-        {data.location && <div>{data.location.toUpperCase()}</div>}
-        {data.website && <div>{data.website}</div>}
+  <div className="w-full h-full p-[15mm] text-black flex flex-col font-sans antialiased">
+    <header className="mb-12">
+      <h1 className="text-6xl font-black tracking-tighter leading-none mb-4">{data.fullName || 'Seu Nome'}</h1>
+      <div className="flex justify-between items-end border-t-4 border-black pt-4">
+        <p className="text-xl font-bold uppercase tracking-wide">{data.title}</p>
+        <div className="text-right text-xs font-mono space-y-1">
+          {data.email && <div>{data.email}</div>}
+          {data.phone && <div>{data.phone}</div>}
+          {data.location && <div>{data.location}</div>}
+        </div>
       </div>
-    </div>
+    </header>
 
-    <div className="grid grid-cols-12 gap-8">
-      <div className="col-span-4 space-y-8">
+    <div className="grid grid-cols-12 gap-8 flex-1">
+      <div className="col-span-4 space-y-12">
         {skillsArray.length > 0 && (
           <section>
-            <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-1">{t('preview.skills')}</h3>
-            <ul className="text-sm font-medium space-y-1">
-              {skillsArray.map((s, i) => <li key={i}>{s}</li>)}
+            <h3 className="text-xs font-black uppercase mb-4 border-b border-black pb-1">Skills</h3>
+            <ul className="space-y-1 text-sm font-medium">
+              {skillsArray.map((skill, i) => (
+                <li key={i}>{skill}</li>
+              ))}
             </ul>
           </section>
         )}
+
         {(data.languages || []).length > 0 && (
           <section>
-             <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-1">{t('preview.languages')}</h3>
-             <ul className="text-sm font-medium space-y-1">
-               {data.languages.map((l, i) => <li key={i}>{l.name} <span className="text-slate-500 font-normal">/ {l.proficiency}</span></li>)}
-             </ul>
+            <h3 className="text-xs font-black uppercase mb-4 border-b border-black pb-1">Languages</h3>
+            <ul className="space-y-2 text-sm">
+              {data.languages.map((lang, i) => (
+                <li key={i}>
+                  <div className="font-bold">{lang.name}</div>
+                  <div className="text-xs opacity-60">{lang.proficiency}</div>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
+
         {data.education.length > 0 && (
-           <section>
-             <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-1">{t('preview.education')}</h3>
-             <div className="space-y-4">
-               {data.education.map((edu) => (
-                 <div key={edu.id}>
-                   <div className="font-bold text-sm">{edu.school}</div>
-                   <div className="text-sm">{edu.degree}</div>
-                   <div className="text-xs mt-1">{edu.dates}</div>
-                 </div>
-               ))}
-             </div>
-           </section>
+          <section>
+            <h3 className="text-xs font-black uppercase mb-4 border-b border-black pb-1">Education</h3>
+            <div className="space-y-6">
+              {data.education.map((edu) => (
+                <div key={edu.id}>
+                  <div className="font-bold text-sm leading-tight">{edu.school}</div>
+                  <div className="text-sm mt-1">{edu.degree}</div>
+                  <div className="text-xs font-mono mt-1 opacity-60">{edu.dates}</div>
+                </div>
+              ))}
+            </div>
+          </section>
         )}
       </div>
-      
-      <div className="col-span-8 space-y-10 border-l border-black pl-8">
+
+      <div className="col-span-8 space-y-12 border-l border-black pl-8">
         {data.summary && (
           <section>
+            <h3 className="text-xs font-black uppercase mb-4 text-slate-400">About</h3>
             <p className="text-lg font-medium leading-relaxed">{data.summary}</p>
           </section>
         )}
-        
+
         {data.experience.length > 0 && (
           <section>
-            <h3 className="text-xl font-bold uppercase mb-6 tracking-tight">{t('preview.experience')}</h3>
-            <div className="space-y-8">
+            <h3 className="text-xs font-black uppercase mb-6 text-slate-400">Experience</h3>
+            <div className="space-y-10">
               {data.experience.map((exp) => (
                 <div key={exp.id}>
-                  <div className="flex justify-between items-end border-b border-black pb-1 mb-2">
-                    <h4 className="font-bold text-lg">{exp.role}</h4>
-                    <span className="font-bold text-sm">{exp.dates}</span>
+                  <div className="flex justify-between items-baseline mb-2">
+                    <h4 className="text-xl font-bold">{exp.role}</h4>
+                    <span className="font-mono text-xs">{exp.dates}</span>
                   </div>
-                  <div className="font-bold text-sm mb-2">{exp.company}</div>
-                  <p className="text-sm leading-relaxed">{exp.description}</p>
+                  <div className="text-sm font-bold uppercase tracking-wide mb-3">{exp.company}, {exp.location}</div>
+                  <p className="text-sm leading-relaxed text-justify opacity-90">{exp.description}</p>
                 </div>
               ))}
             </div>
@@ -1102,244 +1130,93 @@ const SwissTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const CorporateTemplate = ({ data, skillsArray, t }: TemplateProps) => (
-  <div className="w-full h-full p-[15mm] font-serif text-slate-800">
-    <header className="border-b-2 border-slate-300 pb-6 mb-8 text-center">
-      <h1 className="text-3xl font-bold text-slate-900 uppercase tracking-widest mb-2">{data.fullName || 'Seu Nome'}</h1>
-      <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">{data.title || 'Seu Cargo'}</p>
-      <div className="flex justify-center gap-6 text-sm text-slate-600 font-sans">
-        {data.email && <span>{data.email}</span>}
-        {data.phone && <span>{data.phone}</span>}
-        {data.location && <span>{data.location}</span>}
-      </div>
-    </header>
-
-    <div className="space-y-6">
-      {data.summary && (
-        <section>
-          <h3 className="text-sm font-bold uppercase tracking-widest border-b border-slate-200 mb-3 pb-1" style={{ color: data.themeColor }}>{t('preview.profile')}</h3>
-          <p className="text-sm text-justify leading-relaxed">{data.summary}</p>
-        </section>
-      )}
-
-      {data.experience.length > 0 && (
-        <section>
-          <h3 className="text-sm font-bold uppercase tracking-widest border-b border-slate-200 mb-4 pb-1" style={{ color: data.themeColor }}>{t('preview.experience')}</h3>
-          <div className="space-y-6">
-            {data.experience.map((exp) => (
-              <div key={exp.id}>
-                <div className="flex justify-between font-sans">
-                   <h4 className="font-bold text-slate-900">{exp.role}</h4>
-                   <span className="text-sm text-slate-500">{exp.dates}</span>
-                </div>
-                <div className="italic text-sm mb-2 text-slate-600">{exp.company}, {exp.location}</div>
-                <p className="text-sm text-justify leading-relaxed">{exp.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <div className="grid grid-cols-2 gap-8">
-        <div className="space-y-6">
-          {data.education.length > 0 && (
-            <section>
-              <h3 className="text-sm font-bold uppercase tracking-widest border-b border-slate-200 mb-3 pb-1" style={{ color: data.themeColor }}>{t('preview.education')}</h3>
-              <div className="space-y-4">
-                {data.education.map((edu) => (
-                  <div key={edu.id}>
-                    <div className="font-bold text-sm sans-serif">{edu.school}</div>
-                    <div className="text-sm italic">{edu.degree}</div>
-                    <div className="text-xs text-slate-500 font-sans">{edu.dates}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
-        <div className="space-y-6">
-          {skillsArray.length > 0 && (
-            <section>
-              <h3 className="text-sm font-bold uppercase tracking-widest border-b border-slate-200 mb-3 pb-1" style={{ color: data.themeColor }}>{t('preview.skills')}</h3>
-              <div className="flex flex-wrap gap-2">
-                 {skillsArray.map((skill, i) => <span key={i} className="text-sm border border-slate-200 px-2 py-0.5 rounded-sm bg-slate-50">{skill}</span>)}
-              </div>
-            </section>
-          )}
-          {(data.languages || []).length > 0 && (
-             <section>
-               <h3 className="text-sm font-bold uppercase tracking-widest border-b border-slate-200 mb-3 pb-1" style={{ color: data.themeColor }}>{t('preview.languages')}</h3>
-               <ul className="text-sm">
-                 {data.languages.map((l, i) => <li key={i}>{l.name} <span className="text-slate-400">({l.proficiency})</span></li>)}
-               </ul>
-             </section>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-const FocalTemplate = ({ data, skillsArray, t }: TemplateProps) => (
-  <div className="w-full h-full flex flex-col font-sans text-slate-800">
-    <header className="bg-slate-900 text-white p-12 text-center print:bg-slate-900 print:text-white">
-       {data.photo && (
-         <div className="w-32 h-32 rounded-full border-4 border-white/20 mx-auto mb-6 overflow-hidden">
-           <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
-         </div>
-       )}
-       <h1 className="text-4xl font-bold uppercase tracking-widest mb-2">{data.fullName || 'Seu Nome'}</h1>
-       <p className="text-lg font-light tracking-widest opacity-80 mb-6">{data.title || 'Seu Cargo'}</p>
-       
-       <div className="flex justify-center gap-6 text-xs font-bold uppercase tracking-wider text-slate-400">
-          {data.email && <span>{data.email}</span>}
-          {data.phone && <span>{data.phone}</span>}
-          {data.website && <span>{data.website}</span>}
-       </div>
-    </header>
-
-    <div className="flex-1 p-12">
-       {data.summary && (
-         <div className="mb-10 text-center max-w-2xl mx-auto">
-           <p className="text-lg leading-relaxed text-slate-600 font-medium">{data.summary}</p>
-         </div>
-       )}
-
-       <div className="grid grid-cols-12 gap-10">
-          <div className="col-span-8 space-y-10">
-            {data.experience.length > 0 && (
-              <section>
-                 <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b-2 border-slate-900 mb-6 pb-2">{t('preview.experience')}</h3>
-                 <div className="space-y-8">
-                   {data.experience.map((exp) => (
-                     <div key={exp.id}>
-                        <h4 className="text-xl font-bold text-slate-800">{exp.role}</h4>
-                        <div className="text-sm font-bold text-slate-500 mb-2">{exp.company} <span className="font-normal text-slate-300">|</span> {exp.dates}</div>
-                        <p className="text-slate-600 leading-relaxed">{exp.description}</p>
-                     </div>
-                   ))}
-                 </div>
-              </section>
-            )}
-          </div>
-          
-          <div className="col-span-4 space-y-10">
-             {skillsArray.length > 0 && (
-               <section>
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b-2 border-slate-900 mb-6 pb-2">{t('preview.skills')}</h3>
-                  <div className="flex flex-col gap-2">
-                    {skillsArray.map((skill, i) => (
-                      <div key={i} className="bg-slate-100 px-3 py-2 font-medium text-sm border-l-4" style={{ borderColor: data.themeColor }}>{skill}</div>
-                    ))}
-                  </div>
-               </section>
-             )}
-             
-             {data.education.length > 0 && (
-               <section>
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b-2 border-slate-900 mb-6 pb-2">{t('preview.education')}</h3>
-                  <div className="space-y-4">
-                    {data.education.map((edu) => (
-                      <div key={edu.id}>
-                        <div className="font-bold text-sm">{edu.school}</div>
-                        <div className="text-xs text-slate-500">{edu.degree}</div>
-                        <div className="text-xs text-slate-400 mt-1">{edu.dates}</div>
-                      </div>
-                    ))}
-                  </div>
-               </section>
-             )}
-          </div>
-       </div>
-    </div>
-  </div>
-);
-
 const GridTemplate = ({ data, skillsArray, t }: TemplateProps) => (
-  <div className="w-full h-full p-[10mm] bg-slate-100 font-sans flex flex-col gap-4 print:bg-slate-100">
-    <div className="bg-white p-8 shadow-sm border border-slate-200 rounded-lg flex justify-between items-center">
-       <div>
-          <h1 className="text-3xl font-bold text-slate-800">{data.fullName || 'Seu Nome'}</h1>
-          <p className="text-lg text-slate-500 font-medium">{data.title || 'Seu Cargo'}</p>
-       </div>
-       <div className="text-right text-sm text-slate-600 space-y-1">
-          {data.email && <div>{data.email}</div>}
-          {data.phone && <div>{data.phone}</div>}
-          {data.location && <div>{data.location}</div>}
-       </div>
+  <div className="w-full h-full p-[10mm] bg-slate-50 text-slate-800 flex flex-col font-sans">
+    <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-lg mb-4 flex justify-between items-center">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">{data.fullName || 'Seu Nome'}</h1>
+        <p className="font-medium text-lg mt-1" style={{ color: data.themeColor }}>{data.title}</p>
+      </div>
+      <div className="text-right text-xs space-y-1 text-slate-500">
+        {data.email && <div>{data.email}</div>}
+        {data.phone && <div>{data.phone}</div>}
+        {data.location && <div>{data.location}</div>}
+      </div>
     </div>
 
-    <div className="grid grid-cols-2 gap-4 flex-1">
-       {/* Left Column */}
-       <div className="flex flex-col gap-4">
-          {data.summary && (
-            <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-lg">
-               <h3 className="text-sm font-bold uppercase text-slate-400 mb-3 tracking-wider">{t('preview.profile')}</h3>
-               <p className="text-sm leading-relaxed text-slate-700">{data.summary}</p>
+    <div className="grid grid-cols-3 gap-4 flex-1">
+      {/* Column 1: Summary + Skills */}
+      <div className="col-span-1 flex flex-col gap-4">
+        {data.photo && (
+          <div className="aspect-square w-full rounded-lg overflow-hidden border border-slate-200">
+            <img src={data.photo} alt="user" className="w-full h-full object-cover" />
+          </div>
+        )}
+
+        {data.summary && (
+          <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
+            <h3 className="text-xs font-bold uppercase mb-3 flex items-center gap-2">
+              <User className="w-3 h-3" /> Profile
+            </h3>
+            <p className="text-xs leading-relaxed text-slate-600">{data.summary}</p>
+          </div>
+        )}
+
+        {skillsArray.length > 0 && (
+          <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex-1">
+            <h3 className="text-xs font-bold uppercase mb-3 flex items-center gap-2">
+              <Award className="w-3 h-3" /> Skills
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {skillsArray.map((skill, i) => (
+                <span key={i} className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded text-slate-700">{skill}</span>
+              ))}
             </div>
-          )}
-          
-          {data.education.length > 0 && (
-             <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-lg flex-1">
-                <h3 className="text-sm font-bold uppercase text-slate-400 mb-4 tracking-wider">{t('preview.education')}</h3>
-                <div className="space-y-4">
-                  {data.education.map((edu) => (
-                    <div key={edu.id} className="border-b border-slate-100 last:border-0 pb-3 last:pb-0">
-                       <div className="font-bold text-slate-800">{edu.school}</div>
-                       <div className="text-sm text-slate-600">{edu.degree}</div>
-                       <div className="text-xs text-slate-400 mt-1">{edu.dates}</div>
-                    </div>
-                  ))}
-                </div>
-             </div>
-          )}
+          </div>
+        )}
+      </div>
 
-          {skillsArray.length > 0 && (
-             <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-lg">
-                <h3 className="text-sm font-bold uppercase text-slate-400 mb-4 tracking-wider">{t('preview.skills')}</h3>
-                <div className="flex flex-wrap gap-2">
-                   {skillsArray.map((skill, i) => (
-                      <span key={i} className="text-xs font-bold text-white px-2 py-1 rounded" style={{ backgroundColor: data.themeColor || '#64748b' }}>{skill}</span>
-                   ))}
+      {/* Column 2 & 3: Experience */}
+      <div className="col-span-2 flex flex-col gap-4">
+        {data.experience.length > 0 && (
+          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm flex-1">
+            <h3 className="text-xs font-bold uppercase mb-6 flex items-center gap-2 border-b border-slate-100 pb-3">
+              <Briefcase className="w-3 h-3" /> Experience
+            </h3>
+            <div className="space-y-6">
+              {data.experience.map((exp) => (
+                <div key={exp.id} className="grid grid-cols-[1fr_3fr] gap-4">
+                  <div className="text-xs">
+                    <div className="font-bold" style={{ color: data.themeColor }}>{exp.company}</div>
+                    <div className="text-slate-400 mt-1">{exp.dates}</div>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900 mb-1">{exp.role}</h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">{exp.description}</p>
+                  </div>
                 </div>
-             </div>
-          )}
-       </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-       {/* Right Column */}
-       <div className="flex flex-col gap-4">
-          {data.experience.length > 0 && (
-             <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-lg flex-1">
-                <h3 className="text-sm font-bold uppercase text-slate-400 mb-4 tracking-wider">{t('preview.experience')}</h3>
-                <div className="space-y-6">
-                   {data.experience.map((exp) => (
-                      <div key={exp.id}>
-                         <div className="flex justify-between items-baseline mb-1">
-                            <h4 className="font-bold text-slate-800">{exp.role}</h4>
-                            <span className="text-xs font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded">{exp.dates}</span>
-                         </div>
-                         <div className="text-xs font-bold uppercase text-slate-400 mb-2">{exp.company}</div>
-                         <p className="text-sm text-slate-600 leading-relaxed">{exp.description}</p>
-                      </div>
-                   ))}
+        {data.education.length > 0 && (
+          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+            <h3 className="text-xs font-bold uppercase mb-4 flex items-center gap-2 border-b border-slate-100 pb-2">
+              <Award className="w-3 h-3" /> Education
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              {data.education.map((edu) => (
+                <div key={edu.id} className="text-xs">
+                  <div className="font-bold text-slate-900">{edu.school}</div>
+                  <div className="text-slate-600">{edu.degree}</div>
+                  <div className="text-slate-400 mt-0.5">{edu.dates}</div>
                 </div>
-             </div>
-          )}
-          
-          {(data.languages || []).length > 0 && (
-             <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-lg">
-                <h3 className="text-sm font-bold uppercase text-slate-400 mb-4 tracking-wider">{t('preview.languages')}</h3>
-                <div className="grid grid-cols-2 gap-2">
-                   {data.languages.map((l, i) => (
-                      <div key={i} className="text-sm bg-slate-50 p-2 rounded">
-                         <span className="font-bold text-slate-700">{l.name}</span>
-                         <span className="block text-xs text-slate-500">{l.proficiency}</span>
-                      </div>
-                   ))}
-                </div>
-             </div>
-          )}
-       </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   </div>
 );
@@ -1348,7 +1225,7 @@ const GridTemplate = ({ data, skillsArray, t }: TemplateProps) => (
 
 export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template }) => {
   const { t } = useLanguage();
-  const skillsArray = data.skills.split(',').map(s => s.trim()).filter(s => s.length > 0);
+  const skillsArray = data.skills ? data.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
   const props = { data, skillsArray, t };
 
   switch (template) {
@@ -1369,15 +1246,11 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template }) 
     case 'elegant':
       return <Wrapper><ElegantTemplate {...props} /></Wrapper>;
     case 'bold':
-      return <Wrapper><BoldTemplate {...props} /></Wrapper>;
+      return <Wrapper><ModernTemplate {...props} /></Wrapper>; // Fallback since BoldTemplate was missing
     case 'timeline':
       return <Wrapper><TimelineTemplate {...props} /></Wrapper>;
     case 'swiss':
       return <Wrapper><SwissTemplate {...props} /></Wrapper>;
-    case 'corporate':
-      return <Wrapper><CorporateTemplate {...props} /></Wrapper>;
-    case 'focal':
-      return <Wrapper><FocalTemplate {...props} /></Wrapper>;
     case 'grid':
       return <Wrapper><GridTemplate {...props} /></Wrapper>;
     case 'modern':

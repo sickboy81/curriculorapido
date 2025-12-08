@@ -247,8 +247,6 @@ const AppContent = () => {
                   <optgroup label={t('templates.groups.new')}>
                     <option value="timeline">{t('templates.timeline')}</option>
                     <option value="swiss">{t('templates.swiss')}</option>
-                    <option value="corporate">{t('templates.corporate')}</option>
-                    <option value="focal">{t('templates.focal')}</option>
                     <option value="grid">{t('templates.grid')}</option>
                   </optgroup>
                 </select>

@@ -51,10 +51,10 @@ export const ResumeTips: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 bg-white no-print border-t border-slate-100">
+    <section id="dicas" className="py-16 bg-white no-print border-t border-slate-100" role="region" aria-labelledby="tips-title">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
+          <h2 id="tips-title" className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
             {t('tips.title')}
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto">

@@ -34,15 +34,15 @@ export const CareerBlog: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 bg-slate-50 border-t border-slate-200 no-print" id="dicas-carreira">
+    <section className="py-16 bg-slate-50 border-t border-slate-200 no-print" id="dicas-carreira" role="region" aria-labelledby="career-blog-title">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4 flex items-center justify-center gap-2">
-            <BookOpen className="w-8 h-8 text-purple-600" />
+          <h2 id="career-blog-title" className="text-3xl font-bold text-slate-900 mb-4 flex items-center justify-center gap-2">
+            <BookOpen className="w-8 h-8 text-purple-600" aria-hidden="true" />
             {t('blog.sectionTitle')}
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto">
-            {t('blog.sectionSubtitle')}
+            {t('blog.sectionSubtitle')} Confira também nossas <a href="#dicas" className="text-purple-600 hover:text-purple-800 underline font-medium">dicas práticas para criar um currículo profissional</a>.
           </p>
         </div>
 

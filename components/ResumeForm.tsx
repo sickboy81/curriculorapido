@@ -73,10 +73,24 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
   const toggleSection = (section: string) => {
     setActiveSection(activeSection === section ? null : section);
+    // Track form interaction event
+    if (typeof window !== 'undefined' && (window as any).gtag && activeSection === null) {
+      (window as any).gtag('event', 'form_interaction', {
+        section: section,
+        action: 'open'
+      });
+    }
   };
 
   const handleChange = (field: keyof ResumeData, value: any) => {
     onChange({ ...data, [field]: value });
+    // Track form interaction on first change
+    if (typeof window !== 'undefined' && (window as any).gtag && field === 'fullName' && value) {
+      (window as any).gtag('event', 'form_interaction', {
+        field: field,
+        action: 'fill'
+      });
+    }
   };
 
   // --- Photo Handler ---
@@ -293,7 +307,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                <div className="relative shrink-0">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md bg-slate-200 flex items-center justify-center">
                     {data.photo ? (
-                      <img src={data.photo} alt="Preview" className="w-full h-full object-cover" />
+                      <img src={data.photo} alt={data.fullName ? `Foto de perfil de ${data.fullName}` : "Foto de perfil do currículo"} className="w-full h-full object-cover" />
                     ) : (
                       <Camera className="w-6 h-6 text-slate-400" />
                     )}

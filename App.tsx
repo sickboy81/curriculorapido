@@ -124,6 +124,14 @@ const AppContent = () => {
           : 'curriculo';
         pdf.save(`${safeName}_cv.pdf`);
 
+        // Track PDF download event
+        if (typeof window !== 'undefined' && (window as any).gtag) {
+          (window as any).gtag('event', 'download_pdf', {
+            template: template,
+            name: safeName || 'curriculo'
+          });
+        }
+
       } catch (error) {
         console.error("PDF generation failed:", error);
         alert("Erro ao gerar PDF. Por favor, tente novamente.");
@@ -228,7 +236,16 @@ const AppContent = () => {
                 <LayoutTemplate className="w-4 h-4 text-slate-500 ml-2" />
                 <select
                   value={template}
-                  onChange={(e) => setTemplate(e.target.value as TemplateType)}
+                  onChange={(e) => {
+                    const newTemplate = e.target.value as TemplateType;
+                    setTemplate(newTemplate);
+                    // Track template change event
+                    if (typeof window !== 'undefined' && (window as any).gtag) {
+                      (window as any).gtag('event', 'template_change', {
+                        template: newTemplate
+                      });
+                    }
+                  }}
                   className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-2 max-w-[110px] sm:max-w-none"
                 >
                   <optgroup label={t('templates.groups.classic')}>
@@ -429,7 +446,10 @@ const AppContent = () => {
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-slate-900">Currículo Rápido</span> &copy; {new Date().getFullYear()}
               </div>
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-6 flex-wrap justify-center">
+                <a href="#dicas-carreira" className="hover:text-slate-900 transition-colors cursor-pointer">
+                  Dicas de Carreira
+                </a>
                 <button
                   onClick={() => setShowPrivacy(true)}
                   className="hover:text-slate-900 transition-colors cursor-pointer"
@@ -476,9 +496,10 @@ const AppContent = () => {
             disabled={isGeneratingPdf}
             type="button"
             className="bg-purple-600 text-white p-4 rounded-full shadow-lg shadow-purple-600/30 flex items-center gap-2 hover:bg-purple-700 transition-all active:scale-95 disabled:bg-purple-400"
-            aria-label={t('nav.download')}
+            aria-label={isGeneratingPdf ? t('nav.generating') : t('nav.download')}
+            aria-busy={isGeneratingPdf}
           >
-            {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
+            {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" aria-hidden="true" /> : <Download className="w-6 h-6" aria-hidden="true" />}
           </button>
         </div>
 

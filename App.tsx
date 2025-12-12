@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { ResumeForm } from './components/ResumeForm';
 import { ResumePreview } from './components/ResumePreview';
 import { PrivacyModal, TermsModal, ConfirmModal } from './components/LegalModals';
-import { SEOContent } from './components/SEOContent';
-import { ResumeTips } from './components/ResumeTips';
-import { CareerBlog } from './components/CareerBlog';
 import { AdPlaceholder } from './components/AdPlaceholder';
+
+// Lazy load components below the fold for better performance
+const SEOContent = lazy(() => import('./components/SEOContent').then(module => ({ default: module.SEOContent })));
+const ResumeTips = lazy(() => import('./components/ResumeTips').then(module => ({ default: module.ResumeTips })));
+const CareerBlog = lazy(() => import('./components/CareerBlog').then(module => ({ default: module.CareerBlog })));
 import { ResumeData, INITIAL_DATA, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from './types';
 import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Globe, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical } from 'lucide-react';
 import { LanguageProvider, useLanguage, Language } from './LanguageContext';
@@ -201,7 +203,7 @@ const AppContent = () => {
               <div className="bg-purple-600 p-2 rounded-lg">
                 <FileText className="w-5 h-5 text-white" />
               </div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900 hidden sm:block">Currículo Rápido</h1>
+              <div className="text-xl font-bold tracking-tight text-slate-900 hidden sm:block">Currículo Rápido</div>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4">
@@ -309,11 +311,23 @@ const AppContent = () => {
         {/* Main Content */}
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
 
+          {/* Breadcrumbs */}
+          <nav className="mb-6" aria-label="Breadcrumb">
+            <ol className="flex items-center gap-2 text-sm text-slate-600" itemScope itemType="https://schema.org/BreadcrumbList">
+              <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                <a href="/" className="hover:text-slate-900 transition-colors" itemProp="item">
+                  <span itemProp="name">Início</span>
+                </a>
+                <meta itemProp="position" content="1" />
+              </li>
+            </ol>
+          </nav>
+
           {/* Intro Section */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
               {t('hero.title')}
-            </h2>
+            </h1>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto" dangerouslySetInnerHTML={{ __html: t('hero.subtitle') }}>
             </p>
 
@@ -397,10 +411,16 @@ const AppContent = () => {
           </div>
         </main>
 
-        {/* Blog & SEO Section */}
-        <CareerBlog />
-        <ResumeTips />
-        <SEOContent />
+        {/* Blog & SEO Section - Lazy loaded for performance */}
+        <Suspense fallback={<div className="py-16 bg-slate-50"><div className="max-w-7xl mx-auto px-4 text-center text-slate-600">Carregando conteúdo...</div></div>}>
+          <CareerBlog />
+        </Suspense>
+        <Suspense fallback={<div className="py-16 bg-white"><div className="max-w-7xl mx-auto px-4 text-center text-slate-600">Carregando dicas...</div></div>}>
+          <ResumeTips />
+        </Suspense>
+        <Suspense fallback={<div className="py-16 bg-white"><div className="max-w-7xl mx-auto px-4 text-center text-slate-600">Carregando informações...</div></div>}>
+          <SEOContent />
+        </Suspense>
 
         {/* Footer */}
         <footer className="bg-white border-t border-slate-200 py-10 mt-auto">

@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Estilos Globais de Scrollbar --- */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* --- Configuração de Impressão e PDF --- */
+
+/* Oculta a área de impressão na tela normal */
+.print-area {
+  display: none;
+}
+
+/* Estilo para a div usada pelo html2pdf */
+.pdf-generation-container {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  background: white;
+}
+
+/* Quando estiver gerando PDF, mostra o elemento na tela */
+.pdf-generation-container.generating {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999999;
+  box-shadow: 0 0 0 9999px rgba(255, 255, 255, 0.95);
+}
+
+/* Quando estiver gerando PDF, removemos sombras e margens do wrapper do preview */
+.pdf-generation-container .shadow-2xl {
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+@media print {
+  @page {
+    margin: 0;
+    size: A4 portrait;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white;
+    overflow: visible !important;
+  }
+
+  /* Reset para o root */
+  #root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Oculta elementos da interface, mas mantém screen-area como container */
+  .screen-area>*:not(.print-area) {
+    display: none !important;
+  }
+
+  .screen-area {
+    min-height: 0 !important;
+    background: white !important;
+  }
+
+  /* Exibe a área de impressão */
+  .print-area {
+    display: block !important;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  /* Remove transformações e escalas do preview */
+  .print-area * {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Força a impressão das cores de fundo */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

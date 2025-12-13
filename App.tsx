@@ -443,58 +443,6 @@ const AppContent = () => {
         <Suspense fallback={<div className="py-16 bg-white border-t border-slate-200"><div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600">Carregando informações...</div></div>}>
           <SEOContent />
         </Suspense>
-        
-                  <li>✓ Adapte para <strong>nova área profissional</strong></li>
-                  <li>✓ Crie múltiplas versões rapidamente</li>
-                </ul>
-              </div>
-              
-              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                <h3 className="text-xl font-bold text-slate-900 mb-3">Profissionais Experientes</h3>
-                <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                  Para profissionais com anos de experiência, nossos modelos ajudam a organizar um histórico extenso de forma 
-                  clara e concisa. Destaque <strong>conquistas</strong> e <strong>resultados</strong> de forma impactante.
-                </p>
-                <ul className="text-xs text-slate-500 space-y-1">
-                  <li>✓ Organize <strong>histórico extenso</strong></li>
-                  <li>✓ Destaque <strong>conquistas profissionais</strong></li>
-                  <li>✓ Modelos para <strong>executivos</strong></li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="mt-12 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-8 border border-purple-200">
-              <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">Plataformas de Emprego Compatíveis</h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white rounded-lg p-4 text-center border border-slate-200">
-                  <h4 className="font-bold text-slate-800 mb-2">Gupy</h4>
-                  <p className="text-xs text-slate-600">
-                    Nossos modelos são <strong>100% compatíveis</strong> com o sistema ATS da Gupy, uma das maiores 
-                    plataformas de recrutamento do Brasil.
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg p-4 text-center border border-slate-200">
-                  <h4 className="font-bold text-slate-800 mb-2">Kenoby</h4>
-                  <p className="text-xs text-slate-600">
-                    Seus dados serão extraídos corretamente pelo sistema Kenoby, garantindo que seu CV seja avaliado adequadamente.
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg p-4 text-center border border-slate-200">
-                  <h4 className="font-bold text-slate-800 mb-2">Vagas.com</h4>
-                  <p className="text-xs text-slate-600">
-                    Compatível com o sistema de triagem da Vagas.com, aumentando suas chances de passar na primeira etapa.
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg p-4 text-center border border-slate-200">
-                  <h4 className="font-bold text-slate-800 mb-2">LinkedIn</h4>
-                  <p className="text-xs text-slate-600">
-                    Use seu CV gerado para complementar seu perfil no LinkedIn ou em processos Easy Apply.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Footer */}
         <footer className="bg-white border-t border-slate-200 py-10 mt-auto" role="contentinfo">

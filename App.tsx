@@ -3,6 +3,7 @@ import { ResumeForm } from './components/ResumeForm';
 import { ResumePreview } from './components/ResumePreview';
 import { PrivacyModal, TermsModal, ConfirmModal } from './components/LegalModals';
 import { AdPlaceholder } from './components/AdPlaceholder';
+import { ATSChecker } from './components/ATSChecker';
 
 // Lazy load heavy SEO components for better performance
 const SEOContent = lazy(() => import('./components/SEOContent').then(module => ({ default: module.SEOContent })));
@@ -254,6 +255,9 @@ const AppContent = () => {
                   </optgroup>
                 </select>
               </div>
+
+              {/* ATS Checker Button */}
+              <ATSChecker resumeData={resumeData} />
 
               {/* Download Button - Icon on Mobile, Text on Desktop */}
               <button

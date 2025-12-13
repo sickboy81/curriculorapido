@@ -189,7 +189,6 @@ export const translations = {
       grid: "Grid",
       corporate: "Corporativo",
       focal: "Focal",
-      grid: "Grid",
       groups: {
         classic: "Clássicos",
         creative: "Criativos",

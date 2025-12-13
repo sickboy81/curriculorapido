@@ -4,6 +4,12 @@ import { ResumePreview } from './components/ResumePreview';
 import { PrivacyModal, TermsModal, ConfirmModal } from './components/LegalModals';
 import { AdPlaceholder } from './components/AdPlaceholder';
 import { ATSChecker } from './components/ATSChecker';
+import { ToastContainer, useToast } from './components/Toast';
+import { SkeletonCard } from './components/Skeleton';
+import { ScrollToTop } from './components/ScrollToTop';
+import { ExportMenu } from './components/ExportMenu';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { useDebounce } from './hooks/useDebounce';
 
 // Lazy load heavy SEO components for better performance
 const SEOContent = lazy(() => import('./components/SEOContent').then(module => ({ default: module.SEOContent })));
@@ -58,9 +64,24 @@ const AppContent = () => {
   // PDF Generation State
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
+  // Toast notifications
+  const { toasts, success, error, removeToast } = useToast();
+
   // Persistence Effects
   useEffect(() => {
     localStorage.setItem('resume_builder_data', JSON.stringify(resumeData));
+    // Show subtle save notification only after initial load
+    if (resumeData.fullName) {
+      // Debounce to avoid too many notifications
+      const timer = setTimeout(() => {
+        // Only show if data changed (not on initial load)
+        const saved = localStorage.getItem('resume_builder_data');
+        if (saved && saved !== JSON.stringify(INITIAL_DATA_PT)) {
+          // Silent save - no notification to avoid spam
+        }
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
   }, [resumeData]);
 
   useEffect(() => {
@@ -123,10 +144,11 @@ const AppContent = () => {
           ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()
           : 'curriculo';
         pdf.save(`${safeName}_cv.pdf`);
+        success('PDF gerado e baixado com sucesso!');
 
-      } catch (error) {
-        console.error("PDF generation failed:", error);
-        alert("Erro ao gerar PDF. Por favor, tente novamente.");
+      } catch (err) {
+        console.error("PDF generation failed:", err);
+        error("Erro ao gerar PDF. Por favor, tente novamente.");
       } finally {
         setIsGeneratingPdf(false);
       }
@@ -159,9 +181,12 @@ const AppContent = () => {
     if (confirmType === 'clear') {
       setResumeData(BLANK_DATA);
       localStorage.setItem('resume_builder_data', JSON.stringify(BLANK_DATA));
+      success('Dados limpos com sucesso!');
     } else if (confirmType === 'example') {
-      setResumeData(INITIAL_DATA_PT);
+      const exampleData = INITIAL_DATA_PT;
+      setResumeData(exampleData);
       localStorage.setItem('resume_builder_data', JSON.stringify(exampleData));
+      success('Exemplo carregado com sucesso!');
     }
     setConfirmType(null);
   };
@@ -235,25 +260,18 @@ const AppContent = () => {
                 </select>
               </div>
 
-              {/* Download Button - Icon on Mobile, Text on Desktop */}
-              <button
-                onClick={handleDownloadPdf}
-                disabled={isGeneratingPdf}
-                type="button"
-                className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-700 text-white px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors shadow-sm text-sm"
-              >
-                {isGeneratingPdf ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="hidden sm:inline">Gerando...</span>
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-4 h-4" />
-                    <span className="hidden sm:inline">Baixar PDF</span>
-                  </>
-                )}
-              </button>
+              {/* Export Menu */}
+              <ExportMenu
+                resumeData={resumeData}
+                onImport={(data) => {
+                  setResumeData(data);
+                  success('Backup importado com sucesso!');
+                }}
+                onExportPdf={handleDownloadPdf}
+                isGeneratingPdf={isGeneratingPdf}
+                success={success}
+                error={error}
+              />
 
               {/* Mobile Menu Toggle */}
               <div className="relative lg:hidden">
@@ -452,7 +470,7 @@ const AppContent = () => {
         </section>
 
         {/* Blog & SEO Section - Lazy Loaded */}
-        <Suspense fallback={<div className="py-16 bg-slate-50 border-t border-slate-200"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600">Carregando conteúdo...</div></div>}>
+        <Suspense fallback={<div className="py-16 bg-slate-50 border-t border-slate-200"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><SkeletonCard /><SkeletonCard /><SkeletonCard /></div></div></div>}>
           <CareerBlog />
         </Suspense>
         <Suspense fallback={<div className="py-16 bg-white border-t border-slate-100"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600">Carregando dicas...</div></div>}>
@@ -556,6 +574,12 @@ const AppContent = () => {
           </button>
         </div>
 
+        {/* Toast Notifications */}
+        <ToastContainer toasts={toasts} onClose={removeToast} />
+
+        {/* Scroll to Top Button */}
+        <ScrollToTop />
+
         {/* PRINT AREA - Only visible when printing */}
         <div className="print-area">
           <ResumePreview data={resumeData} template={template} />
@@ -574,6 +598,8 @@ const AppContent = () => {
 
 export default function App() {
   return (
-    <AppContent />
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
   );
 }

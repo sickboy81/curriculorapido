@@ -36,6 +36,36 @@ export const CareerBlog: React.FC = () => {
       tags: ["Soft Skills", "Tendências"],
       datePublished: "2025-01-05",
       dateModified: "2025-01-05"
+    },
+    {
+      id: 4,
+      title: t('blog.art4Title'),
+      preview: t('blog.art4Preview'),
+      content: t('blog.art4Content'),
+      readTime: "4 min",
+      tags: ["ATS", "Otimização"],
+      datePublished: "2025-01-20",
+      dateModified: "2025-01-20"
+    },
+    {
+      id: 5,
+      title: t('blog.art5Title'),
+      preview: t('blog.art5Preview'),
+      content: t('blog.art5Content'),
+      readTime: "6 min",
+      tags: ["Experiência", "Resultados"],
+      datePublished: "2025-01-18",
+      dateModified: "2025-01-18"
+    },
+    {
+      id: 6,
+      title: t('blog.art6Title'),
+      preview: t('blog.art6Preview'),
+      content: t('blog.art6Content'),
+      readTime: "5 min",
+      tags: ["Primeiro Emprego", "Dicas"],
+      datePublished: "2025-01-12",
+      dateModified: "2025-01-12"
     }
   ];
 
@@ -103,45 +133,45 @@ export const CareerBlog: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article, index) => (
             <article 
               key={article.id}
               itemScope
               itemType="https://schema.org/Article"
-              className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all flex flex-col h-full"
+              className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg hover:border-purple-200 transition-all duration-300 flex flex-col h-full group"
             >
-              <div className="p-6 flex-1">
-                <div className="flex gap-2 mb-4">
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {article.tags.map(tag => (
-                    <span key={tag} className="text-[10px] font-bold uppercase tracking-wider bg-purple-50 text-purple-700 px-2 py-1 rounded-full">
+                    <span key={tag} className="text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 px-3 py-1 rounded-full border border-purple-100">
                       {tag}
                     </span>
                   ))}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3 leading-tight" itemProp="headline">
+                <h3 className="text-lg font-bold text-slate-900 mb-3 leading-tight group-hover:text-purple-700 transition-colors" itemProp="headline">
                   {article.title}
                 </h3>
-                <div className="text-slate-600 text-sm leading-relaxed mb-4" itemProp="description">
+                <div className="text-slate-600 text-sm leading-relaxed mb-4 flex-1" itemProp="description">
                   {expandedArticle === index ? (
-                    <div dangerouslySetInnerHTML={{ __html: article.content }} className="space-y-4 animate-in fade-in duration-300" itemProp="articleBody" />
+                    <div dangerouslySetInnerHTML={{ __html: article.content }} className="space-y-4 animate-in fade-in duration-300 prose prose-sm max-w-none" itemProp="articleBody" />
                   ) : (
-                    <p>{article.preview}</p>
+                    <p className="line-clamp-3">{article.preview}</p>
                   )}
                 </div>
               </div>
               
-              <div className="p-6 pt-0 mt-auto border-t border-slate-50 flex items-center justify-between">
-                <div className="flex items-center gap-1 text-xs text-slate-400">
-                   <Clock className="w-3.5 h-3.5" />
-                   {article.readTime}
+              <div className="px-6 pb-6 pt-0 mt-auto border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                   <Clock className="w-4 h-4 text-purple-500" />
+                   <span className="font-medium">{article.readTime}</span>
                 </div>
                 <button 
                   onClick={() => setExpandedArticle(expandedArticle === index ? null : index)}
-                  className="text-sm font-bold text-purple-600 hover:text-purple-800 flex items-center gap-1 transition-colors"
+                  className="text-sm font-semibold text-purple-600 hover:text-purple-800 flex items-center gap-1.5 transition-all hover:gap-2 group/btn"
                 >
-                  {expandedArticle === index ? t('blog.readLess') : t('blog.readMore')}
-                  <ChevronRight className={`w-4 h-4 transition-transform ${expandedArticle === index ? 'rotate-90' : ''}`} />
+                  <span>{expandedArticle === index ? t('blog.readLess') : t('blog.readMore')}</span>
+                  <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${expandedArticle === index ? 'rotate-90' : 'group-hover/btn:translate-x-0.5'}`} />
                 </button>
               </div>
             </article>

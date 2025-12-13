@@ -119,6 +119,68 @@ export const ResumeTips: React.FC = () => {
           ))}
         </div>
         
+        {/* Erros Comuns Section */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-slate-900 mb-8 text-center">Erros Comuns que Eliminam Candidatos</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-orange-50 rounded-xl p-6 border-2 border-orange-200 hover:shadow-lg transition-all duration-300">
+              <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2 text-lg">
+                <AlertTriangle className="w-6 h-6 text-orange-600" />
+                Erros de Formatação
+              </h4>
+              <ul className="text-sm text-slate-700 space-y-2 list-disc list-inside">
+                <li>Fontes muito pequenas ou difíceis de ler</li>
+                <li>Excesso de cores ou elementos decorativos</li>
+                <li>Layout desorganizado e difícil de escanear</li>
+                <li>Informações importantes escondidas</li>
+                <li>Margens inadequadas para impressão</li>
+              </ul>
+            </div>
+            
+            <div className="bg-red-50 rounded-xl p-6 border-2 border-red-200 hover:shadow-lg transition-all duration-300">
+              <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2 text-lg">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+                Erros de Conteúdo
+              </h4>
+              <ul className="text-sm text-slate-700 space-y-2 list-disc list-inside">
+                <li>Erros de ortografia e gramática</li>
+                <li>Informações desatualizadas ou inconsistentes</li>
+                <li>Falta de palavras-chave relevantes</li>
+                <li>Objetivo genérico e sem personalização</li>
+                <li>Excesso de informações irrelevantes</li>
+              </ul>
+            </div>
+            
+            <div className="bg-yellow-50 rounded-xl p-6 border-2 border-yellow-200 hover:shadow-lg transition-all duration-300">
+              <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2 text-lg">
+                <AlertTriangle className="w-6 h-6 text-yellow-600" />
+                Problemas Técnicos
+              </h4>
+              <ul className="text-sm text-slate-700 space-y-2 list-disc list-inside">
+                <li>Arquivo em formato Word (.doc) em vez de PDF</li>
+                <li>Arquivo muito pesado ou corrompido</li>
+                <li>Formatação quebrada em sistemas ATS</li>
+                <li>Falta de compatibilidade com leitores de tela</li>
+                <li>Links quebrados ou emails inválidos</li>
+              </ul>
+            </div>
+            
+            <div className="bg-emerald-50 rounded-xl p-6 border-2 border-emerald-200 hover:shadow-lg transition-all duration-300">
+              <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2 text-lg">
+                <CheckCircle className="w-6 h-6 text-emerald-600" />
+                Como Evitar Esses Erros
+              </h4>
+              <ul className="text-sm text-slate-700 space-y-2 list-disc list-inside">
+                <li>Use nosso <strong>gerador de currículo</strong> que já resolve formatação</li>
+                <li>Revise cuidadosamente antes de enviar</li>
+                <li>Sempre salve em <strong>PDF</strong> para manter formatação</li>
+                <li>Teste o arquivo antes de enviar</li>
+                <li>Peça feedback de amigos ou mentores</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </section>
   );

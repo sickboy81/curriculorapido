@@ -42,7 +42,6 @@
   <!-- Site focused on Brazil - Portuguese only -->
 
   <!-- Performance Optimizations -->
-  <link rel="preconnect" href="https://cdn.tailwindcss.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://aistudiocdn.com">
 
@@ -131,6 +130,63 @@
               "position": 1,
               "name": "Início",
               "item": "https://curriculorapido.com.br/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Dicas de Carreira",
+              "item": "https://curriculorapido.com.br/#dicas-carreira"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Dicas de Currículo",
+              "item": "https://curriculorapido.com.br/#dicas-curriculo"
+            }
+          ]
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://curriculorapido.com.br/#templates",
+          "name": "Modelos de Currículo",
+          "description": "Modelos profissionais de currículo otimizados para o mercado brasileiro",
+          "numberOfItems": 6,
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Modelo Moderno",
+              "description": "Design limpo e contemporâneo, ideal para áreas criativas e tecnologia"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Modelo Clássico",
+              "description": "Formato tradicional e profissional, perfeito para áreas corporativas"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Modelo Elegante",
+              "description": "Estilo sofisticado com foco em elegância e profissionalismo"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "Modelo Criativo",
+              "description": "Design inovador para profissionais que buscam se destacar"
+            },
+            {
+              "@type": "ListItem",
+              "position": 5,
+              "name": "Modelo Bold",
+              "description": "Layout ousado com tipografia destacada para impacto visual"
+            },
+            {
+              "@type": "ListItem",
+              "position": 6,
+              "name": "Modelo Executivo",
+              "description": "Formato executivo para cargos de liderança e gestão"
             }
           ]
         },
@@ -244,20 +300,6 @@
     }
     </script>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            slate: {
-              850: '#1e293b',
-            }
-          }
-        }
-      }
-    }
-  </script>
   <style>
     /* --- Estilos Globais Base --- */
     html, body {
@@ -270,7 +312,7 @@
     #root {
       min-height: 100vh;
     }
-
+    
     /* --- Estilos Globais de Scrollbar --- */
     .custom-scrollbar::-webkit-scrollbar {
       width: 8px;
@@ -319,24 +361,32 @@
       left: -9999px;
       top: 0;
       width: 210mm;
-      height: 297mm;
-      overflow: hidden;
+      min-height: 297mm;
+      overflow: visible;
       background: white;
+      visibility: hidden;
     }
 
     /* Quando estiver gerando PDF, mostra o elemento na tela */
     .pdf-generation-container.generating {
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 999999;
-      box-shadow: 0 0 0 9999px rgba(255, 255, 255, 0.95);
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      z-index: 999999 !important;
+      box-shadow: 0 0 0 9999px rgba(255, 255, 255, 0.95) !important;
+      visibility: visible !important;
     }
 
     /* Quando estiver gerando PDF, removemos sombras e margens do wrapper do preview */
-    .pdf-generation-container .shadow-2xl {
+    .pdf-generation-container .shadow-2xl,
+    .pdf-generation-container.generating .shadow-2xl {
       box-shadow: none !important;
       margin: 0 !important;
+    }
+
+    /* Garantir que o conteúdo dentro do container seja visível */
+    .pdf-generation-container.generating * {
+      visibility: visible !important;
     }
 
     @media print {

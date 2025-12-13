@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResumeData, TemplateType } from '../types';
 import { Mail, Phone, MapPin, Globe, User, Briefcase, Award } from 'lucide-react';
+import { MarkdownText } from './MarkdownText';
 // Removed multilingual support - Portuguese only
 
 interface ResumePreviewProps {
@@ -74,7 +75,7 @@ const ModernTemplate = ({ data, skillsArray }: TemplateProps) => (
       {data.summary && (
         <section>
           <h3 className="text-sm font-bold uppercase tracking-wider mb-2 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{pt('preview.summary')}</h3>
-          <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-line">{data.summary}</p>
+          <MarkdownText text={data.summary} className="text-sm leading-relaxed text-slate-700" />
         </section>
       )}
       {data.experience.length > 0 && (
@@ -91,7 +92,7 @@ const ModernTemplate = ({ data, skillsArray }: TemplateProps) => (
                   <span className="text-sm font-semibold italic" style={{ color: data.themeColor }}>{exp.company}</span>
                   <span className="text-xs text-slate-500">{exp.location}</span>
                 </div>
-                <p className="text-sm leading-relaxed text-slate-600 whitespace-pre-line">{exp.description}</p>
+                <MarkdownText text={exp.description} className="text-sm leading-relaxed text-slate-600" />
               </div>
             ))}
           </div>
@@ -108,7 +109,7 @@ const ModernTemplate = ({ data, skillsArray }: TemplateProps) => (
                   <span className="text-xs font-medium text-slate-500 whitespace-nowrap">{edu.dates}</span>
                 </div>
                 <div className="mb-1"><span className="text-sm font-medium" style={{ color: data.themeColor }}>{edu.degree}</span></div>
-                {edu.description && <p className="text-sm text-slate-600 leading-snug">{edu.description}</p>}
+                {edu.description && <MarkdownText text={edu.description} className="text-sm text-slate-600 leading-snug" />}
               </div>
             ))}
           </div>
@@ -162,7 +163,7 @@ const ClassicTemplate = ({ data, skillsArray }: TemplateProps) => (
       {data.summary && (
         <section>
           <h3 className="text-base font-bold uppercase border-b border-black mb-3">{pt('preview.profile')}</h3>
-          <p className="text-sm leading-relaxed text-justify">{data.summary}</p>
+            <MarkdownText text={data.summary} className="text-sm leading-relaxed text-justify" />
         </section>
       )}
       {data.experience.length > 0 && (
@@ -179,7 +180,7 @@ const ClassicTemplate = ({ data, skillsArray }: TemplateProps) => (
                   <span className="text-sm italic" style={{ color: data.themeColor }}>{exp.company}</span>
                   <span className="text-sm italic">{exp.location}</span>
                 </div>
-                <p className="text-sm leading-relaxed text-justify">{exp.description}</p>
+                <MarkdownText text={exp.description} className="text-sm leading-relaxed text-justify" />
               </div>
             ))}
           </div>
@@ -196,7 +197,7 @@ const ClassicTemplate = ({ data, skillsArray }: TemplateProps) => (
                   <span className="text-sm font-bold">{edu.dates}</span>
                 </div>
                 <div><span className="text-sm italic" style={{ color: data.themeColor }}>{edu.degree}</span></div>
-                {edu.description && <p className="text-sm mt-1">{edu.description}</p>}
+                {edu.description && <MarkdownText text={edu.description} className="text-sm mt-1" />}
               </div>
             ))}
           </div>
@@ -289,7 +290,7 @@ const SidebarTemplate = ({ data, skillsArray }: TemplateProps) => (
             <span className="w-8 h-1 rounded-full" style={{ backgroundColor: data.themeColor }}></span>
             {pt('preview.profile')}
           </h3>
-          <p className="text-sm leading-relaxed text-slate-700">{data.summary}</p>
+          <MarkdownText text={data.summary} className="text-sm leading-relaxed text-slate-700" />
         </section>
       )}
       {data.experience.length > 0 && (
@@ -311,7 +312,7 @@ const SidebarTemplate = ({ data, skillsArray }: TemplateProps) => (
                   <span className="mx-2 text-slate-300">|</span>
                   <span className="text-sm text-slate-500">{exp.location}</span>
                 </div>
-                <p className="text-sm leading-relaxed text-slate-600">{exp.description}</p>
+                <MarkdownText text={exp.description} className="text-sm leading-relaxed text-slate-600" />
               </div>
             ))}
           </div>
@@ -344,7 +345,7 @@ const MinimalistTemplate = ({ data, skillsArray }: TemplateProps) => (
       {data.summary && (
         <section>
           <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{pt('preview.about')}</h3>
-          <p className="text-sm leading-relaxed text-center text-slate-600 max-w-lg mx-auto">{data.summary}</p>
+          <MarkdownText text={data.summary} className="text-sm leading-relaxed text-center text-slate-600 max-w-lg mx-auto" />
         </section>
       )}
       {data.experience.length > 0 && (
@@ -359,7 +360,7 @@ const MinimalistTemplate = ({ data, skillsArray }: TemplateProps) => (
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold text-slate-800 mb-1">{exp.role}</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">{exp.description}</p>
+                  <MarkdownText text={exp.description} className="text-sm text-slate-600 leading-relaxed" />
                 </div>
               </div>
             ))}
@@ -440,7 +441,7 @@ const ExecutiveTemplate = ({ data, skillsArray }: TemplateProps) => (
                   </div>
                   <div className="text-sm italic mb-2" style={{ color: data.themeColor }}>{exp.company}, {exp.location}</div>
                   <ul className="list-disc list-outside ml-4 text-sm space-y-1 text-slate-700">
-                    {exp.description.split('. ').map((sent, i) => sent.trim() && <li key={i}>{sent.endsWith('.') ? sent : sent + '.'}</li>)}
+                    <MarkdownText text={exp.description} className="text-sm text-slate-700" />
                   </ul>
                 </div>
               ))}
@@ -520,7 +521,7 @@ const CreativeTemplate = ({ data, skillsArray }: TemplateProps) => (
               <div className="p-1.5 rounded text-white" style={{ backgroundColor: data.themeColor }}><User className="w-4 h-4" /></div>
               <h3 className="text-xl font-bold uppercase tracking-tight">{pt('preview.about')}</h3>
             </div>
-            <p className="text-slate-600 leading-relaxed">{data.summary}</p>
+            <MarkdownText text={data.summary} className="text-slate-600 leading-relaxed" />
           </section>
         )}
         {data.experience.length > 0 && (
@@ -538,7 +539,7 @@ const CreativeTemplate = ({ data, skillsArray }: TemplateProps) => (
                     <span className="font-semibold" style={{ color: data.themeColor }}>{exp.company}</span>
                     <span className="text-slate-500">{exp.dates}</span>
                   </div>
-                  <p className="text-sm text-slate-600">{exp.description}</p>
+                  <MarkdownText text={exp.description} className="text-sm text-slate-600" />
                 </div>
               ))}
             </div>
@@ -612,7 +613,7 @@ const TechTemplate = ({ data, skillsArray }: TemplateProps) => (
         {data.summary && (
           <section>
             <h3 className="text-lg font-bold bg-slate-100 inline-block px-2 py-1 mb-3 print:bg-slate-100">./resumo</h3>
-            <p className="text-sm leading-relaxed">{data.summary}</p>
+            <MarkdownText text={data.summary} className="text-sm leading-relaxed" />
           </section>
         )}
         {data.experience.length > 0 && (
@@ -626,7 +627,7 @@ const TechTemplate = ({ data, skillsArray }: TemplateProps) => (
                     <span className="text-xs font-bold bg-black text-white px-2 py-0.5 rounded-sm print:bg-black print:text-white">{exp.dates}</span>
                   </div>
                   <div className="text-xs font-bold mb-2" style={{ color: data.themeColor }}>@{exp.company}</div>
-                  <p className="text-sm">{exp.description}</p>
+                  <MarkdownText text={exp.description} className="text-sm" />
                 </div>
               ))}
             </div>
@@ -702,7 +703,7 @@ const CompactTemplate = ({ data, skillsArray }: TemplateProps) => (
         {data.summary && (
           <section>
             <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{pt('preview.profile')}</h3>
-            <p className="text-xs text-justify leading-snug">{data.summary}</p>
+            <MarkdownText text={data.summary} className="text-xs text-justify leading-snug" />
           </section>
         )}
         {data.experience.length > 0 && (
@@ -716,7 +717,7 @@ const CompactTemplate = ({ data, skillsArray }: TemplateProps) => (
                     <span className="text-xs font-medium text-slate-500">{exp.dates}</span>
                   </div>
                   <div className="text-xs italic text-slate-600 mb-1">{exp.company} - {exp.location}</div>
-                  <p className="text-xs leading-snug">{exp.description}</p>
+                  <MarkdownText text={exp.description} className="text-xs leading-snug" />
                 </div>
               ))}
             </div>
@@ -789,7 +790,7 @@ const ElegantTemplate = ({ data, skillsArray }: TemplateProps) => (
     <div className="flex-1 space-y-8 px-4">
       {data.summary && (
         <section className="text-center">
-          <p className="text-base leading-relaxed italic text-slate-700">{data.summary}</p>
+          <MarkdownText text={data.summary} className="text-base leading-relaxed italic text-slate-700" />
         </section>
       )}
 
@@ -805,7 +806,7 @@ const ElegantTemplate = ({ data, skillsArray }: TemplateProps) => (
                   <span className="text-sm italic text-slate-500">{exp.dates}</span>
                 </div>
                 <div className="text-base text-slate-600 italic mb-2">{exp.company}, {exp.location}</div>
-                <p className="text-sm text-slate-700 leading-relaxed">{exp.description}</p>
+                <MarkdownText text={exp.description} className="text-sm text-slate-700 leading-relaxed" />
               </div>
             ))}
           </div>
@@ -880,7 +881,7 @@ const BoldTemplate = ({ data, skillsArray }: TemplateProps) => (
       {data.summary && (
         <section>
           <h3 className="text-2xl font-black uppercase mb-4"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{pt('preview.about')}</span></h3>
-          <p className="text-lg font-medium leading-relaxed">{data.summary}</p>
+          <MarkdownText text={data.summary} className="text-lg font-medium leading-relaxed" />
         </section>
       )}
 
@@ -894,7 +895,7 @@ const BoldTemplate = ({ data, skillsArray }: TemplateProps) => (
                 <div className="col-span-9">
                   <h4 className="text-2xl font-bold uppercase mb-1">{exp.role}</h4>
                   <div className="text-lg font-bold text-slate-500 mb-3">{exp.company}</div>
-                  <p className="font-medium text-slate-700">{exp.description}</p>
+                  <MarkdownText text={exp.description} className="font-medium text-slate-700" />
                 </div>
               </div>
             ))}
@@ -974,7 +975,7 @@ const TimelineTemplate = ({ data, skillsArray }: TemplateProps) => (
       {data.summary && (
         <section className="pl-[25mm]">
           <h3 className="font-black uppercase tracking-widest text-sm mb-3 text-slate-400">01 / {pt('preview.profile')}</h3>
-          <p className="text-sm leading-relaxed font-medium text-slate-700 bg-white p-4 border-l-4 border-slate-900 shadow-sm" style={{ borderColor: data.themeColor }}>{data.summary}</p>
+          <MarkdownText text={data.summary} className="text-sm leading-relaxed font-medium text-slate-700 bg-white p-4 border-l-4 border-slate-900 shadow-sm" style={{ borderColor: data.themeColor }} />
         </section>
       )}
 
@@ -997,7 +998,7 @@ const TimelineTemplate = ({ data, skillsArray }: TemplateProps) => (
                     <span className="font-mono text-xs font-bold bg-slate-100 px-2 py-1 rounded">{exp.dates}</span>
                   </div>
                   <div className="mb-2 font-medium" style={{ color: data.themeColor }}>{exp.company}</div>
-                  <p className="text-sm text-slate-600 leading-relaxed">{exp.description}</p>
+                  <MarkdownText text={exp.description} className="text-sm text-slate-600 leading-relaxed" />
                 </div>
               </div>
             ))}
@@ -1118,7 +1119,7 @@ const SwissTemplate = ({ data, skillsArray }: TemplateProps) => (
         {data.summary && (
           <section>
             <h3 className="text-xs font-black uppercase mb-4 text-slate-400">About</h3>
-            <p className="text-lg font-medium leading-relaxed">{data.summary}</p>
+            <MarkdownText text={data.summary} className="text-lg font-medium leading-relaxed" />
           </section>
         )}
 
@@ -1133,7 +1134,7 @@ const SwissTemplate = ({ data, skillsArray }: TemplateProps) => (
                     <span className="font-mono text-xs">{exp.dates}</span>
                   </div>
                   <div className="text-sm font-bold uppercase tracking-wide mb-3">{exp.company}, {exp.location}</div>
-                  <p className="text-sm leading-relaxed text-justify opacity-90">{exp.description}</p>
+                  <MarkdownText text={exp.description} className="text-sm leading-relaxed text-justify opacity-90" />
                 </div>
               ))}
             </div>
@@ -1172,7 +1173,7 @@ const GridTemplate = ({ data, skillsArray }: TemplateProps) => (
             <h3 className="text-xs font-bold uppercase mb-3 flex items-center gap-2">
               <User className="w-3 h-3" /> Profile
             </h3>
-            <p className="text-xs leading-relaxed text-slate-600">{data.summary}</p>
+            <MarkdownText text={data.summary} className="text-xs leading-relaxed text-slate-600" />
           </div>
         )}
 
@@ -1206,7 +1207,7 @@ const GridTemplate = ({ data, skillsArray }: TemplateProps) => (
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-slate-900 mb-1">{exp.role}</h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">{exp.description}</p>
+                    <MarkdownText text={exp.description} className="text-xs text-slate-600 leading-relaxed" />
                   </div>
                 </div>
               ))}

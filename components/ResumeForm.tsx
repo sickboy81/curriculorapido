@@ -3,9 +3,14 @@ import { ResumeData, Experience, Education, Language } from '../types';
 import { 
   Plus, Trash2, MapPin, Briefcase, GraduationCap, User, Phone, Globe, Mail, 
   ChevronDown, CheckCircle2, List, Lightbulb, Languages, X, ArrowUp, ArrowDown, Palette,
-  Layout, Camera, Upload
+  Layout, Camera, Upload, Loader2
 } from 'lucide-react';
 import { pt } from '../translations-pt';
+import { optimizeImage, validateImageFile } from '../utils/imageOptimizer';
+import { sanitizeText, sanitizeEmail, sanitizePhone, sanitizeURL } from '../utils/sanitize';
+import { RichTextEditor } from './RichTextEditor';
+import { Tooltip } from './Tooltip';
+import { validateEmail, validatePhone, validateURL } from '../utils/validators';
 
 interface ResumeFormProps {
   data: ResumeData;
@@ -32,7 +37,7 @@ const FormSection = ({
   children,
   isComplete = false
 }: React.PropsWithChildren<FormSectionProps>) => (
-  <div className={`bg-white rounded-xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-purple-500 shadow-md ring-1 ring-purple-100' : 'border-slate-200 hover:border-slate-300'}`}>
+  <div className={`bg-white rounded-xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-purple-500 shadow-lg ring-1 ring-purple-100' : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'}`}>
     <button 
       onClick={onToggle} 
       className={`w-full flex items-center justify-between p-5 transition-colors ${isOpen ? 'bg-slate-50' : 'bg-white hover:bg-slate-50'}`}
@@ -57,7 +62,7 @@ const FormSection = ({
       </div>
     </button>
     
-    <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+    <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[3000px] opacity-100 translate-y-0' : 'max-h-0 opacity-0 translate-y-[-10px] overflow-hidden'}`}>
       <div className="p-5 sm:p-6 border-t border-slate-100 bg-white">
         {children}
       </div>
@@ -69,30 +74,106 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
   const [activeSection, setActiveSection] = useState<string | null>('personal');
   const [skillInput, setSkillInput] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const toggleSection = (section: string) => {
     setActiveSection(activeSection === section ? null : section);
   };
 
   const handleChange = (field: keyof ResumeData, value: any) => {
-    onChange({ ...data, [field]: value });
+    // Sanitize values based on field type
+    let sanitizedValue = value;
+    const errors = { ...fieldErrors };
+    
+    if (typeof value === 'string') {
+      switch (field) {
+        case 'email':
+          sanitizedValue = sanitizeEmail(value);
+          if (value && value.length > 0) {
+            const validation = validateEmail(sanitizedValue);
+            if (!validation.isValid) {
+              errors.email = validation.message || '';
+            } else {
+              delete errors.email;
+            }
+          } else {
+            delete errors.email;
+          }
+          break;
+        case 'phone':
+          sanitizedValue = sanitizePhone(value);
+          if (value && value.length > 0) {
+            const validation = validatePhone(sanitizedValue);
+            if (!validation.isValid) {
+              errors.phone = validation.message || '';
+            } else {
+              delete errors.phone;
+            }
+          } else {
+            delete errors.phone;
+          }
+          break;
+        case 'website':
+          sanitizedValue = sanitizeURL(value);
+          if (value && value.length > 0) {
+            const validation = validateURL(sanitizedValue);
+            if (!validation.isValid) {
+              errors.website = validation.message || '';
+            } else {
+              delete errors.website;
+            }
+          } else {
+            delete errors.website;
+          }
+          break;
+        case 'fullName':
+        case 'title':
+        case 'location':
+        case 'summary':
+          sanitizedValue = sanitizeText(value);
+          break;
+        default:
+          sanitizedValue = sanitizeText(value);
+      }
+    }
+    
+    setFieldErrors(errors);
+    onChange({ ...data, [field]: sanitizedValue });
   };
 
   // --- Photo Handler ---
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isOptimizingPhoto, setIsOptimizingPhoto] = useState(false);
+  
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Check size (limit to 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        alert("A imagem deve ter no máximo 2MB.");
+      // Check size (limit to 5MB before optimization)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("A imagem deve ter no máximo 5MB.");
         return;
       }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        handleChange('photo', reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setIsOptimizingPhoto(true);
+      try {
+        // Optimize image (compress and resize)
+        const optimizedDataUrl = await optimizeImage(file, {
+          maxWidth: 400,
+          maxHeight: 400,
+          quality: 0.85,
+          format: 'jpeg',
+        });
+        handleChange('photo', optimizedDataUrl);
+      } catch (error) {
+        console.error('Error optimizing image:', error);
+        // Fallback to original if optimization fails
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          handleChange('photo', reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } finally {
+        setIsOptimizingPhoto(false);
+      }
     }
   };
 
@@ -118,8 +199,9 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
   // --- Experience Logic ---
 
   const handleExperienceChange = (id: string, field: keyof Experience, value: string) => {
+    const sanitizedValue = sanitizeText(value);
     const newExp = data.experience.map(exp => 
-      exp.id === id ? { ...exp, [field]: value } : exp
+      exp.id === id ? { ...exp, [field]: sanitizedValue } : exp
     );
     handleChange('experience', newExp);
   };
@@ -149,8 +231,9 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
   // --- Education Logic ---
 
   const handleEducationChange = (id: string, field: keyof Education, value: string) => {
+    const sanitizedValue = sanitizeText(value);
     const newEdu = data.education.map(edu => 
-      edu.id === id ? { ...edu, [field]: value } : edu
+      edu.id === id ? { ...edu, [field]: sanitizedValue } : edu
     );
     handleChange('education', newEdu);
   };
@@ -180,8 +263,9 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
   const handleLanguageChange = (id: string, field: keyof Language, value: string) => {
     const currentLanguages = data.languages || [];
+    const sanitizedValue = sanitizeText(value);
     const newLangs = currentLanguages.map(lang => 
-      lang.id === id ? { ...lang, [field]: value } : lang
+      lang.id === id ? { ...lang, [field]: sanitizedValue } : lang
     );
     handleChange('languages', newLangs);
   };
@@ -235,18 +319,30 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
   };
 
   // Helper input classes
-  const inputClass = "w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 focus:bg-white transition-all outline-none hover:border-slate-300";
+  const getInputClass = (field: string = '') => {
+    const baseClass = "w-full p-3 bg-slate-50 border rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-purple-500/20 focus:bg-white transition-all duration-200 outline-none hover:shadow-sm focus:shadow-md";
+    const errorClass = "border-red-300 focus:border-red-500";
+    const validClass = "border-slate-200 focus:border-purple-500 hover:border-slate-300";
+    
+    if (field && fieldErrors[field]) {
+      return `${baseClass} ${errorClass}`;
+    }
+    return `${baseClass} ${validClass}`;
+  };
+  const inputClass = getInputClass(); // Para compatibilidade com campos que não precisam de validação
   const labelClass = "block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1";
 
   // Reusable Action Button for moving items
-  const MoveButton = ({ onClick, icon: Icon, disabled }: { onClick: () => void, icon: React.ElementType, disabled: boolean }) => (
-    <button 
-      onClick={(e) => { e.stopPropagation(); onClick(); }}
-      disabled={disabled}
-      className="p-1.5 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-400"
-    >
-      <Icon className="w-4 h-4" />
-    </button>
+  const MoveButton = ({ onClick, icon: Icon, disabled, tooltip }: { onClick: () => void, icon: React.ElementType, disabled: boolean, tooltip: string }) => (
+    <Tooltip content={tooltip} position="top">
+      <button 
+        onClick={(e) => { e.stopPropagation(); onClick(); }}
+        disabled={disabled}
+        className="p-1.5 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-400 hover:scale-110 active:scale-95"
+      >
+        <Icon className="w-4 h-4" />
+      </button>
+    </Tooltip>
   );
 
   return (
@@ -258,8 +354,9 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
           <Palette className="w-4 h-4 text-purple-600" />
           {pt('form.appearance')}
         </h3>
-        <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-sm ring-2 ring-white border border-slate-200 flex-shrink-0 cursor-pointer hover:scale-105 transition-transform group">
+        <Tooltip content="Clique no círculo para escolher uma cor personalizada para o tema do seu currículo" position="right">
+          <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-purple-200 transition-colors">
+            <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-sm ring-2 ring-white border border-slate-200 flex-shrink-0 cursor-pointer hover:scale-110 transition-transform group hover:shadow-md">
               <input 
                 type="color" 
                 value={data.themeColor || '#7c3aed'}
@@ -272,7 +369,8 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
               <label className="text-sm font-semibold text-slate-900 block">{pt('form.color')}</label>
               <p className="text-xs text-slate-500 mt-1">{pt('form.colorDesc')}</p>
             </div>
-        </div>
+          </div>
+        </Tooltip>
       </div>
 
       <div className="space-y-3">
@@ -301,21 +399,35 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                <div className="flex-1">
                  <label className="text-sm font-semibold text-slate-900 block mb-1">{pt('form.photoLabel')}</label>
                  <div className="flex gap-2">
-                    <button 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="text-xs flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-md hover:bg-slate-50 hover:text-purple-600 transition-colors shadow-sm text-slate-600"
-                    >
-                      <Upload className="w-3.5 h-3.5" />
-                      {data.photo ? pt('form.changePhoto') : pt('form.addPhoto')}
-                    </button>
-                    {data.photo && (
+                    <Tooltip content="Recomendado: foto profissional 3x4, fundo neutro, boa iluminação" position="top">
                       <button 
-                        onClick={removePhoto}
-                        className="text-xs flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-md hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm text-slate-600"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isOptimizingPhoto}
+                        className="text-xs flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-md hover:bg-slate-50 hover:text-purple-600 transition-all shadow-sm text-slate-600 hover:shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        {pt('form.remove')}
+                        {isOptimizingPhoto ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            Otimizando...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-3.5 h-3.5" />
+                            {data.photo ? pt('form.changePhoto') : pt('form.addPhoto')}
+                          </>
+                        )}
                       </button>
+                    </Tooltip>
+                    {data.photo && (
+                      <Tooltip content="Remover foto" position="top">
+                        <button 
+                          onClick={removePhoto}
+                          className="text-xs flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-md hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all shadow-sm text-slate-600 hover:shadow-md hover:scale-105 active:scale-95"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          {pt('form.remove')}
+                        </button>
+                      </Tooltip>
                     )}
                  </div>
                  <input 
@@ -331,45 +443,79 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
             <div className="grid grid-cols-1 gap-5">
               <div>
-                <label className={labelClass}>{pt('form.fullName')}</label>
+                <label className={labelClass}>
+                  {pt('form.fullName')}
+                  <Tooltip content="Use seu nome completo como aparece em documentos oficiais" position="right">
+                    <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold cursor-help hover:bg-slate-300 transition-colors">?</span>
+                  </Tooltip>
+                </label>
                 <input 
                   type="text" 
                   value={data.fullName}
                   onChange={(e) => handleChange('fullName', e.target.value)}
-                  className={inputClass}
+                  className={getInputClass('fullName')}
                   spellCheck={true}
+                  placeholder="Ex: João Silva Santos"
                 />
               </div>
               <div>
-                <label className={labelClass}>{pt('form.jobTitle')}</label>
+                <label className={labelClass}>
+                  {pt('form.jobTitle')}
+                  <Tooltip content="Cargo ou área de atuação desejada. Ex: Desenvolvedor Frontend, Analista de Marketing" position="right">
+                    <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold cursor-help hover:bg-slate-300 transition-colors">?</span>
+                  </Tooltip>
+                </label>
                 <input 
                   type="text" 
                   value={data.title}
                   onChange={(e) => handleChange('title', e.target.value)}
-                  className={inputClass}
+                  className={getInputClass('title')}
                   spellCheck={true}
+                  placeholder="Ex: Desenvolvedor Full Stack"
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className={labelClass}><span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {pt('form.email')}</span></label>
+                  <label className={labelClass}>
+                    <span className="flex items-center gap-1">
+                      <Mail className="w-3 h-3"/> {pt('form.email')}
+                      <Tooltip content="Use um e-mail profissional. Evite apelidos ou números excessivos" position="right">
+                        <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold cursor-help hover:bg-slate-300 transition-colors">?</span>
+                      </Tooltip>
+                    </span>
+                  </label>
                   <input 
                     type="email" 
                     value={data.email}
                     onChange={(e) => handleChange('email', e.target.value)}
-                    className={inputClass}
+                    className={getInputClass('email')}
                     spellCheck={false}
+                    placeholder="seu.email@exemplo.com"
                   />
+                  {fieldErrors.email && (
+                    <p className="text-xs text-red-600 mt-1 ml-1">{fieldErrors.email}</p>
+                  )}
                 </div>
                 <div>
-                  <label className={labelClass}><span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {pt('form.phone')}</span></label>
+                  <label className={labelClass}>
+                    <span className="flex items-center gap-1">
+                      <Phone className="w-3 h-3"/> {pt('form.phone')}
+                      <Tooltip content="Formato: (11) 98765-4321 ou +55 11 98765-4321" position="right">
+                        <span className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold cursor-help hover:bg-slate-300 transition-colors">?</span>
+                      </Tooltip>
+                    </span>
+                  </label>
                   <input 
                     type="text" 
                     value={data.phone}
                     onChange={(e) => handleChange('phone', e.target.value)}
-                    className={inputClass}
+                    className={getInputClass('phone')}
                     spellCheck={false}
+                    placeholder="(11) 98765-4321"
                   />
+                  {fieldErrors.phone && (
+                    <p className="text-xs text-red-600 mt-1 ml-1">{fieldErrors.phone}</p>
+                  )}
                 </div>
                 <div>
                   <label className={labelClass}><span className="flex items-center gap-1"><MapPin className="w-3 h-3"/> {pt('form.location')}</span></label>
@@ -377,7 +523,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                     type="text" 
                     value={data.location}
                     onChange={(e) => handleChange('location', e.target.value)}
-                    className={inputClass}
+                    className={getInputClass('location')}
                     spellCheck={true}
                   />
                 </div>
@@ -387,9 +533,13 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                     type="text" 
                     value={data.website}
                     onChange={(e) => handleChange('website', e.target.value)}
-                    className={inputClass}
+                    className={getInputClass('website')}
                     spellCheck={false}
+                    placeholder="exemplo.com ou https://exemplo.com"
                   />
+                  {fieldErrors.website && (
+                    <p className="text-xs text-red-600 mt-1 ml-1">{fieldErrors.website}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -406,14 +556,12 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
           isComplete={!!data.summary}
         >
           <div>
-            <label className={labelClass}>{pt('form.bioLabel')}</label>
-            <textarea 
+            <RichTextEditor
               value={data.summary}
-              onChange={(e) => handleChange('summary', e.target.value)}
-              rows={5}
-              className={`${inputClass} leading-relaxed resize-y min-h-[120px]`}
+              onChange={(value) => handleChange('summary', value)}
               placeholder={pt('form.bioPlaceholder')}
-              spellCheck={true}
+              label={pt('form.bioLabel')}
+              maxLength={500}
             />
           </div>
         </FormSection>
@@ -448,45 +596,65 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                      </span>
                   </div>
                   <div className="flex gap-1">
-                    <MoveButton onClick={() => moveExperience(index, 'up')} icon={ArrowUp} disabled={index === 0} />
-                    <MoveButton onClick={() => moveExperience(index, 'down')} icon={ArrowDown} disabled={index === data.experience.length - 1} />
+                    <MoveButton onClick={() => moveExperience(index, 'up')} icon={ArrowUp} disabled={index === 0} tooltip="Mover para cima" />
+                    <MoveButton onClick={() => moveExperience(index, 'down')} icon={ArrowDown} disabled={index === data.experience.length - 1} tooltip="Mover para baixo" />
                     <div className="w-px h-4 bg-slate-200 mx-1 self-center"></div>
-                    <button 
-                      onClick={() => removeExperience(exp.id)}
-                      className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Remover"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <Tooltip content="Remover experiência" position="top">
+                      <button 
+                        onClick={() => removeExperience(exp.id)}
+                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all hover:scale-110 active:scale-95"
+                        title="Remover"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </Tooltip>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className={labelClass}>{pt('form.role')}</label>
+                    <label className={labelClass}>
+                      {pt('form.role')}
+                      <Tooltip content="Nome exato do cargo que você ocupou" position="right">
+                        <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold cursor-help hover:bg-slate-300 transition-colors">?</span>
+                      </Tooltip>
+                    </label>
                     <input 
                       value={exp.role}
                       onChange={(e) => handleExperienceChange(exp.id, 'role', e.target.value)}
                       className={inputClass}
                       spellCheck={true}
+                      placeholder="Ex: Desenvolvedor Frontend"
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>{pt('form.company')}</label>
+                    <label className={labelClass}>
+                      {pt('form.company')}
+                      <Tooltip content="Nome completo da empresa" position="right">
+                        <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold cursor-help hover:bg-slate-300 transition-colors">?</span>
+                      </Tooltip>
+                    </label>
                     <input 
                       value={exp.company}
                       onChange={(e) => handleExperienceChange(exp.id, 'company', e.target.value)}
                       className={inputClass}
                       spellCheck={true}
+                      placeholder="Ex: Empresa Tecnologia Ltda"
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>{pt('form.period')}</label>
+                    <label className={labelClass}>
+                      {pt('form.period')}
+                      <Tooltip content="Formato: Jan 2020 - Dez 2022 ou 2020 - 2022" position="right">
+                        <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold cursor-help hover:bg-slate-300 transition-colors">?</span>
+                      </Tooltip>
+                    </label>
                     <input 
                       value={exp.dates}
                       onChange={(e) => handleExperienceChange(exp.id, 'dates', e.target.value)}
                       className={inputClass}
                       spellCheck={false}
+                      placeholder="Jan 2020 - Dez 2022"
                     />
                   </div>
                   <div>
@@ -501,27 +669,28 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                 </div>
                 
                 <div>
-                  <label className={labelClass}>{pt('form.desc')}</label>
-                  <textarea 
+                  <RichTextEditor
                     value={exp.description}
-                    onChange={(e) => handleExperienceChange(exp.id, 'description', e.target.value)}
-                    rows={4}
-                    className={`${inputClass} min-h-[100px] font-normal`}
-                    spellCheck={true}
+                    onChange={(value) => handleExperienceChange(exp.id, 'description', value)}
+                    placeholder="Descreva suas responsabilidades, conquistas e resultados alcançados..."
+                    label={pt('form.desc')}
+                    maxLength={1000}
                   />
                 </div>
               </div>
             ))}
 
-            <button 
-              onClick={addExperience}
-              className="w-full py-4 flex flex-col items-center justify-center gap-2 text-sm font-medium text-slate-500 bg-slate-50 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all border-2 border-dashed border-slate-200 hover:border-purple-300 group"
-            >
-              <div className="bg-white p-2 rounded-full shadow-sm border border-slate-200 group-hover:border-purple-200 group-hover:bg-purple-600 group-hover:text-white transition-all">
-                 <Plus className="w-5 h-5" />
-              </div>
-              {pt('form.addExp')}
-            </button>
+            <Tooltip content="Adicione suas experiências profissionais mais relevantes" position="top">
+              <button 
+                onClick={addExperience}
+                className="w-full py-4 flex flex-col items-center justify-center gap-2 text-sm font-medium text-slate-500 bg-slate-50 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all border-2 border-dashed border-slate-200 hover:border-purple-300 group hover:shadow-md active:scale-[0.98]"
+              >
+                <div className="bg-white p-2 rounded-full shadow-sm border border-slate-200 group-hover:border-purple-200 group-hover:bg-purple-600 group-hover:text-white transition-all group-hover:scale-110">
+                   <Plus className="w-5 h-5" />
+                </div>
+                {pt('form.addExp')}
+              </button>
+            </Tooltip>
           </div>
         </FormSection>
 
@@ -548,16 +717,18 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                      </span>
                   </div>
                   <div className="flex gap-1">
-                    <MoveButton onClick={() => moveEducation(index, 'up')} icon={ArrowUp} disabled={index === 0} />
-                    <MoveButton onClick={() => moveEducation(index, 'down')} icon={ArrowDown} disabled={index === data.education.length - 1} />
+                    <MoveButton onClick={() => moveEducation(index, 'up')} icon={ArrowUp} disabled={index === 0} tooltip="Mover para cima" />
+                    <MoveButton onClick={() => moveEducation(index, 'down')} icon={ArrowDown} disabled={index === data.education.length - 1} tooltip="Mover para baixo" />
                     <div className="w-px h-4 bg-slate-200 mx-1 self-center"></div>
-                    <button 
-                      onClick={() => removeEducation(edu.id)}
-                      className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Remover"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <Tooltip content="Remover formação" position="top">
+                      <button 
+                        onClick={() => removeEducation(edu.id)}
+                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all hover:scale-110 active:scale-95"
+                        title="Remover"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </Tooltip>
                   </div>
                 </div>
 
@@ -592,27 +763,28 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                 </div>
                 
                 <div>
-                  <label className={labelClass}>{pt('form.details')}</label>
-                  <textarea 
+                  <RichTextEditor
                     value={edu.description}
-                    onChange={(e) => handleEducationChange(edu.id, 'description', e.target.value)}
-                    rows={2}
-                    className={inputClass}
-                    spellCheck={true}
+                    onChange={(value) => handleEducationChange(edu.id, 'description', value)}
+                    placeholder="Informações adicionais sobre sua formação..."
+                    label={pt('form.details')}
+                    maxLength={500}
                   />
                 </div>
               </div>
             ))}
             
-            <button 
-              onClick={addEducation}
-              className="w-full py-4 flex flex-col items-center justify-center gap-2 text-sm font-medium text-slate-500 bg-slate-50 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all border-2 border-dashed border-slate-200 hover:border-purple-300 group"
-            >
-              <div className="bg-white p-2 rounded-full shadow-sm border border-slate-200 group-hover:border-purple-200 group-hover:bg-purple-600 group-hover:text-white transition-all">
-                 <Plus className="w-5 h-5" />
-              </div>
-              {pt('form.addEdu')}
-            </button>
+            <Tooltip content="Adicione sua formação acadêmica e cursos relevantes" position="top">
+              <button 
+                onClick={addEducation}
+                className="w-full py-4 flex flex-col items-center justify-center gap-2 text-sm font-medium text-slate-500 bg-slate-50 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all border-2 border-dashed border-slate-200 hover:border-purple-300 group hover:shadow-md active:scale-[0.98]"
+              >
+                <div className="bg-white p-2 rounded-full shadow-sm border border-slate-200 group-hover:border-purple-200 group-hover:bg-purple-600 group-hover:text-white transition-all group-hover:scale-110">
+                   <Plus className="w-5 h-5" />
+                </div>
+                {pt('form.addEdu')}
+              </button>
+            </Tooltip>
           </div>
         </FormSection>
 
@@ -657,26 +829,30 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                       </select>
                     </div>
                   </div>
-                  <button 
-                    onClick={() => removeLanguage(lang.id)}
-                    className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors self-center sm:self-end sm:mb-[2px]"
-                    title="Remover"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+                  <Tooltip content="Remover idioma" position="top">
+                    <button 
+                      onClick={() => removeLanguage(lang.id)}
+                      className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all self-center sm:self-end sm:mb-[2px] hover:scale-110 active:scale-95"
+                      title="Remover"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </Tooltip>
                 </div>
               </div>
             ))}
             
-            <button 
-              onClick={addLanguage}
-              className="w-full py-3 flex items-center justify-center gap-2 text-sm font-medium text-slate-600 bg-slate-50 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all border-2 border-dashed border-slate-200 hover:border-purple-300 group"
-            >
-              <div className="bg-white p-1 rounded-md shadow-sm border border-slate-200 group-hover:border-purple-200">
-                 <Plus className="w-4 h-4" />
-              </div>
-              {pt('form.addLang')}
-            </button>
+            <Tooltip content="Adicione os idiomas que você domina e seu nível de proficiência" position="top">
+              <button 
+                onClick={addLanguage}
+                className="w-full py-3 flex items-center justify-center gap-2 text-sm font-medium text-slate-600 bg-slate-50 hover:bg-purple-50 hover:text-purple-600 rounded-xl transition-all border-2 border-dashed border-slate-200 hover:border-purple-300 group hover:shadow-md active:scale-[0.98]"
+              >
+                <div className="bg-white p-1 rounded-md shadow-sm border border-slate-200 group-hover:border-purple-200 group-hover:scale-110 transition-all">
+                   <Plus className="w-4 h-4" />
+                </div>
+                {pt('form.addLang')}
+              </button>
+            </Tooltip>
           </div>
         </FormSection>
 
@@ -693,22 +869,26 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
             <label className={labelClass}>{pt('form.addSkill')}</label>
             
             <div className="flex gap-2">
-              <input 
-                type="text"
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-                onKeyDown={handleSkillKeyDown}
-                className={inputClass}
-                placeholder="..."
-              />
-              <button 
-                onClick={addSkill}
-                disabled={!skillInput.trim()}
-                className="px-5 py-2.5 bg-slate-900 text-white rounded-lg font-medium hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
-              >
-                <Plus className="w-4 h-4" />
-                <span className="hidden sm:inline">{pt('form.add')}</span>
-              </button>
+              <Tooltip content="Digite uma habilidade e pressione Enter ou clique em Adicionar" position="top">
+                <input 
+                  type="text"
+                  value={skillInput}
+                  onChange={(e) => setSkillInput(e.target.value)}
+                  onKeyDown={handleSkillKeyDown}
+                  className={inputClass}
+                  placeholder="Ex: JavaScript, Python, Gestão de Projetos..."
+                />
+              </Tooltip>
+              <Tooltip content="Adicionar habilidade à lista" position="top">
+                <button 
+                  onClick={addSkill}
+                  disabled={!skillInput.trim()}
+                  className="px-5 py-2.5 bg-slate-900 text-white rounded-lg font-medium hover:bg-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span className="hidden sm:inline">{pt('form.add')}</span>
+                </button>
+              </Tooltip>
             </div>
 
             <div className="min-h-[80px] p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-wrap gap-2 content-start">
@@ -721,16 +901,18 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
               {getSkillsArray().map((skill, index) => (
                 <span 
                   key={index}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-purple-100 rounded-lg text-sm font-medium text-purple-700 shadow-sm group animate-in zoom-in-95 duration-200"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-purple-100 rounded-lg text-sm font-medium text-purple-700 shadow-sm group animate-in zoom-in-95 duration-200 hover:border-purple-300 hover:shadow-md transition-all cursor-default"
                 >
                   {skill}
-                  <button 
-                    onClick={() => removeSkill(skill)}
-                    className="p-0.5 hover:bg-red-50 hover:text-red-500 rounded-md transition-colors"
-                    aria-label={`Remover ${skill}`}
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+                  <Tooltip content={`Remover ${skill}`} position="top">
+                    <button 
+                      onClick={() => removeSkill(skill)}
+                      className="p-0.5 hover:bg-red-50 hover:text-red-500 rounded-md transition-all hover:scale-110 active:scale-95"
+                      aria-label={`Remover ${skill}`}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </Tooltip>
                 </span>
               ))}
             </div>
@@ -742,14 +924,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                </label>
                <div className="flex flex-wrap gap-2 pl-1">
                 {['Leadership', 'Teamwork', 'Excel', 'Problem Solving', 'English', 'Communication', 'Scrum', 'Python', 'Sales'].map(s => (
-                  <button 
-                    key={s}
-                    onClick={() => addSuggestedSkill(s)}
-                    disabled={getSkillsArray().includes(s)}
-                    className="text-xs px-3 py-2 bg-white hover:bg-purple-50 text-slate-600 hover:text-purple-700 rounded-lg border border-slate-200 hover:border-purple-200 transition-all whitespace-nowrap disabled:opacity-50 disabled:cursor-default shadow-sm"
-                  >
-                    + {s}
-                  </button>
+                  <Tooltip content={`Adicionar ${s}`} position="top" key={s}>
+                    <button 
+                      onClick={() => addSuggestedSkill(s)}
+                      disabled={getSkillsArray().includes(s)}
+                      className="text-xs px-3 py-2 bg-white hover:bg-purple-50 text-slate-600 hover:text-purple-700 rounded-lg border border-slate-200 hover:border-purple-200 transition-all whitespace-nowrap disabled:opacity-50 disabled:cursor-default shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
+                    >
+                      + {s}
+                    </button>
+                  </Tooltip>
                 ))}
               </div>
             </div>

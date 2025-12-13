@@ -65,6 +65,46 @@ export const CareerBlog: React.FC = () => {
       tags: ["Primeiro Emprego", "Dicas"],
       datePublished: "2025-01-12",
       dateModified: "2025-01-12"
+    },
+    {
+      id: 7,
+      title: pt('blog.art7Title'),
+      preview: pt('blog.art7Preview'),
+      content: pt('blog.art7Content'),
+      readTime: "4 min",
+      tags: ["Carta de Apresentação", "Comunicação"],
+      datePublished: "2025-01-22",
+      dateModified: "2025-01-22"
+    },
+    {
+      id: 8,
+      title: pt('blog.art8Title'),
+      preview: pt('blog.art8Preview'),
+      content: pt('blog.art8Content'),
+      readTime: "6 min",
+      tags: ["LinkedIn", "Networking"],
+      datePublished: "2025-01-25",
+      dateModified: "2025-01-25"
+    },
+    {
+      id: 9,
+      title: pt('blog.art9Title'),
+      preview: pt('blog.art9Preview'),
+      content: pt('blog.art9Content'),
+      readTime: "8 min",
+      tags: ["Entrevista", "Preparação"],
+      datePublished: "2025-01-28",
+      dateModified: "2025-01-28"
+    },
+    {
+      id: 10,
+      title: pt('blog.art10Title'),
+      preview: pt('blog.art10Preview'),
+      content: pt('blog.art10Content'),
+      readTime: "5 min",
+      tags: ["Negociação", "Carreira"],
+      datePublished: "2025-01-30",
+      dateModified: "2025-01-30"
     }
   ];
 
@@ -166,7 +206,13 @@ export const CareerBlog: React.FC = () => {
                    <span className="font-medium">{article.readTime}</span>
                 </div>
                 <button 
-                  onClick={() => setExpandedArticle(expandedArticle === index ? null : index)}
+                  onClick={() => {
+                    const newExpanded = expandedArticle === index ? null : index;
+                    setExpandedArticle(newExpanded);
+                    if (newExpanded !== null) {
+                      analytics.trackArticleView(articles[newExpanded].title);
+                    }
+                  }}
                   className="text-sm font-semibold text-purple-600 hover:text-purple-800 flex items-center gap-1.5 transition-all hover:gap-2 group/btn"
                 >
                   <span>{expandedArticle === index ? pt('blog.readLess') : pt('blog.readMore')}</span>

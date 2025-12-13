@@ -10,13 +10,32 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { ExportMenu } from './components/ExportMenu';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useDebounce } from './hooks/useDebounce';
+import { ResumeManager } from './components/ResumeManager';
+import { SavedResume, resumeStorage } from './utils/resumeStorage';
+import { ShareModal } from './components/ShareModal';
+import { loadFromShareLink } from './utils/shareLink';
+import { VersionHistory } from './components/VersionHistory';
+import { versionHistory, ResumeVersion } from './utils/versionHistory';
+import { analytics } from './utils/analytics';
+import { TemplateGallery } from './components/TemplateGallery';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcut';
+import { KeyboardShortcutsHelp } from './components/KeyboardShortcutsHelp';
+import { AutoSaveIndicator } from './components/AutoSaveIndicator';
+import { Tooltip } from './components/Tooltip';
+import { JobSuggestions } from './components/JobSuggestions';
+import { ResumeProgress } from './components/ResumeProgress';
+import { ResumeStats } from './components/ResumeStats';
+import { QuickActions } from './components/QuickActions';
+import { ResumeTipsInline } from './components/ResumeTipsInline';
+import { ResumeValidator } from './components/ResumeValidator';
+import { AccessibilityHelper } from './components/AccessibilityHelper';
 
 // Lazy load heavy SEO components for better performance
 const SEOContent = lazy(() => import('./components/SEOContent').then(module => ({ default: module.SEOContent })));
 const ResumeTips = lazy(() => import('./components/ResumeTips').then(module => ({ default: module.ResumeTips })));
 const CareerBlog = lazy(() => import('./components/CareerBlog').then(module => ({ default: module.CareerBlog })));
 import { ResumeData, INITIAL_DATA_PT, BLANK_DATA, TemplateType } from './types';
-import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical, FileCheck } from 'lucide-react';
+import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical, FileCheck, FolderOpen, History, Eye, Keyboard } from 'lucide-react';
 // Removed multilingual support - site is focused on Brazil
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -27,6 +46,15 @@ const AppContent = () => {
   const [resumeData, setResumeData] = useState<ResumeData>(() => {
     if (typeof window !== 'undefined') {
       try {
+        // Try to load from saved resumes first
+        const currentId = resumeStorage.getCurrentId();
+        if (currentId) {
+          const savedResume = resumeStorage.get(currentId);
+          if (savedResume) {
+            return savedResume.data;
+          }
+        }
+        // Fallback to legacy storage
         const savedData = localStorage.getItem('resume_builder_data');
         if (savedData) {
           return JSON.parse(savedData);
@@ -61,89 +89,221 @@ const AppContent = () => {
   // Confirmation Modal State
   const [confirmType, setConfirmType] = useState<'clear' | 'example' | null>(null);
 
+  // Resume Manager State
+  const [showResumeManager, setShowResumeManager] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showTemplateGallery, setShowTemplateGallery] = useState(false);
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const [currentResumeId, setCurrentResumeId] = useState<string | null>(null);
+
   // PDF Generation State
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+
+  // Auto-save status
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [lastSaved, setLastSaved] = useState<Date | undefined>(undefined);
 
   // Toast notifications
   const { toasts, success, error, removeToast } = useToast();
 
+  // Debounced save to localStorage
+  const debouncedResumeData = useDebounce(resumeData, 1000);
+
   // Persistence Effects
   useEffect(() => {
-    localStorage.setItem('resume_builder_data', JSON.stringify(resumeData));
-    // Show subtle save notification only after initial load
-    if (resumeData.fullName) {
-      // Debounce to avoid too many notifications
-      const timer = setTimeout(() => {
-        // Only show if data changed (not on initial load)
-        const saved = localStorage.getItem('resume_builder_data');
-        if (saved && saved !== JSON.stringify(INITIAL_DATA_PT)) {
-          // Silent save - no notification to avoid spam
+    // Use requestIdleCallback or setTimeout to defer heavy operations
+    const saveData = () => {
+      setSaveStatus('saving');
+      try {
+        localStorage.setItem('resume_builder_data', JSON.stringify(debouncedResumeData));
+        
+        // Auto-save version history
+        const resumeId = resumeStorage.getCurrentId() || 'default';
+        if (resumeId && debouncedResumeData.fullName) {
+          // Only save if data has changed significantly (not on every keystroke)
+          const lastVersion = versionHistory.getAll(resumeId)[0];
+          if (!lastVersion || 
+              JSON.stringify(lastVersion.data) !== JSON.stringify(debouncedResumeData) ||
+              lastVersion.template !== template) {
+            versionHistory.save(resumeId, debouncedResumeData, template);
+          }
         }
-      }, 1000);
+        
+        setSaveStatus('saved');
+        setLastSaved(new Date());
+        
+        // Reset to idle after a delay
+        const timer = setTimeout(() => {
+          setSaveStatus('idle');
+        }, 2000);
+        return () => clearTimeout(timer);
+      } catch (error) {
+        console.error('Error saving resume data:', error);
+        setSaveStatus('error');
+        setTimeout(() => setSaveStatus('idle'), 3000);
+      }
+    };
+
+    // Defer save operation to avoid blocking the main thread
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(saveData, { timeout: 1000 });
+      return () => cancelIdleCallback(id);
+    } else {
+      const timer = setTimeout(saveData, 0);
       return () => clearTimeout(timer);
     }
-  }, [resumeData]);
+  }, [debouncedResumeData, template]);
 
   useEffect(() => {
     localStorage.setItem('resume_builder_template', template);
   }, [template]);
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      key: 's',
+      ctrlKey: true,
+      callback: () => {
+        if (currentResumeId) {
+          const saved = resumeStorage.get(currentResumeId);
+          if (saved) {
+            resumeStorage.update(currentResumeId, { data: resumeData, template });
+            success('Currículo salvo!');
+            analytics.trackResumeSave(currentResumeId, saved.name);
+          }
+        } else {
+          setShowResumeManager(true);
+        }
+      },
+    },
+    {
+      key: 'p',
+      ctrlKey: true,
+      callback: () => {
+        handleDownloadPdf();
+      },
+    },
+    {
+      key: 'e',
+      ctrlKey: true,
+      callback: () => {
+        // Focus on first input field
+        const firstInput = document.querySelector('input, textarea') as HTMLElement;
+        if (firstInput) {
+          firstInput.focus();
+        }
+      },
+    },
+    {
+      key: '/',
+      callback: () => {
+        // Focus search/template gallery
+        setShowTemplateGallery(true);
+      },
+    },
+    {
+      key: '?',
+      callback: () => {
+        // Show keyboard shortcuts help
+        setShowKeyboardShortcuts(true);
+      },
+    },
+  ]);
 
   const handleDownloadPdf = async () => {
     if (typeof window !== 'undefined') {
       setIsGeneratingPdf(true);
 
       try {
-        // Get the print area
-        const printArea = document.querySelector('.print-area') as HTMLElement;
-        if (!printArea) {
-          throw new Error('Print area not found');
+        // Get the PDF generation container
+        const pdfContainer = document.querySelector('#resume-to-pdf') as HTMLElement;
+        if (!pdfContainer) {
+          throw new Error('PDF container not found');
         }
 
-        // Temporarily show the print area for capture
-        const originalDisplay = printArea.style.display;
-        printArea.style.display = 'block';
-        printArea.style.position = 'relative';
-        printArea.style.width = '210mm';
-        printArea.style.height = 'auto';
-        printArea.style.background = 'white';
+        // Make container visible and properly sized for capture
+        const originalClasses = pdfContainer.className;
+        pdfContainer.className = 'pdf-generation-container generating';
+        pdfContainer.style.position = 'fixed';
+        pdfContainer.style.left = '50%';
+        pdfContainer.style.top = '50%';
+        pdfContainer.style.transform = 'translate(-50%, -50%)';
+        pdfContainer.style.zIndex = '999999';
+        pdfContainer.style.width = '210mm';
+        pdfContainer.style.height = 'auto';
+        pdfContainer.style.background = 'white';
+        pdfContainer.style.boxShadow = '0 0 0 9999px rgba(255, 255, 255, 0.95)';
 
-        // Wait for layout
-        await new Promise(resolve => setTimeout(resolve, 300));
+        // Wait for layout to settle
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Capture with html2canvas
-        const canvas = await html2canvas(printArea, {
-          scale: 2,
+        // Capture with html2canvas - use higher scale for better quality
+        const canvas = await html2canvas(pdfContainer, {
+          scale: 3, // Increased for better quality
           useCORS: true,
           logging: false,
           backgroundColor: '#ffffff',
-          windowWidth: 794,  // A4 width in pixels at 96 DPI
-          windowHeight: 1123 // A4 height in pixels at 96 DPI
+          allowTaint: false,
+          removeContainer: false,
+          width: pdfContainer.scrollWidth,
+          height: pdfContainer.scrollHeight
         });
 
-        // Restore original display
-        printArea.style.display = originalDisplay;
-        printArea.style.position = '';
-        printArea.style.width = '';
-        printArea.style.height = '';
+        // Restore original state
+        pdfContainer.className = originalClasses;
+        pdfContainer.style.position = '';
+        pdfContainer.style.left = '';
+        pdfContainer.style.top = '';
+        pdfContainer.style.transform = '';
+        pdfContainer.style.zIndex = '';
+        pdfContainer.style.width = '';
+        pdfContainer.style.height = '';
+        pdfContainer.style.background = '';
+        pdfContainer.style.boxShadow = '';
 
-        // Convert canvas to PDF
-        const imgData = canvas.toDataURL('image/jpeg', 0.98);
+        // Create PDF in A4 format
         const pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
-          format: 'a4'
+          format: 'a4',
+          compress: true
         });
 
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const pdfWidth = pdf.internal.pageSize.getWidth(); // 210mm
+        const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+        // Calculate dimensions - convert canvas pixels to mm
+        // At scale 3, 1mm = approximately 11.34 pixels (96 DPI * 3 / 25.4)
+        const mmPerPixel = 25.4 / (96 * 3); // More accurate conversion
+        const imgWidthMM = canvas.width * mmPerPixel;
+        const imgHeightMM = canvas.height * mmPerPixel;
+
+        // Calculate scaling to fit A4 (maintain aspect ratio)
+        const widthRatio = pdfWidth / imgWidthMM;
+        const heightRatio = pdfHeight / imgHeightMM;
+        const ratio = Math.min(widthRatio, heightRatio, 1); // Don't scale up
+
+        const finalWidth = imgWidthMM * ratio;
+        const finalHeight = imgHeightMM * ratio;
+
+        // Center the image on the page
+        const xOffset = (pdfWidth - finalWidth) / 2;
+        const yOffset = (pdfHeight - finalHeight) / 2;
+
+        // Convert canvas to image with high quality
+        const imgData = canvas.toDataURL('image/png', 1.0);
+        
+        // Add image to PDF
+        pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalWidth, finalHeight, undefined, 'FAST');
 
         // Save with filename
         const safeName = resumeData.fullName
           ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()
           : 'curriculo';
         pdf.save(`${safeName}_cv.pdf`);
+        
+        analytics.trackPDFDownload(template);
         success('PDF gerado e baixado com sucesso!');
 
       } catch (err) {
@@ -181,15 +341,49 @@ const AppContent = () => {
     if (confirmType === 'clear') {
       setResumeData(BLANK_DATA);
       localStorage.setItem('resume_builder_data', JSON.stringify(BLANK_DATA));
+      resumeStorage.setCurrentId(null);
       success('Dados limpos com sucesso!');
     } else if (confirmType === 'example') {
       const exampleData = INITIAL_DATA_PT;
       setResumeData(exampleData);
       localStorage.setItem('resume_builder_data', JSON.stringify(exampleData));
+      resumeStorage.setCurrentId(null);
       success('Exemplo carregado com sucesso!');
     }
     setConfirmType(null);
   };
+
+  const handleLoadResume = (savedResume: SavedResume) => {
+    setResumeData(savedResume.data);
+    setTemplate(savedResume.template);
+    resumeStorage.setCurrentId(savedResume.id);
+    setCurrentResumeId(savedResume.id);
+    analytics.trackResumeLoad(savedResume.id);
+    setShowResumeManager(false);
+    success(`Currículo "${savedResume.name}" carregado com sucesso!`);
+  };
+
+  const handleNewResume = () => {
+    setResumeData(BLANK_DATA);
+    setTemplate('modern');
+    resumeStorage.setCurrentId(null);
+    setCurrentResumeId(null);
+    setShowResumeManager(false);
+    success('Novo currículo criado!');
+  };
+
+  const handleRestoreVersion = (version: ResumeVersion) => {
+    setResumeData(version.data);
+    setTemplate(version.template);
+    analytics.trackVersionRestore(version.id);
+    success('Versão restaurada com sucesso!');
+  };
+
+  // Update current resume ID when loading from storage
+  useEffect(() => {
+    const id = resumeStorage.getCurrentId();
+    setCurrentResumeId(id);
+  }, []);
 
   const getConfirmProps = () => {
     if (confirmType === 'clear') {
@@ -233,8 +427,13 @@ const AppContent = () => {
                 <LayoutTemplate className="w-4 h-4 text-slate-500 ml-2" />
                 <select
                   value={template}
-                  onChange={(e) => setTemplate(e.target.value as TemplateType)}
+                  onChange={(e) => {
+                    const newTemplate = e.target.value as TemplateType;
+                    analytics.trackTemplateChange(template, newTemplate);
+                    setTemplate(newTemplate);
+                  }}
                   className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-2 max-w-[110px] sm:max-w-none"
+                  aria-label="Selecionar template de currículo"
                 >
                   <optgroup label="Clássicos">
                     <option value="modern">Moderno</option>
@@ -258,11 +457,59 @@ const AppContent = () => {
                     <option value="grid">Grid</option>
                   </optgroup>
                 </select>
+                <Tooltip content="Ver todos os templates" position="bottom">
+                  <button
+                    onClick={() => setShowTemplateGallery(true)}
+                    className="p-1.5 hover:bg-slate-200 rounded-lg transition-colors hidden sm:block"
+                    aria-label="Abrir galeria de templates"
+                  >
+                    <Eye className="w-4 h-4 text-slate-600" />
+                  </button>
+                </Tooltip>
               </div>
+
+              {/* Resume Manager Button */}
+              <Tooltip content="Salvar e gerenciar múltiplos currículos" position="bottom">
+                <button
+                  onClick={() => setShowResumeManager(true)}
+                  className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors shadow-sm text-sm"
+                  aria-label="Gerenciar currículos"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span className="hidden sm:inline">Meus CVs</span>
+                </button>
+              </Tooltip>
+
+              {/* Version History Button */}
+              {currentResumeId && (
+                <Tooltip content="Ver e restaurar versões anteriores" position="bottom">
+                  <button
+                    onClick={() => setShowVersionHistory(true)}
+                    className="hidden sm:flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors shadow-sm text-sm"
+                    aria-label="Histórico de versões"
+                  >
+                    <History className="w-4 h-4" />
+                    <span className="hidden sm:inline">Versões</span>
+                  </button>
+                </Tooltip>
+              )}
+
+              {/* Share Button */}
+              <Tooltip content="Compartilhar currículo via link" position="bottom">
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-sm text-sm"
+                  aria-label="Compartilhar currículo"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Compartilhar</span>
+                </button>
+              </Tooltip>
 
               {/* Export Menu */}
               <ExportMenu
                 resumeData={resumeData}
+                template={template}
                 onImport={(data) => {
                   setResumeData(data);
                   success('Backup importado com sucesso!');
@@ -326,6 +573,27 @@ const AppContent = () => {
             {/* Left Column: Form */}
             <div className="lg:col-span-5 xl:col-span-4 space-y-6">
 
+              {/* Resume Progress Indicator */}
+              <ResumeProgress resumeData={resumeData} />
+
+              {/* Quick Actions */}
+              <QuickActions
+                resumeData={resumeData}
+                onCopy={() => success('Texto do currículo copiado!')}
+                onDownload={handleDownloadPdf}
+                onShare={() => setShowShareModal(true)}
+                onPrint={() => window.print()}
+                onPreview={() => {
+                  const element = document.querySelector('.print-area');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+              />
+
+              {/* Inline Tips */}
+              <ResumeTipsInline />
+
               {/* Form Actions - Moved here */}
               <div className="flex gap-3">
                 <button
@@ -357,6 +625,24 @@ const AppContent = () => {
                 <ResumeForm data={resumeData} onChange={setResumeData} />
               </div>
               
+              {/* Resume Validator */}
+              <ResumeValidator 
+                resumeData={resumeData}
+                onFix={(issue) => {
+                  // Scroll to the form
+                  const element = document.getElementById('form');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    success(`Por favor, preencha o campo: ${issue.message}`);
+                  }
+                }}
+              />
+
+              {/* Resume Stats */}
+              <div id="resume-stats" className="mt-6">
+                <ResumeStats resumeData={resumeData} />
+              </div>
+
               {/* Quick Info Box */}
               <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mt-6">
                 <p className="text-sm text-purple-900 leading-relaxed">
@@ -469,6 +755,13 @@ const AppContent = () => {
           </div>
         </section>
 
+        {/* Job Suggestions Section */}
+        <section id="job-suggestions" className="py-16 bg-gradient-to-br from-blue-50 to-purple-50 border-t border-blue-200 no-print">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <JobSuggestions resumeData={resumeData} />
+          </div>
+        </section>
+
         {/* Blog & SEO Section - Lazy Loaded */}
         <Suspense fallback={<div className="py-16 bg-slate-50 border-t border-slate-200"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><SkeletonCard /><SkeletonCard /><SkeletonCard /></div></div></div>}>
           <CareerBlog />
@@ -523,6 +816,14 @@ const AppContent = () => {
               </div>
               <div className="flex items-center gap-6">
                 <button
+                  onClick={() => setShowKeyboardShortcuts(true)}
+                  className="hover:text-slate-900 transition-colors cursor-pointer flex items-center gap-1"
+                  title="Ver atalhos de teclado"
+                >
+                  <Keyboard className="w-4 h-4" />
+                  <span className="hidden sm:inline">Atalhos</span>
+                </button>
+                <button
                   onClick={() => setShowPrivacy(true)}
                   className="hover:text-slate-900 transition-colors cursor-pointer"
                 >
@@ -561,6 +862,53 @@ const AppContent = () => {
           isDestructive={modalProps.isDestructive}
         />
 
+        {/* Resume Manager Modal */}
+        {showResumeManager && (
+          <ResumeManager
+            currentResume={resumeData}
+            currentTemplate={template}
+            onLoadResume={handleLoadResume}
+            onNewResume={handleNewResume}
+            onClose={() => setShowResumeManager(false)}
+          />
+        )}
+
+        {/* Share Modal */}
+        <ShareModal
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          resumeData={resumeData}
+          template={template}
+        />
+
+        {/* Version History Modal */}
+        {currentResumeId && (
+          <VersionHistory
+            isOpen={showVersionHistory}
+            onClose={() => setShowVersionHistory(false)}
+            resumeId={currentResumeId}
+            onRestore={handleRestoreVersion}
+          />
+        )}
+
+        {/* Template Gallery Modal */}
+        <TemplateGallery
+          isOpen={showTemplateGallery}
+          onClose={() => setShowTemplateGallery(false)}
+          currentTemplate={template}
+          onSelectTemplate={(newTemplate) => {
+            analytics.trackTemplateChange(template, newTemplate);
+            setTemplate(newTemplate);
+          }}
+          resumeData={resumeData}
+        />
+
+        {/* Keyboard Shortcuts Help Modal */}
+        <KeyboardShortcutsHelp
+          isOpen={showKeyboardShortcuts}
+          onClose={() => setShowKeyboardShortcuts(false)}
+        />
+
         {/* Floating Action Button for Mobile */}
         <div className="lg:hidden fixed bottom-6 right-6 z-50">
           <button
@@ -574,11 +922,30 @@ const AppContent = () => {
           </button>
         </div>
 
+        {/* Resume Manager Modal */}
+        {showResumeManager && (
+          <ResumeManager
+            currentResume={resumeData}
+            currentTemplate={template}
+            onLoadResume={(data, template) => {
+              setResumeData(data);
+              setTemplate(template);
+            }}
+            onClose={() => setShowResumeManager(false)}
+          />
+        )}
+
         {/* Toast Notifications */}
         <ToastContainer toasts={toasts} onClose={removeToast} />
 
+        {/* Auto-save Indicator */}
+        <AutoSaveIndicator status={saveStatus} lastSaved={lastSaved} />
+
         {/* Scroll to Top Button */}
         <ScrollToTop />
+        
+        {/* Accessibility Helper */}
+        <AccessibilityHelper />
 
         {/* PRINT AREA - Only visible when printing */}
         <div className="print-area">

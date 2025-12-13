@@ -9,15 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "^1.31.0",
+    "@types/dompurify": "^3.0.5",
     "docx": "^9.5.1",
+    "dompurify": "^3.3.1",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.4",
     "lucide-react": "^0.556.0",
-    "pdfjs-dist": "^5.4.449",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1",
-    "tesseract.js": "^6.0.1"
+    "react-dom": "^19.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

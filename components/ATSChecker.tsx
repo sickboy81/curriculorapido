@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, XCircle, AlertTriangle, FileCheck, Search, Zap, Shield, X } from 'lucide-react';
 import { ResumeData } from '../types';
+import { analytics } from '../utils/analytics';
 
 interface ATSCheckerProps {
   resumeData: ResumeData;

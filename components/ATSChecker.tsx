@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { CheckCircle, XCircle, AlertTriangle, FileCheck, Search, Zap, Shield, X, Upload, FileText, Loader2 } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle, FileCheck, Search, Zap, Shield, X, Upload, FileText, Loader2, Image as ImageIcon, Download } from 'lucide-react';
 import { ResumeData } from '../types';
 import { useLanguage } from '../LanguageContext';
 import * as pdfjsLib from 'pdfjs-dist';
+import jsPDF from 'jspdf';
 
 // Configure PDF.js worker
 if (typeof window !== 'undefined') {
@@ -38,8 +39,10 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
   const [results, setResults] = useState<CheckResult[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
-  const [analysisMode, setAnalysisMode] = useState<'form' | 'pdf'>('form');
+  const [analysisMode, setAnalysisMode] = useState<'form' | 'pdf' | 'image'>('form');
+  const [convertedPdfUrl, setConvertedPdfUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const extractTextFromPDF = async (file: File): Promise<ExtractedText> => {
     const arrayBuffer = await file.arrayBuffer();
@@ -459,6 +462,104 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
     return checks;
   };
 
+  const convertImageToPDF = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const pdf = new jsPDF({
+              orientation: img.width > img.height ? 'landscape' : 'portrait',
+              unit: 'mm',
+              format: 'a4'
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            
+            // Calculate dimensions to fit image in A4
+            const imgWidth = img.width;
+            const imgHeight = img.height;
+            const ratio = Math.min(pdfWidth / (imgWidth * 0.264583), pdfHeight / (imgHeight * 0.264583));
+            
+            const finalWidth = imgWidth * 0.264583 * ratio;
+            const finalHeight = imgHeight * 0.264583 * ratio;
+            
+            const x = (pdfWidth - finalWidth) / 2;
+            const y = (pdfHeight - finalHeight) / 2;
+
+            pdf.addImage(img.src, 'JPEG', x, y, finalWidth, finalHeight);
+            
+            const pdfBlob = pdf.output('blob');
+            const url = URL.createObjectURL(pdfBlob);
+            resolve(url);
+          } catch (error) {
+            reject(error);
+          }
+        };
+        
+        img.onerror = () => reject(new Error('Erro ao carregar imagem'));
+        img.src = e.target?.result as string;
+      };
+      
+      reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!validImageTypes.includes(file.type)) {
+      alert('Por favor, selecione uma imagem válida (JPG, PNG ou WEBP)');
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadedFileName(file.name);
+
+    try {
+      // Convert image to PDF
+      const pdfUrl = await convertImageToPDF(file);
+      setConvertedPdfUrl(pdfUrl);
+      
+      // Basic analysis for images (limited without OCR)
+      const checks: CheckResult[] = [{
+        id: 'conversion',
+        title: 'Conversão para PDF',
+        status: 'pass',
+        message: 'Imagem convertida para PDF com sucesso!'
+      }, {
+        id: 'format',
+        title: 'Formato do Arquivo',
+        status: 'pass',
+        message: 'PDF gerado no formato A4, pronto para envio'
+      }, {
+        id: 'note',
+        title: 'Análise ATS Completa',
+        status: 'warning',
+        message: 'Para análise completa de ATS, recomendamos usar um PDF com texto selecionável',
+        suggestion: 'O PDF foi gerado da imagem. Para melhor análise, considere criar um novo currículo usando nosso formulário ou converter o PDF original com texto'
+      }];
+
+      setResults(checks);
+      setIsOpen(true);
+      setAnalysisMode('image');
+    } catch (error) {
+      console.error('Erro ao converter imagem:', error);
+      alert('Erro ao converter imagem para PDF. Tente novamente.');
+    } finally {
+      setIsUploading(false);
+      if (imageInputRef.current) {
+        imageInputRef.current.value = '';
+      }
+    }
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || file.type !== 'application/pdf') {
@@ -523,8 +624,21 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
 
       setResults(checks);
       setIsOpen(true);
-    } else {
+    } else if (analysisMode === 'pdf') {
       fileInputRef.current?.click();
+    } else if (analysisMode === 'image') {
+      imageInputRef.current?.click();
+    }
+  };
+
+  const handleDownloadConvertedPDF = () => {
+    if (convertedPdfUrl) {
+      const link = document.createElement('a');
+      link.href = convertedPdfUrl;
+      link.download = uploadedFileName ? uploadedFileName.replace(/\.[^/.]+$/, '.pdf') : 'curriculo.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
@@ -570,7 +684,11 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
           ) : (
             <>
               <FileCheck className="w-4 h-4" />
-              <span>{analysisMode === 'form' ? 'Verificar ATS' : 'Enviar PDF'}</span>
+              <span>
+                {analysisMode === 'form' ? 'Verificar ATS' : 
+                 analysisMode === 'pdf' ? 'Enviar PDF' : 
+                 'Enviar Imagem'}
+              </span>
             </>
           )}
         </button>
@@ -587,10 +705,7 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
             Formulário
           </button>
           <button
-            onClick={() => {
-              setAnalysisMode('pdf');
-              fileInputRef.current?.click();
-            }}
+            onClick={() => setAnalysisMode('pdf')}
             className={`px-2 py-1 rounded transition-colors ${
               analysisMode === 'pdf' 
                 ? 'bg-purple-100 text-purple-700 font-medium' 
@@ -598,6 +713,16 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
             }`}
           >
             PDF
+          </button>
+          <button
+            onClick={() => setAnalysisMode('image')}
+            className={`px-2 py-1 rounded transition-colors ${
+              analysisMode === 'image' 
+                ? 'bg-purple-100 text-purple-700 font-medium' 
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Imagem
           </button>
         </div>
       </div>
@@ -607,6 +732,13 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
         type="file"
         accept=".pdf"
         onChange={handleFileUpload}
+        className="hidden"
+      />
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/jpeg,image/jpg,image/png,image/webp"
+        onChange={handleImageUpload}
         className="hidden"
       />
 
@@ -626,6 +758,8 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
                   <p className="text-sm text-white/90">
                     {analysisMode === 'pdf' && uploadedFileName 
                       ? `Análise de: ${uploadedFileName}` 
+                      : analysisMode === 'image' && uploadedFileName
+                      ? `Imagem: ${uploadedFileName}`
                       : 'Análise de compatibilidade com sistemas de triagem'}
                   </p>
                 </div>
@@ -664,6 +798,27 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
                   </div>
                 </div>
               ))}
+
+              {analysisMode === 'image' && convertedPdfUrl && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-purple-600" />
+                      <h4 className="font-bold text-slate-900">PDF Gerado com Sucesso!</h4>
+                    </div>
+                    <button
+                      onClick={handleDownloadConvertedPDF}
+                      className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium text-sm"
+                    >
+                      <Download className="w-4 h-4" />
+                      Baixar PDF
+                    </button>
+                  </div>
+                  <p className="text-sm text-slate-700">
+                    Sua imagem foi convertida para PDF no formato A4. O arquivo está pronto para ser enviado em processos seletivos.
+                  </p>
+                </div>
+              )}
 
               <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
                 <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">

@@ -10,7 +10,7 @@ const SEOContent = lazy(() => import('./components/SEOContent').then(module => (
 const ResumeTips = lazy(() => import('./components/ResumeTips').then(module => ({ default: module.ResumeTips })));
 const CareerBlog = lazy(() => import('./components/CareerBlog').then(module => ({ default: module.CareerBlog })));
 import { ResumeData, INITIAL_DATA, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from './types';
-import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Globe, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical } from 'lucide-react';
+import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Globe, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical, FileCheck } from 'lucide-react';
 import { LanguageProvider, useLanguage, Language } from './LanguageContext';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -256,9 +256,6 @@ const AppContent = () => {
                 </select>
               </div>
 
-              {/* ATS Checker Button */}
-              <ATSChecker resumeData={resumeData} />
-
               {/* Download Button - Icon on Mobile, Text on Desktop */}
               <button
                 onClick={handleDownloadPdf}
@@ -433,11 +430,48 @@ const AppContent = () => {
                 <div className="w-full mt-6 max-w-2xl">
                   <AdPlaceholder slotId="preview-bottom-ad" format="auto" />
                 </div>
+
+                {/* ATS Checker Button - After Preview */}
+                <div className="w-full mt-6 max-w-2xl flex justify-center">
+                  <button
+                    onClick={() => {
+                      const element = document.getElementById('ats-checker');
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    type="button"
+                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl font-semibold text-base transform hover:scale-105"
+                  >
+                    <FileCheck className="w-5 h-5" />
+                    Verificar Compatibilidade ATS
+                  </button>
+                </div>
               </div>
             </div>
 
           </div>
         </main>
+
+        {/* ATS Checker Section */}
+        <section id="ats-checker" className="py-16 bg-gradient-to-br from-purple-50 to-blue-50 border-t border-purple-200 no-print">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-slate-900 mb-4 flex items-center justify-center gap-2">
+                <FileCheck className="w-8 h-8 text-purple-600" />
+                Verificador de ATS
+              </h2>
+              <p className="text-slate-600 max-w-2xl mx-auto">
+                Verifique se seu currículo está otimizado para passar nos sistemas de triagem automática (ATS) 
+                como Gupy, Kenoby e Vagas.com. Analise seu currículo criado aqui, envie um PDF existente ou 
+                converta uma imagem para PDF.
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl shadow-lg border border-purple-200 p-8">
+              <ATSChecker resumeData={resumeData} showAsSection={true} />
+            </div>
+          </div>
+        </section>
 
         {/* Blog & SEO Section - Lazy Loaded */}
         <Suspense fallback={<div className="py-16 bg-slate-50 border-t border-slate-200"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600">Carregando conteúdo...</div></div>}>

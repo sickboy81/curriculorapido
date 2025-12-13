@@ -12,6 +12,7 @@ if (typeof window !== 'undefined') {
 
 interface ATSCheckerProps {
   resumeData: ResumeData;
+  showAsSection?: boolean; // If true, shows full content without wrapper button
 }
 
 interface CheckResult {
@@ -33,7 +34,7 @@ interface ExtractedText {
   hasLanguages: boolean;
 }
 
-export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
+export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, showAsSection = false }) => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState<CheckResult[]>([]);
@@ -668,6 +669,221 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData }) => {
     }
   };
 
+  // If showAsSection is true, show content directly without wrapper button
+  if (showAsSection) {
+    return (
+      <>
+        <div className="space-y-6">
+          {/* Mode Selector */}
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={() => setAnalysisMode('form')}
+              className={`px-4 py-2 rounded-lg transition-all font-medium ${
+                analysisMode === 'form' 
+                  ? 'bg-purple-600 text-white shadow-md' 
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              <FileText className="w-4 h-4 inline mr-2" />
+              Analisar Formulário
+            </button>
+            <button
+              onClick={() => setAnalysisMode('pdf')}
+              className={`px-4 py-2 rounded-lg transition-all font-medium ${
+                analysisMode === 'pdf' 
+                  ? 'bg-purple-600 text-white shadow-md' 
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              <Upload className="w-4 h-4 inline mr-2" />
+              Enviar PDF
+            </button>
+            <button
+              onClick={() => setAnalysisMode('image')}
+              className={`px-4 py-2 rounded-lg transition-all font-medium ${
+                analysisMode === 'image' 
+                  ? 'bg-purple-600 text-white shadow-md' 
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              <ImageIcon className="w-4 h-4 inline mr-2" />
+              Enviar Imagem
+            </button>
+          </div>
+
+          {/* Action Button */}
+          <div className="flex justify-center">
+            <button
+              onClick={handleCheckClick}
+              disabled={isUploading}
+              className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isUploading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Processando...</span>
+                </>
+              ) : (
+                <>
+                  <FileCheck className="w-5 h-5" />
+                  <span>
+                    {analysisMode === 'form' ? 'Verificar ATS do Currículo' : 
+                     analysisMode === 'pdf' ? 'Selecionar e Verificar PDF' : 
+                     'Selecionar e Converter Imagem'}
+                  </span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Show results if available */}
+          {results.length > 0 && !isOpen && (
+            <div className="mt-6 space-y-4">
+              {results.map((result) => (
+                <div
+                  key={result.id}
+                  className={`border-2 rounded-xl p-4 ${getStatusColor(result.status)} transition-all`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5">
+                      {getStatusIcon(result.status)}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold mb-1">{result.title}</h4>
+                      <p className="text-sm mb-2">{result.message}</p>
+                      {result.suggestion && (
+                        <div className="mt-2 pt-2 border-t border-current/20">
+                          <p className="text-xs font-medium opacity-90">
+                            <Zap className="w-3 h-3 inline mr-1" />
+                            {result.suggestion}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".pdf"
+          onChange={handleFileUpload}
+          className="hidden"
+        />
+        <input
+          ref={imageInputRef}
+          type="file"
+          accept="image/jpeg,image/jpg,image/png,image/webp"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+
+        {/* Modal for results when showAsSection is true */}
+        {isOpen && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setIsOpen(false)}>
+            <div 
+              className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 rounded-t-2xl flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-lg">
+                    <Shield className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">Verificador de ATS</h3>
+                    <p className="text-sm text-white/90">
+                      {analysisMode === 'pdf' && uploadedFileName 
+                        ? `Análise de: ${uploadedFileName}` 
+                        : analysisMode === 'image' && uploadedFileName
+                        ? `Imagem: ${uploadedFileName}`
+                        : 'Análise de compatibilidade com sistemas de triagem'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                  aria-label="Fechar"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-4">
+                {results.map((result) => (
+                  <div
+                    key={result.id}
+                    className={`border-2 rounded-xl p-4 ${getStatusColor(result.status)} transition-all`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5">
+                        {getStatusIcon(result.status)}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold mb-1">{result.title}</h4>
+                        <p className="text-sm mb-2">{result.message}</p>
+                        {result.suggestion && (
+                          <div className="mt-2 pt-2 border-t border-current/20">
+                            <p className="text-xs font-medium opacity-90">
+                              <Zap className="w-3 h-3 inline mr-1" />
+                              {result.suggestion}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {analysisMode === 'image' && convertedPdfUrl && (
+                  <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-purple-600" />
+                        <h4 className="font-bold text-slate-900">PDF Gerado com Sucesso!</h4>
+                      </div>
+                      <button
+                        onClick={handleDownloadConvertedPDF}
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium text-sm"
+                      >
+                        <Download className="w-4 h-4" />
+                        Baixar PDF
+                      </button>
+                    </div>
+                    <p className="text-sm text-slate-700">
+                      Sua imagem foi convertida para PDF no formato A4. O arquivo está pronto para ser enviado em processos seletivos.
+                    </p>
+                  </div>
+                )}
+
+                <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <Search className="w-5 h-5 text-purple-600" />
+                    Dicas para Melhorar
+                  </h4>
+                  <ul className="text-sm text-slate-700 space-y-2 list-disc list-inside">
+                    <li>Use palavras-chave da descrição da vaga no seu currículo</li>
+                    <li>Mantenha o formato simples, evitando tabelas e colunas complexas</li>
+                    <li>Use nomes de seções padrão: "Experiência Profissional", "Formação Acadêmica"</li>
+                    <li>Salve sempre em PDF para preservar a formatação</li>
+                    <li>Inclua números e resultados quantificáveis nas descrições</li>
+                    <li>Revise ortografia e gramática cuidadosamente</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  // Original compact mode (for backward compatibility)
   return (
     <>
       <div className="flex flex-col gap-2">

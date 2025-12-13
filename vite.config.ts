@@ -42,24 +42,6 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, '.'),
       }
-    },
-    build: {
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-        },
-      },
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'react-vendor': ['react', 'react-dom'],
-            'pdf-vendor': ['jspdf', 'html2canvas'],
-          },
-        },
-      },
-      chunkSizeWarningLimit: 1000,
-    },
+    }
   };
 });

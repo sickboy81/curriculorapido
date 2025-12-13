@@ -4,7 +4,7 @@ import { ResumePreview } from './components/ResumePreview';
 import { PrivacyModal, TermsModal, ConfirmModal } from './components/LegalModals';
 import { AdPlaceholder } from './components/AdPlaceholder';
 
-// Lazy load components below the fold for better performance
+// Lazy load heavy SEO components for better performance
 const SEOContent = lazy(() => import('./components/SEOContent').then(module => ({ default: module.SEOContent })));
 const ResumeTips = lazy(() => import('./components/ResumeTips').then(module => ({ default: module.ResumeTips })));
 const CareerBlog = lazy(() => import('./components/CareerBlog').then(module => ({ default: module.CareerBlog })));
@@ -124,14 +124,6 @@ const AppContent = () => {
           : 'curriculo';
         pdf.save(`${safeName}_cv.pdf`);
 
-        // Track PDF download event
-        if (typeof window !== 'undefined' && (window as any).gtag) {
-          (window as any).gtag('event', 'download_pdf', {
-            template: template,
-            name: safeName || 'curriculo'
-          });
-        }
-
       } catch (error) {
         console.error("PDF generation failed:", error);
         alert("Erro ao gerar PDF. Por favor, tente novamente.");
@@ -205,7 +197,7 @@ const AppContent = () => {
       <div className="screen-area min-h-screen flex flex-col">
 
         {/* Navbar */}
-        <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-3 sticky top-0 z-50 shadow-sm">
+        <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-3 sticky top-0 z-50 shadow-sm" aria-label="Navegação principal">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="bg-purple-600 p-2 rounded-lg">
@@ -236,16 +228,7 @@ const AppContent = () => {
                 <LayoutTemplate className="w-4 h-4 text-slate-500 ml-2" />
                 <select
                   value={template}
-                  onChange={(e) => {
-                    const newTemplate = e.target.value as TemplateType;
-                    setTemplate(newTemplate);
-                    // Track template change event
-                    if (typeof window !== 'undefined' && (window as any).gtag) {
-                      (window as any).gtag('event', 'template_change', {
-                        template: newTemplate
-                      });
-                    }
-                  }}
+                  onChange={(e) => setTemplate(e.target.value as TemplateType)}
                   className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-2 max-w-[110px] sm:max-w-none"
                 >
                   <optgroup label={t('templates.groups.classic')}>
@@ -328,18 +311,6 @@ const AppContent = () => {
         {/* Main Content */}
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
 
-          {/* Breadcrumbs */}
-          <nav className="mb-6" aria-label="Breadcrumb">
-            <ol className="flex items-center gap-2 text-sm text-slate-600" itemScope itemType="https://schema.org/BreadcrumbList">
-              <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-                <a href="/" className="hover:text-slate-900 transition-colors" itemProp="item">
-                  <span itemProp="name">Início</span>
-                </a>
-                <meta itemProp="position" content="1" />
-              </li>
-            </ol>
-          </nav>
-
           {/* Intro Section */}
           <div className="text-center mb-8">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
@@ -347,6 +318,18 @@ const AppContent = () => {
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto" dangerouslySetInnerHTML={{ __html: t('hero.subtitle') }}>
             </p>
+            
+            {/* Additional SEO Content */}
+            <div className="mt-6 max-w-3xl mx-auto">
+              <p className="text-base text-slate-500 leading-relaxed">
+                Crie seu <strong>curriculum vitae profissional</strong> em minutos com nosso <strong>gerador de currículo online</strong>. 
+                Perfeito para <strong>fazer currículo para primeiro emprego</strong>, <strong>modelo de currículo para jovem aprendiz</strong>, 
+                <strong>currículo para estágio</strong> ou profissionais experientes. Nossos <strong>modelos de currículo prontos</strong> incluem 
+                opções <strong>simples</strong>, <strong>modernas</strong> e <strong>criativas</strong>, todos otimizados para sistemas ATS como 
+                <strong>Gupy</strong>, <strong>Kenoby</strong> e <strong>Vagas.com</strong>. <strong>Baixe seu currículo em PDF</strong> grátis, 
+                sem cadastro, sem marcas d'água e sem limites. Funciona perfeitamente no <strong>celular Android</strong> e <strong>iPhone</strong>.
+              </p>
+            </div>
 
             {/* Social Sharing */}
             <div className="flex items-center justify-center gap-4 mt-6">
@@ -391,11 +374,24 @@ const AppContent = () => {
                 </button>
               </div>
 
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" id="form">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
-                  <h3 className="font-semibold text-slate-800">{t('form.title')}</h3>
+                  <h2 className="font-semibold text-slate-800">{t('form.title')}</h2>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Preencha seus dados e veja seu <strong>curriculum vitae</strong> sendo criado em tempo real. 
+                    Todos os campos são opcionais e podem ser editados a qualquer momento.
+                  </p>
                 </div>
                 <ResumeForm data={resumeData} onChange={setResumeData} />
+              </div>
+              
+              {/* Quick Info Box */}
+              <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mt-6">
+                <p className="text-sm text-purple-900 leading-relaxed">
+                  <strong>Dica:</strong> Use nosso <strong>gerador de currículo grátis</strong> para criar múltiplas versões 
+                  do seu CV adaptadas para diferentes vagas. Salve seus dados no navegador e edite quando precisar. 
+                  Perfeito para <strong>candidaturas em massa</strong> ou <strong>processos seletivos específicos</strong>.
+                </p>
               </div>
 
               {/* Ad Slot - Sidebar Mobile/Desktop */}
@@ -409,6 +405,27 @@ const AppContent = () => {
               <div className="flex flex-col items-center">
                 <div className="mb-4 text-sm text-slate-500 font-medium flex items-center gap-2">
                   {t('preview.realtime')}
+                </div>
+                
+                {/* Template Info Box */}
+                <div className="mb-4 w-full max-w-2xl bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                  <p className="text-blue-900 leading-relaxed">
+                    <strong>Dica de Template:</strong> O modelo <strong>{t(`templates.${template}`)}</strong> é ideal para{' '}
+                    {template === 'modern' && 'profissionais que buscam um visual contemporâneo e limpo, perfeito para áreas de tecnologia e startups.'}
+                    {template === 'classic' && 'setores tradicionais como direito, contabilidade e administração, transmitindo seriedade e profissionalismo.'}
+                    {template === 'elegant' && 'executivos e profissionais seniores que precisam transmitir sofisticação e experiência.'}
+                    {template === 'creative' && 'designers, publicitários e profissionais de marketing que querem destacar criatividade.'}
+                    {template === 'tech' && 'desenvolvedores, engenheiros de software e profissionais de TI que valorizam um visual moderno.'}
+                    {template === 'sidebar' && 'quem tem muitas informações para organizar de forma clara e hierárquica.'}
+                    {template === 'compact' && 'candidatos que precisam incluir muitas informações em pouco espaço, mantendo legibilidade.'}
+                    {template === 'minimalist' && 'quem prefere simplicidade e foco no conteúdo, ideal para passar em sistemas ATS.'}
+                    {template === 'timeline' && 'mostrar evolução de carreira de forma visual e cronológica.'}
+                    {template === 'swiss' && 'designers e profissionais que valorizam tipografia e layout precisos, estilo suíço.'}
+                    {template === 'grid' && 'organizar informações de forma estruturada e visual, ideal para portfólios e projetos.'}
+                    {!['modern', 'classic', 'elegant', 'creative', 'tech', 'sidebar', 'compact', 'minimalist', 'timeline', 'swiss', 'grid'].includes(template) && 
+                     'diversas áreas profissionais, com layout profissional e otimizado para ATS.'}
+                    {' '}Todos os modelos são <strong>compatíveis com sistemas ATS</strong> e podem ser <strong>baixados em PDF</strong> gratuitamente.
+                  </p>
                 </div>
 
                 {/* Preview Container with Scaling */}
@@ -428,28 +445,214 @@ const AppContent = () => {
           </div>
         </main>
 
-        {/* Blog & SEO Section - Lazy loaded for performance */}
-        <Suspense fallback={<div className="py-16 bg-slate-50"><div className="max-w-7xl mx-auto px-4 text-center text-slate-600">Carregando conteúdo...</div></div>}>
+        {/* Blog & SEO Section - Lazy Loaded */}
+        <Suspense fallback={<div className="py-16 bg-slate-50 border-t border-slate-200"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600">Carregando conteúdo...</div></div>}>
           <CareerBlog />
         </Suspense>
-        <Suspense fallback={<div className="py-16 bg-white"><div className="max-w-7xl mx-auto px-4 text-center text-slate-600">Carregando dicas...</div></div>}>
+        <Suspense fallback={<div className="py-16 bg-white border-t border-slate-100"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600">Carregando dicas...</div></div>}>
           <ResumeTips />
         </Suspense>
-        <Suspense fallback={<div className="py-16 bg-white"><div className="max-w-7xl mx-auto px-4 text-center text-slate-600">Carregando informações...</div></div>}>
+        <Suspense fallback={<div className="py-16 bg-white border-t border-slate-200"><div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-600">Carregando informações...</div></div>}>
           <SEOContent />
         </Suspense>
+        
+        {/* Additional Rich Content Section */}
+        <section className="py-16 bg-slate-50 border-t border-slate-200 no-print">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Currículo para Diferentes Profissões</h3>
+                <p className="text-slate-600 leading-relaxed mb-4">
+                  Nossos <strong>modelos de currículo</strong> são versáteis e funcionam para diversas áreas profissionais. 
+                  Seja você um <strong>desenvolvedor</strong>, <strong>designer</strong>, <strong>vendedor</strong>, 
+                  <strong>administrador</strong>, <strong>professor</strong>, <strong>médico</strong> ou qualquer outra profissão, 
+                  temos o modelo ideal para destacar suas habilidades e experiência.
+                </p>
+                <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                  <li><strong>Currículo para área de tecnologia</strong> - Destaque suas linguagens e frameworks</li>
+                  <li><strong>Currículo para vendas</strong> - Foque em resultados e metas alcançadas</li>
+                  <li><strong>Currículo para área administrativa</strong> - Enfatize organização e gestão</li>
+                  <li><strong>Currículo para área de saúde</strong> - Destaque certificações e especializações</li>
+                </ul>
+              </div>
+              
+              <div className="bg-white rounded-xl p-6 border border-slate-200">
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Dicas de Formatação e Layout</h3>
+                <p className="text-slate-600 leading-relaxed mb-4">
+                  Um <strong>currículo bem formatado</strong> é essencial para causar boa primeira impressão. Nossos modelos 
+                  seguem as <strong>melhores práticas de design</strong> e <strong>tipografia</strong>, garantindo legibilidade 
+                  e profissionalismo. Todos os layouts são testados para funcionar tanto em <strong>impressão</strong> quanto 
+                  em <strong>visualização digital</strong>.
+                </p>
+                <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                  <li>Fonte legível e tamanho adequado (10-12pt)</li>
+                  <li>Espaçamento consistente entre seções</li>
+                  <li>Uso estratégico de negrito e cores</li>
+                  <li>Margens adequadas para impressão A4</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="mt-8 bg-white rounded-xl p-6 border border-slate-200">
+              <h3 className="text-xl font-bold text-slate-900 mb-4">Frequentes Perguntas sobre Currículo</h3>
+              <div className="space-y-4 text-slate-600">
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2">Quantas páginas deve ter um currículo?</h4>
+                  <p className="text-sm leading-relaxed">
+                    Para a maioria dos casos, <strong>1 página é o ideal</strong>. Profissionais com mais de 10 anos de experiência 
+                    ou múltiplas especializações podem usar <strong>2 páginas</strong>. O importante é ser objetivo e incluir apenas 
+                    informações relevantes para a vaga.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2">Devo incluir foto no currículo?</h4>
+                  <p className="text-sm leading-relaxed">
+                    No Brasil, a foto é <strong>opcional mas recomendada</strong> para a maioria das áreas. Use uma foto profissional, 
+                    com boa iluminação e fundo neutro. Evite selfies ou fotos casuais. Nossa ferramenta permite adicionar foto facilmente.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2">Como destacar meu currículo dos demais?</h4>
+                  <p className="text-sm leading-relaxed">
+                    Use <strong>palavras-chave da vaga</strong>, destaque <strong>resultados quantificáveis</strong> (números, percentuais, 
+                    valores), mantenha o <strong>formato limpo e profissional</strong>, e personalize o <strong>resumo profissional</strong> 
+                    para cada vaga. Nossos modelos já incluem essas otimizações.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Use Cases Section */}
+        <section className="py-16 bg-white border-t border-slate-200 no-print">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">Casos de Uso do Currículo Rápido</h2>
+              <p className="text-slate-600 max-w-3xl mx-auto">
+                Nossa ferramenta de <strong>criação de currículo online</strong> atende diferentes necessidades profissionais. 
+                Veja como pessoas em diferentes situações usam o <strong>Currículo Rápido</strong> para alcançar seus objetivos de carreira.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 className="text-xl font-bold text-slate-900 mb-3">Primeiro Emprego</h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  Se você está entrando no <strong>mercado de trabalho</strong> pela primeira vez, nosso gerador ajuda a 
+                  criar um <strong>currículo profissional</strong> mesmo sem experiência. Destaque sua <strong>formação</strong>, 
+                  <strong>cursos</strong> e <strong>habilidades</strong> de forma atrativa.
+                </p>
+                <ul className="text-xs text-slate-500 space-y-1">
+                  <li>✓ Ideal para <strong>jovem aprendiz</strong></li>
+                  <li>✓ Perfeito para <strong>estágio</strong></li>
+                  <li>✓ Modelos para <strong>primeiro emprego</strong></li>
+                </ul>
+              </div>
+              
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 className="text-xl font-bold text-slate-900 mb-3">Mudança de Carreira</h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  Está mudando de área? Nosso gerador permite criar um <strong>curriculum vitae</strong> que destaca 
+                  <strong>habilidades transferíveis</strong> e mostra como sua experiência anterior se aplica à nova área. 
+                  Personalize facilmente para cada oportunidade.
+                </p>
+                <ul className="text-xs text-slate-500 space-y-1">
+                  <li>✓ Destaque <strong>habilidades transferíveis</strong></li>
+                  <li>✓ Adapte para <strong>nova área profissional</strong></li>
+                  <li>✓ Crie múltiplas versões rapidamente</li>
+                </ul>
+              </div>
+              
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 className="text-xl font-bold text-slate-900 mb-3">Profissionais Experientes</h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                  Para profissionais com anos de experiência, nossos modelos ajudam a organizar um histórico extenso de forma 
+                  clara e concisa. Destaque <strong>conquistas</strong> e <strong>resultados</strong> de forma impactante.
+                </p>
+                <ul className="text-xs text-slate-500 space-y-1">
+                  <li>✓ Organize <strong>histórico extenso</strong></li>
+                  <li>✓ Destaque <strong>conquistas profissionais</strong></li>
+                  <li>✓ Modelos para <strong>executivos</strong></li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="mt-12 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-8 border border-purple-200">
+              <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">Plataformas de Emprego Compatíveis</h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white rounded-lg p-4 text-center border border-slate-200">
+                  <h4 className="font-bold text-slate-800 mb-2">Gupy</h4>
+                  <p className="text-xs text-slate-600">
+                    Nossos modelos são <strong>100% compatíveis</strong> com o sistema ATS da Gupy, uma das maiores 
+                    plataformas de recrutamento do Brasil.
+                  </p>
+                </div>
+                <div className="bg-white rounded-lg p-4 text-center border border-slate-200">
+                  <h4 className="font-bold text-slate-800 mb-2">Kenoby</h4>
+                  <p className="text-xs text-slate-600">
+                    Seus dados serão extraídos corretamente pelo sistema Kenoby, garantindo que seu CV seja avaliado adequadamente.
+                  </p>
+                </div>
+                <div className="bg-white rounded-lg p-4 text-center border border-slate-200">
+                  <h4 className="font-bold text-slate-800 mb-2">Vagas.com</h4>
+                  <p className="text-xs text-slate-600">
+                    Compatível com o sistema de triagem da Vagas.com, aumentando suas chances de passar na primeira etapa.
+                  </p>
+                </div>
+                <div className="bg-white rounded-lg p-4 text-center border border-slate-200">
+                  <h4 className="font-bold text-slate-800 mb-2">LinkedIn</h4>
+                  <p className="text-xs text-slate-600">
+                    Use seu CV gerado para complementar seu perfil no LinkedIn ou em processos Easy Apply.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Footer */}
-        <footer className="bg-white border-t border-slate-200 py-10 mt-auto">
+        <footer className="bg-white border-t border-slate-200 py-10 mt-auto" role="contentinfo">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Footer SEO Content */}
+            <div className="mb-8 pb-8 border-b border-slate-200">
+              <div className="grid md:grid-cols-3 gap-6 text-sm text-slate-600">
+                <div>
+                  <h4 className="font-bold text-slate-900 mb-2">Sobre o Currículo Rápido</h4>
+                  <p className="leading-relaxed">
+                    O <strong>melhor gerador de currículo grátis do Brasil</strong>. Crie seu <strong>curriculum vitae profissional</strong> 
+                    em minutos, sem cadastro e sem limites. Nossos <strong>modelos de currículo 2025</strong> são otimizados para 
+                    <strong>sistemas ATS</strong> e <strong>recrutadores</strong>.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 mb-2">Recursos Principais</h4>
+                  <ul className="space-y-1 leading-relaxed">
+                    <li>✓ <strong>Modelos de currículo prontos</strong> para preencher</li>
+                    <li>✓ <strong>Compatível com ATS</strong> (Gupy, Kenoby, Vagas.com)</li>
+                    <li>✓ <strong>Funciona no celular</strong> Android e iPhone</li>
+                    <li>✓ <strong>Download em PDF</strong> grátis e ilimitado</li>
+                    <li>✓ <strong>Sem cadastro</strong> e sem marcas d'água</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 mb-2">Para Quem é Ideal</h4>
+                  <ul className="space-y-1 leading-relaxed">
+                    <li>• <strong>Primeiro emprego</strong> e <strong>jovem aprendiz</strong></li>
+                    <li>• <strong>Estágio</strong> e <strong>trainee</strong></li>
+                    <li>• Profissionais experientes em <strong>recolocação</strong></li>
+                    <li>• Quem busca <strong>mudança de carreira</strong></li>
+                    <li>• Candidatos para <strong>vagas no Brasil</strong></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-slate-900">Currículo Rápido</span> &copy; {new Date().getFullYear()}
               </div>
-              <div className="flex items-center gap-6 flex-wrap justify-center">
-                <a href="#dicas-carreira" className="hover:text-slate-900 transition-colors cursor-pointer">
-                  Dicas de Carreira
-                </a>
+              <div className="flex items-center gap-6">
                 <button
                   onClick={() => setShowPrivacy(true)}
                   className="hover:text-slate-900 transition-colors cursor-pointer"
@@ -496,10 +699,9 @@ const AppContent = () => {
             disabled={isGeneratingPdf}
             type="button"
             className="bg-purple-600 text-white p-4 rounded-full shadow-lg shadow-purple-600/30 flex items-center gap-2 hover:bg-purple-700 transition-all active:scale-95 disabled:bg-purple-400"
-            aria-label={isGeneratingPdf ? t('nav.generating') : t('nav.download')}
-            aria-busy={isGeneratingPdf}
+            aria-label={t('nav.download')}
           >
-            {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" aria-hidden="true" /> : <Download className="w-6 h-6" aria-hidden="true" />}
+            {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
           </button>
         </div>
 

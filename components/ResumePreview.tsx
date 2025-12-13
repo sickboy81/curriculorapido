@@ -51,7 +51,7 @@ const ModernTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         </div>
         {data.photo && (
           <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-slate-200 shrink-0">
-            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" loading="lazy" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         )}
       </div>
@@ -131,7 +131,7 @@ const ClassicTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       {data.photo && (
         <div className="flex justify-center mb-4">
           <div className="w-24 h-24 rounded-full overflow-hidden border border-black">
-            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" loading="lazy" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         </div>
       )}
@@ -218,7 +218,7 @@ const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
     <aside className="w-[35%] text-white p-6 flex flex-col gap-6 print:text-white" style={{ backgroundColor: '#0f172a' }}>
       {data.photo && (
         <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-slate-700 shadow-md">
-            <img src={data.photo} alt={data.fullName || "Foto de perfil profissional"} className="w-full h-full object-cover" loading="lazy" />
+          <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
         </div>
       )}
       <div className="space-y-3">
@@ -313,7 +313,7 @@ const MinimalistTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       {data.photo && (
         <div className="flex justify-center mb-6">
           <div className="w-24 h-24 rounded-full overflow-hidden grayscale">
-            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" loading="lazy" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         </div>
       )}
@@ -392,7 +392,7 @@ const ExecutiveTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="flex items-center gap-6">
         {data.photo && (
           <div className="w-24 h-24 rounded-lg overflow-hidden border border-slate-300">
-            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" loading="lazy" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         )}
         <div>
@@ -484,7 +484,7 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="flex items-center gap-6">
         {data.photo && (
           <div className="w-28 h-28 rounded-full border-4 border-white shadow-lg overflow-hidden">
-            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" loading="lazy" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         )}
         <div>
@@ -589,7 +589,7 @@ const TechTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       </div>
       {data.photo && (
         <div className="w-24 h-24 border-2 border-black p-1">
-          <img src={data.photo} alt={data.fullName || "Foto de perfil profissional"} className="w-full h-full object-cover grayscale" loading="lazy" />
+          <img src={data.photo} alt="user" className="w-full h-full object-cover grayscale" />
         </div>
       )}
     </header>
@@ -667,7 +667,7 @@ const CompactTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="flex items-center gap-4">
         {data.photo && (
           <div className="w-16 h-16 rounded-md overflow-hidden">
-            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" loading="lazy" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         )}
         <div>
@@ -759,7 +759,7 @@ const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       {data.photo && (
         <div className="flex justify-center mb-4">
           <div className="w-24 h-24 rounded-full overflow-hidden border border-slate-200">
-            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" loading="lazy" />
+            <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
           </div>
         </div>
       )}
@@ -857,7 +857,7 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       </div>
       {data.photo && (
         <div className="w-32 h-32 ml-8 border-4 border-white shrink-0">
-          <img src={data.photo} alt={data.fullName || "Foto de perfil profissional"} className="w-full h-full object-cover grayscale" loading="lazy" />
+          <img src={data.photo} alt="user" className="w-full h-full object-cover grayscale" />
         </div>
       )}
     </header>
@@ -1149,7 +1149,7 @@ const GridTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="col-span-1 flex flex-col gap-4">
         {data.photo && (
           <div className="aspect-square w-full rounded-lg overflow-hidden border border-slate-200">
-            <img src={data.photo} alt={data.fullName || "Foto de perfil profissional"} className="w-full h-full object-cover" />
+            <img src={data.photo} alt="user" className="w-full h-full object-cover" />
           </div>
         )}
 

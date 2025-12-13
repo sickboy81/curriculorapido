@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /assets/
+Disallow: /registerSW.js
+Disallow: /sw.js
+Disallow: /workbox-*.js
 
 Sitemap: https://curriculorapido.com.br/sitemap.xml
+

@@ -1,0 +1,26 @@
+# Configuração para servir robots.txt corretamente
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Garantir que robots.txt seja acessível
+  RewriteCond %{REQUEST_URI} ^/robots\.txt$ [NC]
+  RewriteRule ^robots\.txt$ /robots.txt [L]
+  
+  # Redirecionar para index.html para SPA (exceto arquivos estáticos)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Headers para robots.txt
+<Files "robots.txt">
+  Header set Content-Type "text/plain; charset=utf-8"
+  Header set Cache-Control "public, max-age=86400"
+</Files>
+
+# Headers para sitemap.xml
+<Files "sitemap.xml">
+  Header set Content-Type "application/xml; charset=utf-8"
+  Header set Cache-Control "public, max-age=86400"
+</Files>
+

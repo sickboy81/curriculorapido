@@ -6,12 +6,12 @@ export const SEOContent: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-white border-t border-slate-200 py-16 lg:py-20 no-print" role="region" aria-labelledby="seo-content-title">
+    <section className="bg-white border-t border-slate-200 py-16 lg:py-20 no-print" id="seo-content">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Main SEO Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 id="seo-content-title" className="text-3xl font-bold text-slate-900 mb-6">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">
             {t('seo.title')}
           </h2>
           <p className="text-lg text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('seo.subtitle') }}>
@@ -53,37 +53,6 @@ export const SEOContent: React.FC = () => {
           </div>
         </div>
 
-        {/* Benefits Section */}
-        <div className="mb-16 bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-8 md:p-12">
-          <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">Por que escolher o Currículo Rápido?</h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-slate-800 mb-2">100% Gratuito</h4>
-              <p className="text-sm text-slate-600">Crie quantos currículos quiser sem pagar nada. Sem marcas d'água, sem limites, sem pegadinhas.</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-slate-800 mb-2">Privacidade Total</h4>
-              <p className="text-sm text-slate-600">Seus dados nunca saem do seu navegador. Não armazenamos informações pessoais em servidores.</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-slate-800 mb-2">Compatível com ATS</h4>
-              <p className="text-sm text-slate-600">Modelos otimizados para sistemas de triagem como Gupy, Kenoby e Vagas.com, aumentando suas chances.</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-slate-800 mb-2">Funciona no Celular</h4>
-              <p className="text-sm text-slate-600">Crie e edite seu currículo diretamente no smartphone. Interface responsiva e intuitiva.</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-slate-800 mb-2">Modelos Profissionais</h4>
-              <p className="text-sm text-slate-600">12 modelos de currículo prontos para diferentes áreas: tecnologia, vendas, administração e mais.</p>
-            </div>
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h4 className="font-bold text-slate-800 mb-2">Download Imediato</h4>
-              <p className="text-sm text-slate-600">Baixe seu currículo em PDF de alta qualidade em segundos, pronto para enviar por email ou WhatsApp.</p>
-            </div>
-          </div>
-        </div>
-
         {/* Semantic Grid for Crawlers */}
         <div className="grid md:grid-cols-2 gap-12">
 
@@ -95,7 +64,10 @@ export const SEOContent: React.FC = () => {
               <h3 className="text-xl font-bold text-slate-800">{t('seo.privacyTitle')}</h3>
             </div>
             <p className="text-slate-600 leading-relaxed">
-              {t('seo.privacyText')}
+              {t('seo.privacyText')} Diferente de outros <strong>sites de currículo</strong> que armazenam seus dados em servidores, 
+              o <strong>Currículo Rápido</strong> processa tudo localmente no seu navegador. Isso significa que suas informações pessoais, 
+              histórico profissional e dados de contato nunca saem do seu dispositivo. <a href="#dicas-carreira" className="text-purple-600 hover:text-purple-800 underline">Saiba mais sobre dicas de carreira</a> e 
+              <a href="#dicas-curriculo" className="text-purple-600 hover:text-purple-800 underline">confira nossas dicas de currículo</a> para criar o melhor CV possível.
             </p>
           </article>
 
@@ -107,7 +79,7 @@ export const SEOContent: React.FC = () => {
               <h3 className="text-xl font-bold text-slate-800">{t('seo.termsTitle')}</h3>
             </div>
             <p className="text-slate-600 leading-relaxed">
-              {t('seo.termsText')}
+              {t('seo.termsText')} <a href="#form" className="text-purple-600 hover:text-purple-800 underline">Comece a criar seu currículo agora</a>.
             </p>
           </article>
 
@@ -119,7 +91,11 @@ export const SEOContent: React.FC = () => {
               <h3 className="text-xl font-bold text-slate-800">{t('seo.atsTitle')}</h3>
             </div>
             <p className="text-slate-600 leading-relaxed">
-              {t('seo.atsText')}
+              {t('seo.atsText')} Nossos <strong>modelos de currículo</strong> são testados e validados para garantir compatibilidade 
+              com os principais <strong>sistemas ATS do Brasil</strong>, incluindo <strong>Gupy</strong>, <strong>Kenoby</strong>, 
+              <strong>Vagas.com</strong>, <strong>Indeed</strong> e outros. Isso aumenta significativamente suas chances de passar 
+              pela triagem inicial e chegar até o recrutador. <a href="#dicas-curriculo" className="text-purple-600 hover:text-purple-800 underline">Veja nossas dicas para otimizar seu CV</a> e 
+              maximizar suas oportunidades de entrevista.
             </p>
           </article>
 
@@ -131,41 +107,91 @@ export const SEOContent: React.FC = () => {
               <h3 className="text-xl font-bold text-slate-800">{t('seo.securityTitle')}</h3>
             </div>
             <p className="text-slate-600 leading-relaxed">
-              {t('seo.securityText')}
+              {t('seo.securityText')} <a href="#form" className="text-purple-600 hover:text-purple-800 underline">Experimente nosso gerador de currículo grátis</a>.
             </p>
           </article>
 
         </div>
 
-        {/* Additional SEO Content */}
+        {/* Additional SEO Content Section */}
         <div className="mt-16 pt-12 border-t border-slate-100">
-          <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">Criar Currículo Online: Guia Completo 2025</h3>
-          <div className="prose prose-slate max-w-none">
-            <p className="text-slate-600 leading-relaxed mb-4">
-              Criar um <strong>currículo profissional</strong> nunca foi tão fácil. O <strong>Currículo Rápido</strong> é o melhor <strong>gerador de CV grátis</strong> do Brasil, desenvolvido especialmente para o mercado de trabalho brasileiro. Nossa ferramenta permite que você crie um <strong>curriculum vitae</strong> em minutos, sem precisar de conhecimento técnico ou design.
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h3 className="text-2xl font-bold text-slate-900 mb-4">Por que escolher o Currículo Rápido?</h3>
+            <p className="text-slate-600 leading-relaxed mb-6">
+              O <strong>Currículo Rápido</strong> é a melhor opção para quem busca <strong>criar currículo online grátis</strong> sem complicações. 
+              Nossa ferramenta permite <strong>fazer currículo pelo celular</strong> ou computador, com <strong>modelos de currículo prontos</strong> 
+              para preencher. Ideal para <strong>primeiro emprego</strong>, <strong>jovem aprendiz</strong>, <strong>estágio</strong> ou profissionais 
+              experientes. Todos os <strong>modelos de currículo 2025</strong> são otimizados para sistemas ATS como Gupy e Kenoby, garantindo que 
+              seu <strong>curriculum vitae</strong> seja lido corretamente por recrutadores e robôs de triagem. 
+              <strong>Baixe seu currículo em PDF</strong> instantaneamente, sem cadastro e sem marcas d'água.
             </p>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              Se você está procurando um <strong>modelo de currículo simples</strong> para primeiro emprego, um <strong>currículo para jovem aprendiz</strong>, ou um <strong>CV profissional</strong> para cargos de liderança, temos o modelo ideal para você. Todos os nossos <strong>modelos de currículo 2025</strong> são otimizados para sistemas ATS (Applicant Tracking System) usados por empresas como Gupy, Kenoby e Vagas.com.
-            </p>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              Diferente de outros <strong>sites de currículo online</strong> que exigem cadastro ou cobram taxas, o Currículo Rápido funciona 100% no seu navegador. Você pode <strong>fazer currículo pelo celular</strong> ou computador, editar quantas vezes quiser e <strong>baixar currículo em PDF</strong> gratuitamente, sem marcas d'água ou limitações.
-            </p>
-            <h4 className="text-xl font-bold text-slate-900 mt-8 mb-4">Como fazer um currículo que se destaca</h4>
-            <ul className="list-disc pl-6 space-y-2 text-slate-600 mb-4">
-              <li><strong>Use palavras-chave da vaga:</strong> Leia a descrição da vaga e inclua os termos técnicos no seu currículo para passar nos filtros automáticos.</li>
-              <li><strong>Seja objetivo:</strong> Mantenha seu currículo em 1 página (máximo 2 para profissionais seniores). Recrutadores gastam apenas 6 segundos na primeira leitura.</li>
-              <li><strong>Destaque resultados:</strong> Em vez de listar tarefas, mostre conquistas e números. Ex: "Aumentei as vendas em 30%" é melhor que "Responsável por vendas".</li>
-              <li><strong>Formato ATS-friendly:</strong> Use fontes simples (Arial, Calibri), evite gráficos complexos e tabelas, e salve sempre em PDF.</li>
-              <li><strong>Personalize para cada vaga:</strong> Adapte seu resumo profissional e destaque experiências relevantes para cada posição.</li>
-            </ul>
-            <p className="text-slate-600 leading-relaxed">
-              Com o <strong>Currículo Rápido</strong>, você tem acesso a <strong>modelos de currículo prontos</strong> que já seguem essas melhores práticas. Basta preencher seus dados, escolher o modelo que melhor representa seu perfil e baixar. É rápido, fácil e totalmente gratuito. Para mais <a href="#dicas-carreira" className="text-purple-600 hover:text-purple-800 underline font-medium">dicas de carreira e criação de currículo</a>, confira nossos artigos especializados. Comece a criar seu <strong>currículo profissional</strong> agora mesmo!
-            </p>
+            
+            {/* Additional Rich Content */}
+            <div className="text-left space-y-6 mt-8">
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-2">Modelos de Currículo para Diferentes Situações</h4>
+                <p className="text-slate-600 leading-relaxed">
+                  Oferecemos <strong>modelos de currículo simples</strong> para quem está começando, <strong>modelos de currículo modernos</strong> para 
+                  profissionais de tecnologia, <strong>modelos de currículo criativos</strong> para áreas como design e marketing, e 
+                  <strong>modelos de currículo clássicos</strong> para setores mais tradicionais. Cada modelo foi desenvolvido pensando nas 
+                  melhores práticas de <strong>recrutamento e seleção</strong> no mercado brasileiro, garantindo que seu CV seja bem recebido 
+                  tanto por <strong>recrutadores humanos</strong> quanto por <strong>sistemas ATS</strong>.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-2">Como Fazer Currículo Profissional Passo a Passo</h4>
+                <p className="text-slate-600 leading-relaxed">
+                  Nosso <strong>gerador de currículo grátis</strong> simplifica o processo de criação. Você não precisa saber usar Word, 
+                  Canva ou outros editores complexos. Basta preencher os campos do formulário e ver seu <strong>curriculum vitae</strong> 
+                  sendo criado em tempo real. Nossa ferramenta funciona como um <strong>editor de currículo online</strong> intuitivo, 
+                  onde você pode adicionar suas <strong>experiências profissionais</strong>, <strong>formação acadêmica</strong>, 
+                  <strong>habilidades técnicas</strong>, <strong>idiomas</strong> e muito mais. Tudo isso sem precisar fazer 
+                  <strong>cadastro ou login</strong>, preservando sua privacidade.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-2">Currículo Otimizado para Sistemas ATS</h4>
+                <p className="text-slate-600 leading-relaxed">
+                  Um dos maiores desafios na busca por emprego é fazer com que seu currículo passe pelos <strong>filtros automáticos</strong> 
+                  das empresas. Nossos <strong>modelos de currículo ATS-friendly</strong> são desenvolvidos especificamente para serem lidos 
+                  corretamente por sistemas como <strong>Gupy</strong>, <strong>Kenoby</strong>, <strong>Vagas.com</strong>, 
+                  <strong>LinkedIn Easy Apply</strong> e outros. Isso significa que suas informações serão extraídas corretamente, 
+                  aumentando suas chances de chegar até o <strong>recrutador humano</strong>. Além disso, nossos modelos seguem as 
+                  <strong>melhores práticas de formatação</strong> recomendadas por especialistas em RH.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-2">Currículo para Primeiro Emprego e Jovem Aprendiz</h4>
+                <p className="text-slate-600 leading-relaxed">
+                  Se você está procurando seu <strong>primeiro emprego</strong> ou é um <strong>jovem aprendiz</strong>, não se preocupe 
+                  com a falta de experiência. Nossos modelos são perfeitos para destacar sua <strong>formação acadêmica</strong>, 
+                  <strong>cursos complementares</strong>, <strong>atividades extracurriculares</strong> e <strong>habilidades pessoais</strong>. 
+                  Sabemos que criar um <strong>currículo sem experiência</strong> pode ser desafiador, por isso nossa ferramenta oferece 
+                  dicas e sugestões para cada seção. Você pode criar um <strong>currículo para estágio</strong> ou 
+                  <strong>currículo para primeiro emprego</strong> que destaque seu potencial, mesmo sem histórico profissional extenso.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-2">Baixar Currículo em PDF Grátis</h4>
+                <p className="text-slate-600 leading-relaxed">
+                  Após preencher todas as informações, você pode <strong>baixar seu currículo em PDF</strong> com um único clique. 
+                  O arquivo gerado está no formato <strong>PDF A4</strong>, pronto para <strong>imprimir</strong> ou enviar por email. 
+                  Não há <strong>marcas d'água</strong>, <strong>limites de download</strong> ou <strong>restrições de uso</strong>. 
+                  Você pode usar seu currículo para <strong>candidaturas de emprego</strong>, <strong>processos seletivos</strong>, 
+                  <strong>envio por WhatsApp</strong>, <strong>publicação no LinkedIn</strong> ou qualquer outra necessidade. 
+                  Tudo isso de forma <strong>100% gratuita</strong> e <strong>ilimitada</strong>.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* STYLING ONLY FAQ Section - schema moved to index.html JSON-LD */}
-        <div className="mt-16 pt-12 border-t border-slate-100">
+        <div className="mt-8 pt-12 border-t border-slate-100">
           <h3 className="text-2xl font-bold text-slate-900 mb-8 text-center">{t('seo.faqTitle')}</h3>
           <div className="max-w-3xl mx-auto space-y-4">
 
@@ -208,64 +234,66 @@ export const SEOContent: React.FC = () => {
                 <p>{t('seo.a4')}</p>
               </div>
             </details>
-
+            
             <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
               <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
-                <span>{t('seo.q5')}</span>
+                <span>Qual a diferença entre currículo e curriculum vitae?</span>
                 <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
               </summary>
               <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
-                <p>{t('seo.a5')}</p>
+                <p>
+                  No Brasil, <strong>currículo</strong> e <strong>curriculum vitae (CV)</strong> são termos usados de forma intercambiável. 
+                  Ambos se referem ao documento que apresenta suas qualificações profissionais, experiência e formação. 
+                  O termo <strong>curriculum vitae</strong> é mais formal e tradicional, enquanto <strong>currículo</strong> é mais comum no dia a dia. 
+                  Nossa ferramenta gera documentos profissionais que podem ser chamados de qualquer uma das formas.
+                </p>
               </div>
             </details>
-
+            
             <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
               <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
-                <span>{t('seo.q6')}</span>
+                <span>Como fazer um currículo sem experiência profissional?</span>
                 <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
               </summary>
               <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
-                <p>{t('seo.a6')}</p>
+                <p>
+                  Se você está procurando seu <strong>primeiro emprego</strong> ou é um <strong>jovem aprendiz</strong>, foque em destacar sua 
+                  <strong>formação acadêmica</strong>, <strong>cursos complementares</strong>, <strong>atividades extracurriculares</strong>, 
+                  <strong>trabalhos voluntários</strong> e <strong>projetos pessoais</strong>. Use a seção de <strong>resumo profissional</strong> 
+                  para destacar seu potencial e motivação. Nossos modelos são perfeitos para <strong>currículo sem experiência</strong>, 
+                  ajudando você a organizar essas informações de forma profissional e atrativa.
+                </p>
               </div>
             </details>
-
+            
             <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
               <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
-                <span>{t('seo.q7')}</span>
+                <span>Posso usar o mesmo currículo para várias vagas?</span>
                 <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
               </summary>
               <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
-                <p>{t('seo.a7')}</p>
+                <p>
+                  Embora seja possível usar o mesmo <strong>curriculum vitae</strong> para múltiplas vagas, é altamente recomendado 
+                  <strong>personalizar seu CV</strong> para cada oportunidade. Adapte o <strong>resumo profissional</strong>, 
+                  destaque <strong>experiências relevantes</strong> para a vaga e inclua <strong>palavras-chave</strong> da descrição do cargo. 
+                  Nossa ferramenta permite salvar seus dados e criar múltiplas versões facilmente, tornando a personalização rápida e eficiente.
+                </p>
               </div>
             </details>
-
+            
             <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
               <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
-                <span>{t('seo.q8')}</span>
+                <span>O que é um sistema ATS e por que é importante?</span>
                 <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
               </summary>
               <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
-                <p>{t('seo.a8')}</p>
-              </div>
-            </details>
-
-            <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
-              <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
-                <span>{t('seo.q9')}</span>
-                <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
-              </summary>
-              <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
-                <p>{t('seo.a9')}</p>
-              </div>
-            </details>
-
-            <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
-              <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
-                <span>{t('seo.q10')}</span>
-                <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
-              </summary>
-              <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
-                <p>{t('seo.a10')}</p>
+                <p>
+                  <strong>ATS (Applicant Tracking System)</strong> é um software usado por empresas para fazer a triagem inicial de candidatos. 
+                  Sistemas como <strong>Gupy</strong>, <strong>Kenoby</strong> e <strong>Vagas.com</strong> escaneiam currículos procurando por 
+                  <strong>palavras-chave</strong> e <strong>qualificações</strong> relevantes. Se seu CV não for compatível com ATS, 
+                  ele pode ser rejeitado antes mesmo de chegar a um recrutador humano. Nossos <strong>modelos de currículo</strong> são 
+                  desenvolvidos especificamente para serem <strong>lidos corretamente por sistemas ATS</strong>, aumentando suas chances de passar na triagem.
+                </p>
               </div>
             </details>
 

@@ -50,3 +50,4 @@ A imagem deve conter:
 Atualmente, o site referencia `preview-image.jpg` mas o arquivo não existe. 
 Crie a imagem seguindo as instruções acima para melhorar o compartilhamento social.
 
+

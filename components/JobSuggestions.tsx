@@ -14,6 +14,7 @@ export const JobSuggestions: React.FC<JobSuggestionsProps> = ({ resumeData, onAp
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<JobAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [wordCount, setWordCount] = useState(0);
 
   const handleAnalyze = async () => {
     if (!jobDescription.trim()) {

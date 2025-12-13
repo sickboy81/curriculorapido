@@ -1,8 +1,7 @@
 {
-  "public": true,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!robots\\.txt|sitemap\\.xml|.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|pdf|json|webmanifest|sw\\.js|workbox-.*\\.js|registerSW\\.js|assets/)).*)",
       "destination": "/index.html"
     }
   ],
@@ -35,4 +34,3 @@
     }
   ]
 }
-

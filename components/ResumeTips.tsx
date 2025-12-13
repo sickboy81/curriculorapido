@@ -96,11 +96,6 @@ export const ResumeTips: React.FC = () => {
           <p className="text-slate-600 max-w-2xl mx-auto mb-4">
             {t('tips.subtitle')}
           </p>
-          <p className="text-sm text-slate-500 max-w-3xl mx-auto">
-            Essas dicas foram elaboradas por <strong>especialistas em recrutamento</strong> e são essenciais para criar um 
-            <strong>currículo que se destaca</strong> no mercado brasileiro. Aplique essas práticas ao usar nosso 
-            <strong>gerador de currículo online</strong> para aumentar suas chances de conseguir uma <strong>entrevista de emprego</strong>.
-          </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" itemScope itemType="https://schema.org/ItemList">
@@ -124,64 +119,6 @@ export const ResumeTips: React.FC = () => {
           ))}
         </div>
         
-        {/* Additional Tips Section */}
-        <div className="mt-12 bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-8 border border-purple-200">
-          <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">Erros Comuns que Eliminam Candidatos</h3>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg p-5 border border-slate-200">
-              <h4 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-orange-600" />
-                Erros de Formatação
-              </h4>
-              <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside">
-                <li>Fontes muito pequenas ou difíceis de ler</li>
-                <li>Excesso de cores ou elementos decorativos</li>
-                <li>Layout desorganizado e difícil de escanear</li>
-                <li>Informações importantes escondidas</li>
-                <li>Margens inadequadas para impressão</li>
-              </ul>
-            </div>
-            <div className="bg-white rounded-lg p-5 border border-slate-200">
-              <h4 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-orange-600" />
-                Erros de Conteúdo
-              </h4>
-              <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside">
-                <li>Erros de ortografia e gramática</li>
-                <li>Informações desatualizadas ou inconsistentes</li>
-                <li>Falta de palavras-chave relevantes</li>
-                <li>Objetivo genérico e sem personalização</li>
-                <li>Excesso de informações irrelevantes</li>
-              </ul>
-            </div>
-            <div className="bg-white rounded-lg p-5 border border-slate-200">
-              <h4 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-orange-600" />
-                Problemas Técnicos
-              </h4>
-              <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside">
-                <li>Arquivo em formato Word (.doc) em vez de PDF</li>
-                <li>Arquivo muito pesado ou corrompido</li>
-                <li>Formatação quebrada em sistemas ATS</li>
-                <li>Falta de compatibilidade com leitores de tela</li>
-                <li>Links quebrados ou emails inválidos</li>
-              </ul>
-            </div>
-            <div className="bg-white rounded-lg p-5 border border-slate-200">
-              <h4 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-600" />
-                Como Evitar Esses Erros
-              </h4>
-              <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside">
-                <li>Use nosso <strong>gerador de currículo</strong> que já resolve formatação</li>
-                <li>Revise cuidadosamente antes de enviar</li>
-                <li>Sempre salve em <strong>PDF</strong> para manter formatação</li>
-                <li>Teste o arquivo antes de enviar</li>
-                <li>Peça feedback de amigos ou mentores</li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

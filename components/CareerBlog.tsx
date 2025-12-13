@@ -101,12 +101,6 @@ export const CareerBlog: React.FC = () => {
           <p className="text-slate-600 max-w-2xl mx-auto mb-4">
             {t('blog.sectionSubtitle')}
           </p>
-          <p className="text-sm text-slate-500 max-w-3xl mx-auto">
-            Aprenda as melhores práticas para criar um <strong>curriculum vitae profissional</strong>, descobrir 
-            <strong>como fazer currículo que passa em ATS</strong>, escrever um <strong>resumo profissional eficaz</strong> e 
-            destacar suas <strong>habilidades e competências</strong>. Nossos artigos são baseados em pesquisas e experiências 
-            reais de <strong>recrutadores e especialistas em RH</strong> do mercado brasileiro.
-          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -154,46 +148,6 @@ export const CareerBlog: React.FC = () => {
           ))}
         </div>
         
-        {/* Additional Blog Content */}
-        <div className="mt-12 bg-white rounded-2xl p-8 border border-slate-200">
-          <h3 className="text-2xl font-bold text-slate-900 mb-4">Mais Recursos para Sua Carreira</h3>
-          <div className="grid md:grid-cols-2 gap-6 text-slate-600">
-            <div>
-              <h4 className="font-bold text-slate-800 mb-2">Como Usar o Currículo Rápido</h4>
-              <p className="text-sm leading-relaxed mb-3">
-                Nosso <strong>gerador de currículo online</strong> foi desenvolvido para ser intuitivo e rápido. 
-                Em menos de 10 minutos você pode criar um <strong>curriculum vitae profissional</strong> pronto para 
-                enviar. Basta preencher os campos do formulário e ver seu CV sendo criado em tempo real.
-              </p>
-              <ul className="text-sm space-y-1 list-disc list-inside">
-                <li>Preencha seus <strong>dados pessoais</strong> e informações de contato</li>
-                <li>Adicione seu <strong>resumo profissional</strong> ou objetivo</li>
-                <li>Liste suas <strong>experiências profissionais</strong> mais relevantes</li>
-                <li>Inclua sua <strong>formação acadêmica</strong> e cursos</li>
-                <li>Destaque suas <strong>habilidades</strong> e <strong>idiomas</strong></li>
-                <li>Escolha o <strong>modelo de currículo</strong> que melhor representa você</li>
-                <li><strong>Baixe em PDF</strong> e use para suas candidaturas</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-800 mb-2">Dicas para Passar em Processos Seletivos</h4>
-              <p className="text-sm leading-relaxed mb-3">
-                Criar um bom currículo é apenas o primeiro passo. Para aumentar suas chances de conseguir uma 
-                <strong>entrevista de emprego</strong>, é importante entender como os <strong>recrutadores</strong> 
-                avaliam candidatos e como os <strong>sistemas ATS</strong> fazem a triagem inicial.
-              </p>
-              <ul className="text-sm space-y-1 list-disc list-inside">
-                <li>Use <strong>palavras-chave</strong> da descrição da vaga</li>
-                <li>Destaque <strong>resultados quantificáveis</strong> (números, percentuais)</li>
-                <li>Mantenha o formato <strong>limpo e profissional</strong></li>
-                <li>Personalize o <strong>resumo</strong> para cada vaga</li>
-                <li>Revise <strong>ortografia e gramática</strong> cuidadosamente</li>
-                <li>Salve em <strong>PDF</strong> para manter a formatação</li>
-                <li>Envie junto com uma <strong>carta de apresentação</strong> quando possível</li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

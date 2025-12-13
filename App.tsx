@@ -318,18 +318,6 @@ const AppContent = () => {
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto" dangerouslySetInnerHTML={{ __html: t('hero.subtitle') }}>
             </p>
-            
-            {/* Additional SEO Content */}
-            <div className="mt-6 max-w-3xl mx-auto">
-              <p className="text-base text-slate-500 leading-relaxed">
-                Crie seu <strong>curriculum vitae profissional</strong> em minutos com nosso <strong>gerador de currículo online</strong>. 
-                Perfeito para <strong>fazer currículo para primeiro emprego</strong>, <strong>modelo de currículo para jovem aprendiz</strong>, 
-                <strong>currículo para estágio</strong> ou profissionais experientes. Nossos <strong>modelos de currículo prontos</strong> incluem 
-                opções <strong>simples</strong>, <strong>modernas</strong> e <strong>criativas</strong>, todos otimizados para sistemas ATS como 
-                <strong>Gupy</strong>, <strong>Kenoby</strong> e <strong>Vagas.com</strong>. <strong>Baixe seu currículo em PDF</strong> grátis, 
-                sem cadastro, sem marcas d'água e sem limites. Funciona perfeitamente no <strong>celular Android</strong> e <strong>iPhone</strong>.
-              </p>
-            </div>
 
             {/* Social Sharing */}
             <div className="flex items-center justify-center gap-4 mt-6">

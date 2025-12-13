@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResumeData, TemplateType } from '../types';
 import { Mail, Phone, MapPin, Globe, User, Briefcase, Award } from 'lucide-react';
-import { useLanguage } from '../LanguageContext';
+// Removed multilingual support - Portuguese only
 
 interface ResumePreviewProps {
   data: ResumeData;
@@ -28,14 +28,28 @@ const Wrapper = ({ children }: { children?: React.ReactNode }) => (
   </div>
 );
 
-// Template Props to include translations
+// Template Props
 interface TemplateProps {
   data: ResumeData;
   skillsArray: string[];
-  t: (key: string) => string;
 }
 
-const ModernTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+// Simple Portuguese text helper
+const pt = (key: string): string => {
+  const texts: Record<string, string> = {
+    'preview.summary': 'Resumo Profissional',
+    'preview.experience': 'Experiência Profissional',
+    'preview.education': 'Formação Acadêmica',
+    'preview.skills': 'Habilidades',
+    'preview.languages': 'Idiomas',
+    'preview.profile': 'Perfil',
+    'preview.contact': 'Contato',
+    'preview.about': 'Sobre'
+  };
+  return texts[key] || key;
+};
+
+const ModernTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[15mm] text-slate-800 flex flex-col font-sans">
     <header className="border-b-2 border-slate-800 pb-6 mb-6">
       <div className="flex justify-between items-start gap-6">
@@ -59,13 +73,13 @@ const ModernTemplate = ({ data, skillsArray, t }: TemplateProps) => (
     <div className="flex-1 space-y-6">
       {data.summary && (
         <section>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-2 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{t('preview.summary')}</h3>
+          <h3 className="text-sm font-bold uppercase tracking-wider mb-2 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{pt('preview.summary')}</h3>
           <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-line">{data.summary}</p>
         </section>
       )}
       {data.experience.length > 0 && (
         <section>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{t('preview.experience')}</h3>
+          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{pt('preview.experience')}</h3>
           <div className="space-y-5">
             {data.experience.map((exp) => (
               <div key={exp.id}>
@@ -85,7 +99,7 @@ const ModernTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       )}
       {data.education.length > 0 && (
         <section>
-          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{t('preview.education')}</h3>
+          <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{pt('preview.education')}</h3>
           <div className="space-y-4">
             {data.education.map((edu) => (
               <div key={edu.id}>
@@ -103,13 +117,13 @@ const ModernTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="grid grid-cols-2 gap-8">
         {skillsArray.length > 0 && (
           <section>
-            <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{t('preview.skills')}</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{pt('preview.skills')}</h3>
             <SkillsList skills={skillsArray} />
           </section>
         )}
         {(data.languages || []).length > 0 && (
           <section>
-            <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{t('preview.languages')}</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-3 border-b border-slate-200 pb-1" style={{ color: data.themeColor }}>{pt('preview.languages')}</h3>
             <ul className="space-y-1">
               {data.languages.map((lang) => (
                 <li key={lang.id} className="text-sm flex justify-between">
@@ -125,7 +139,7 @@ const ModernTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const ClassicTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const ClassicTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[15mm] text-black flex flex-col font-serif">
     <header className="text-center mb-8 border-b-2 border-black pb-6">
       {data.photo && (
@@ -147,13 +161,13 @@ const ClassicTemplate = ({ data, skillsArray, t }: TemplateProps) => (
     <div className="flex-1 space-y-6">
       {data.summary && (
         <section>
-          <h3 className="text-base font-bold uppercase border-b border-black mb-3">{t('preview.profile')}</h3>
+          <h3 className="text-base font-bold uppercase border-b border-black mb-3">{pt('preview.profile')}</h3>
           <p className="text-sm leading-relaxed text-justify">{data.summary}</p>
         </section>
       )}
       {data.experience.length > 0 && (
         <section>
-          <h3 className="text-base font-bold uppercase border-b border-black mb-4">{t('preview.experience')}</h3>
+          <h3 className="text-base font-bold uppercase border-b border-black mb-4">{pt('preview.experience')}</h3>
           <div className="space-y-6">
             {data.experience.map((exp) => (
               <div key={exp.id}>
@@ -173,7 +187,7 @@ const ClassicTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       )}
       {data.education.length > 0 && (
         <section>
-          <h3 className="text-base font-bold uppercase border-b border-black mb-4">{t('preview.education')}</h3>
+          <h3 className="text-base font-bold uppercase border-b border-black mb-4">{pt('preview.education')}</h3>
           <div className="space-y-4">
             {data.education.map((edu) => (
               <div key={edu.id}>
@@ -191,13 +205,13 @@ const ClassicTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="grid grid-cols-2 gap-8">
         {skillsArray.length > 0 && (
           <section>
-            <h3 className="text-base font-bold uppercase border-b border-black mb-3">{t('preview.skills')}</h3>
+            <h3 className="text-base font-bold uppercase border-b border-black mb-3">{pt('preview.skills')}</h3>
             <p className="text-sm leading-relaxed">{skillsArray.join(' • ')}</p>
           </section>
         )}
         {(data.languages || []).length > 0 && (
           <section>
-            <h3 className="text-base font-bold uppercase border-b border-black mb-3">{t('preview.languages')}</h3>
+            <h3 className="text-base font-bold uppercase border-b border-black mb-3">{pt('preview.languages')}</h3>
             <ul className="text-sm leading-relaxed space-y-1">
               {data.languages.map(lang => (
                 <li key={lang.id} className="flex justify-between">
@@ -213,7 +227,7 @@ const ClassicTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const SidebarTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full text-slate-800 flex font-sans">
     <aside className="w-[35%] text-white p-6 flex flex-col gap-6 print:text-white" style={{ backgroundColor: '#0f172a' }}>
       {data.photo && (
@@ -226,7 +240,7 @@ const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         <p className="font-medium text-lg opacity-90" style={{ color: data.themeColor || '#a78bfa' }}>{data.title || 'Seu Cargo'}</p>
       </div>
       <div className="space-y-3 text-sm text-slate-300">
-        <h3 className="text-white font-bold uppercase tracking-wider text-xs border-b border-slate-700 pb-1 mb-2">{t('preview.contact')}</h3>
+        <h3 className="text-white font-bold uppercase tracking-wider text-xs border-b border-slate-700 pb-1 mb-2">{pt('preview.contact')}</h3>
         {data.email && (<div className="flex items-start gap-3"><Mail className="w-4 h-4 shrink-0 mt-0.5" /><span className="break-words text-xs">{data.email}</span></div>)}
         {data.phone && (<div className="flex items-center gap-3"><Phone className="w-4 h-4 shrink-0" /><span className="text-xs">{data.phone}</span></div>)}
         {data.location && (<div className="flex items-start gap-3"><MapPin className="w-4 h-4 shrink-0 mt-0.5" /><span className="text-xs leading-tight">{data.location}</span></div>)}
@@ -234,7 +248,7 @@ const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       </div>
       {skillsArray.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-white font-bold uppercase tracking-wider text-xs border-b border-slate-700 pb-1 mb-2">{t('preview.skills')}</h3>
+          <h3 className="text-white font-bold uppercase tracking-wider text-xs border-b border-slate-700 pb-1 mb-2">{pt('preview.skills')}</h3>
           <div className="flex flex-wrap gap-2">
             {skillsArray.map((skill, i) => (
               <span key={i} className="text-[10px] sm:text-xs bg-slate-800 px-2 py-1 rounded border border-slate-700">{skill}</span>
@@ -244,7 +258,7 @@ const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       )}
       {(data.languages || []).length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-white font-bold uppercase tracking-wider text-xs border-b border-slate-700 pb-1 mb-2">{t('preview.languages')}</h3>
+          <h3 className="text-white font-bold uppercase tracking-wider text-xs border-b border-slate-700 pb-1 mb-2">{pt('preview.languages')}</h3>
           <div className="space-y-2">
             {data.languages.map((lang) => (
               <div key={lang.id} className="flex justify-between text-xs">
@@ -257,7 +271,7 @@ const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       )}
       {data.education.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-white font-bold uppercase tracking-wider text-xs border-b border-slate-700 pb-1 mb-2">{t('preview.education')}</h3>
+          <h3 className="text-white font-bold uppercase tracking-wider text-xs border-b border-slate-700 pb-1 mb-2">{pt('preview.education')}</h3>
           {data.education.map((edu) => (
             <div key={edu.id} className="text-xs">
               <div className="font-bold text-white leading-tight">{edu.school}</div>
@@ -273,7 +287,7 @@ const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         <section>
           <h3 className="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
             <span className="w-8 h-1 rounded-full" style={{ backgroundColor: data.themeColor }}></span>
-            {t('preview.profile')}
+            {pt('preview.profile')}
           </h3>
           <p className="text-sm leading-relaxed text-slate-700">{data.summary}</p>
         </section>
@@ -282,7 +296,7 @@ const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         <section>
           <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
             <span className="w-8 h-1 rounded-full" style={{ backgroundColor: data.themeColor }}></span>
-            {t('preview.experience')}
+            {pt('preview.experience')}
           </h3>
           <div className="space-y-8 border-l-2 border-slate-100 ml-3 pl-6">
             {data.experience.map((exp) => (
@@ -307,7 +321,7 @@ const SidebarTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const MinimalistTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const MinimalistTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[15mm] text-slate-900 flex flex-col font-sans">
     <header className="text-center mb-10">
       {data.photo && (
@@ -329,13 +343,13 @@ const MinimalistTemplate = ({ data, skillsArray, t }: TemplateProps) => (
     <div className="space-y-8">
       {data.summary && (
         <section>
-          <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{t('preview.about')}</h3>
+          <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{pt('preview.about')}</h3>
           <p className="text-sm leading-relaxed text-center text-slate-600 max-w-lg mx-auto">{data.summary}</p>
         </section>
       )}
       {data.experience.length > 0 && (
         <section>
-          <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">{t('preview.experience')}</h3>
+          <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">{pt('preview.experience')}</h3>
           <div className="space-y-8">
             {data.experience.map((exp) => (
               <div key={exp.id} className="grid grid-cols-[1fr_3fr] gap-4">
@@ -354,7 +368,7 @@ const MinimalistTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       )}
       {data.education.length > 0 && (
         <section>
-          <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-6 mt-8">{t('preview.education')}</h3>
+          <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-6 mt-8">{pt('preview.education')}</h3>
           <div className="space-y-4">
             {data.education.map((edu) => (
               <div key={edu.id} className="text-center">
@@ -369,13 +383,13 @@ const MinimalistTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="grid grid-cols-2 gap-4 mt-8">
         {skillsArray.length > 0 && (
           <section className="text-center">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{t('preview.skills')}</h3>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{pt('preview.skills')}</h3>
             <p className="text-sm text-slate-600">{skillsArray.join('  /  ')}</p>
           </section>
         )}
         {(data.languages || []).length > 0 && (
           <section className="text-center">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{t('preview.languages')}</h3>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{pt('preview.languages')}</h3>
             <p className="text-sm text-slate-600">
               {data.languages.map(l => `${l.name} (${l.proficiency})`).join('  /  ')}
             </p>
@@ -386,7 +400,7 @@ const MinimalistTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const ExecutiveTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const ExecutiveTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[15mm] text-slate-900 flex flex-col font-sans">
     <header className="flex justify-between items-center border-b-[3px] border-slate-800 pb-4 mb-8">
       <div className="flex items-center gap-6">
@@ -410,13 +424,13 @@ const ExecutiveTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="flex-1 space-y-8">
         {data.summary && (
           <section>
-            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-3 uppercase tracking-wide">{t('preview.profile')}</h3>
+            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-3 uppercase tracking-wide">{pt('preview.profile')}</h3>
             <p className="text-sm text-justify leading-relaxed">{data.summary}</p>
           </section>
         )}
         {data.experience.length > 0 && (
           <section>
-            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-4 uppercase tracking-wide">{t('preview.experience')}</h3>
+            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-4 uppercase tracking-wide">{pt('preview.experience')}</h3>
             <div className="space-y-6">
               {data.experience.map((exp) => (
                 <div key={exp.id}>
@@ -437,7 +451,7 @@ const ExecutiveTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="w-1/3 space-y-8">
         {skillsArray.length > 0 && (
           <section>
-            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-3 uppercase tracking-wide">{t('preview.skills')}</h3>
+            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-3 uppercase tracking-wide">{pt('preview.skills')}</h3>
             <div className="flex flex-wrap gap-2">
               {skillsArray.map((skill, i) => (
                 <span key={i} className="text-sm text-slate-800 block w-full border-b border-dotted border-slate-200 py-1">{skill}</span>
@@ -447,7 +461,7 @@ const ExecutiveTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         )}
         {(data.languages || []).length > 0 && (
           <section>
-            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-3 uppercase tracking-wide">{t('preview.languages')}</h3>
+            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-3 uppercase tracking-wide">{pt('preview.languages')}</h3>
             <div className="space-y-2">
               {data.languages.map((lang, i) => (
                 <div key={i} className="text-sm text-slate-800 border-b border-dotted border-slate-200 py-1 flex justify-between">
@@ -460,7 +474,7 @@ const ExecutiveTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         )}
         {data.education.length > 0 && (
           <section>
-            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-3 uppercase tracking-wide">{t('preview.education')}</h3>
+            <h3 className="font-serif text-lg font-bold border-b border-slate-300 pb-1 mb-3 uppercase tracking-wide">{pt('preview.education')}</h3>
             <div className="space-y-4">
               {data.education.map((edu) => (
                 <div key={edu.id}>
@@ -477,7 +491,7 @@ const ExecutiveTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const CreativeTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full text-slate-800 flex flex-col font-sans bg-white">
     <div className="h-6 w-full" style={{ backgroundColor: data.themeColor }}></div>
     <header className="bg-slate-900 text-white p-10 flex justify-between items-center print:bg-slate-900 print:text-white">
@@ -504,7 +518,7 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
           <section>
             <div className="flex items-center gap-3 mb-4">
               <div className="p-1.5 rounded text-white" style={{ backgroundColor: data.themeColor }}><User className="w-4 h-4" /></div>
-              <h3 className="text-xl font-bold uppercase tracking-tight">{t('preview.about')}</h3>
+              <h3 className="text-xl font-bold uppercase tracking-tight">{pt('preview.about')}</h3>
             </div>
             <p className="text-slate-600 leading-relaxed">{data.summary}</p>
           </section>
@@ -513,7 +527,7 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
           <section>
             <div className="flex items-center gap-3 mb-6">
               <div className="p-1.5 rounded text-white" style={{ backgroundColor: data.themeColor }}><Briefcase className="w-4 h-4" /></div>
-              <h3 className="text-xl font-bold uppercase tracking-tight">{t('preview.experience')}</h3>
+              <h3 className="text-xl font-bold uppercase tracking-tight">{pt('preview.experience')}</h3>
             </div>
             <div className="space-y-8 border-l-2 border-slate-100 ml-3 pl-8">
               {data.experience.map((exp) => (
@@ -534,7 +548,7 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <aside className="w-[30%] bg-slate-50 p-10 border-l border-slate-100 print:bg-slate-50">
         {skillsArray.length > 0 && (
           <section className="mb-10">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">{t('preview.skills')}</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">{pt('preview.skills')}</h3>
             <div className="flex flex-wrap gap-2">
               {skillsArray.map((skill, i) => (
                 <span key={i} className="bg-white border border-slate-200 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-700 shadow-sm">{skill}</span>
@@ -544,7 +558,7 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         )}
         {(data.languages || []).length > 0 && (
           <section className="mb-10">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">{t('preview.languages')}</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">{pt('preview.languages')}</h3>
             <ul className="space-y-3">
               {data.languages.map((lang, i) => (
                 <li key={i} className="text-sm">
@@ -557,7 +571,7 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         )}
         {data.education.length > 0 && (
           <section>
-            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">{t('preview.education')}</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">{pt('preview.education')}</h3>
             <div className="space-y-6">
               {data.education.map((edu) => (
                 <div key={edu.id}>
@@ -574,7 +588,7 @@ const CreativeTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const TechTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const TechTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[15mm] text-slate-800 flex flex-col font-mono">
     <header className="mb-8 border-b-4 border-black pb-6 flex justify-between items-start">
       <div>
@@ -661,7 +675,7 @@ const TechTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const CompactTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const CompactTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[12mm] text-slate-800 flex flex-col font-sans">
     <header className="flex justify-between items-start border-b border-slate-300 pb-4 mb-4">
       <div className="flex items-center gap-4">
@@ -687,13 +701,13 @@ const CompactTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="col-span-2 space-y-5">
         {data.summary && (
           <section>
-            <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{t('preview.profile')}</h3>
+            <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{pt('preview.profile')}</h3>
             <p className="text-xs text-justify leading-snug">{data.summary}</p>
           </section>
         )}
         {data.experience.length > 0 && (
           <section>
-            <h3 className="text-xs font-bold uppercase border-b mb-3" style={{ color: data.themeColor, borderColor: data.themeColor }}>{t('preview.experience')}</h3>
+            <h3 className="text-xs font-bold uppercase border-b mb-3" style={{ color: data.themeColor, borderColor: data.themeColor }}>{pt('preview.experience')}</h3>
             <div className="space-y-3">
               {data.experience.map((exp) => (
                 <div key={exp.id}>
@@ -713,7 +727,7 @@ const CompactTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="col-span-1 space-y-5 bg-slate-50 p-3 -m-3 h-full print:bg-slate-50">
         {skillsArray.length > 0 && (
           <section>
-            <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{t('preview.skills')}</h3>
+            <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{pt('preview.skills')}</h3>
             <ul className="text-xs space-y-1 list-disc list-inside">
               {skillsArray.map((skill, i) => (
                 <li key={i}>{skill}</li>
@@ -723,7 +737,7 @@ const CompactTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         )}
         {(data.languages || []).length > 0 && (
           <section>
-            <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{t('preview.languages')}</h3>
+            <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{pt('preview.languages')}</h3>
             <ul className="text-xs space-y-1">
               {data.languages.map((lang, i) => (
                 <li key={i} className="flex justify-between">
@@ -736,7 +750,7 @@ const CompactTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         )}
         {data.education.length > 0 && (
           <section>
-            <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{t('preview.education')}</h3>
+            <h3 className="text-xs font-bold uppercase border-b mb-2" style={{ color: data.themeColor, borderColor: data.themeColor }}>{pt('preview.education')}</h3>
             <div className="space-y-2">
               {data.education.map((edu) => (
                 <div key={edu.id} className="text-xs">
@@ -753,7 +767,7 @@ const CompactTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const ElegantTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[15mm] text-slate-800 flex flex-col font-serif">
     <header className="text-center mb-8">
       {data.photo && (
@@ -781,7 +795,7 @@ const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
 
       {data.experience.length > 0 && (
         <section>
-          <h3 className="text-center text-lg font-normal italic border-b border-slate-200 mb-6 pb-2">{t('preview.experience')}</h3>
+          <h3 className="text-center text-lg font-normal italic border-b border-slate-200 mb-6 pb-2">{pt('preview.experience')}</h3>
           <div className="space-y-8">
             {data.experience.map((exp) => (
               <div key={exp.id} className="relative pl-6 border-l border-slate-300">
@@ -802,7 +816,7 @@ const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         <div>
           {data.education.length > 0 && (
             <section className="mb-8">
-              <h3 className="text-center text-lg font-normal italic border-b border-slate-200 mb-4 pb-2">{t('preview.education')}</h3>
+              <h3 className="text-center text-lg font-normal italic border-b border-slate-200 mb-4 pb-2">{pt('preview.education')}</h3>
               <div className="space-y-4">
                 {data.education.map((edu) => (
                   <div key={edu.id} className="text-center">
@@ -819,7 +833,7 @@ const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         <div>
           {skillsArray.length > 0 && (
             <section className="mb-8">
-              <h3 className="text-center text-lg font-normal italic border-b border-slate-200 mb-4 pb-2">{t('preview.skills')}</h3>
+              <h3 className="text-center text-lg font-normal italic border-b border-slate-200 mb-4 pb-2">{pt('preview.skills')}</h3>
               <p className="text-center text-sm italic leading-loose">
                 {skillsArray.join(' • ')}
               </p>
@@ -827,7 +841,7 @@ const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
           )}
           {(data.languages || []).length > 0 && (
             <section>
-              <h3 className="text-center text-lg font-normal italic border-b border-slate-200 mb-4 pb-2">{t('preview.languages')}</h3>
+              <h3 className="text-center text-lg font-normal italic border-b border-slate-200 mb-4 pb-2">{pt('preview.languages')}</h3>
               <ul className="text-center text-sm italic space-y-1">
                 {data.languages.map(l => (
                   <li key={l.id}>{l.name} <span className="text-slate-400">- {l.proficiency}</span></li>
@@ -841,7 +855,7 @@ const ElegantTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const BoldTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full text-slate-900 flex flex-col font-sans">
     <header className="bg-black text-white p-12 print:bg-black print:text-white flex justify-between">
       <div className="flex-1">
@@ -865,14 +879,14 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
     <div className="flex-1 p-12 space-y-10">
       {data.summary && (
         <section>
-          <h3 className="text-2xl font-black uppercase mb-4"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{t('preview.about')}</span></h3>
+          <h3 className="text-2xl font-black uppercase mb-4"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{pt('preview.about')}</span></h3>
           <p className="text-lg font-medium leading-relaxed">{data.summary}</p>
         </section>
       )}
 
       {data.experience.length > 0 && (
         <section>
-          <h3 className="text-2xl font-black uppercase mb-6"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{t('preview.experience')}</span></h3>
+          <h3 className="text-2xl font-black uppercase mb-6"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{pt('preview.experience')}</span></h3>
           <div className="space-y-8">
             {data.experience.map((exp) => (
               <div key={exp.id} className="grid grid-cols-12 gap-4 border-b-4 border-black pb-6 last:border-0">
@@ -891,7 +905,7 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="grid grid-cols-2 gap-12">
         {data.education.length > 0 && (
           <section>
-            <h3 className="text-2xl font-black uppercase mb-6"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{t('preview.education')}</span></h3>
+            <h3 className="text-2xl font-black uppercase mb-6"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{pt('preview.education')}</span></h3>
             <div className="space-y-4">
               {data.education.map((edu) => (
                 <div key={edu.id}>
@@ -907,7 +921,7 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         <div className="space-y-8">
           {skillsArray.length > 0 && (
             <section>
-              <h3 className="text-2xl font-black uppercase mb-6"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{t('preview.skills')}</span></h3>
+              <h3 className="text-2xl font-black uppercase mb-6"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{pt('preview.skills')}</span></h3>
               <div className="flex flex-wrap gap-3">
                 {skillsArray.map((skill, i) => (
                   <span key={i} className="text-lg font-bold border-2 border-black px-3 py-1">{skill}</span>
@@ -917,7 +931,7 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
           )}
           {(data.languages || []).length > 0 && (
             <section>
-              <h3 className="text-2xl font-black uppercase mb-6"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{t('preview.languages')}</span></h3>
+              <h3 className="text-2xl font-black uppercase mb-6"><span className="bg-black text-white px-2 py-1 print:bg-black print:text-white">{pt('preview.languages')}</span></h3>
               <ul className="space-y-2">
                 {data.languages.map((l, i) => (
                   <li key={i} className="font-bold text-lg flex justify-between border-b-2 border-slate-200 pb-1">
@@ -938,7 +952,7 @@ const BoldTemplate = ({ data, skillsArray, t }: TemplateProps) => (
 
 // --- New Templates ---
 
-const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const TimelineTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[15mm] text-slate-800 flex flex-col font-sans relative overflow-hidden">
     {/* Decorative background line */}
     <div className="absolute left-[30mm] top-0 bottom-0 w-0.5 bg-slate-200"></div>
@@ -959,7 +973,7 @@ const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
 
       {data.summary && (
         <section className="pl-[25mm]">
-          <h3 className="font-black uppercase tracking-widest text-sm mb-3 text-slate-400">01 / {t('preview.profile')}</h3>
+          <h3 className="font-black uppercase tracking-widest text-sm mb-3 text-slate-400">01 / {pt('preview.profile')}</h3>
           <p className="text-sm leading-relaxed font-medium text-slate-700 bg-white p-4 border-l-4 border-slate-900 shadow-sm" style={{ borderColor: data.themeColor }}>{data.summary}</p>
         </section>
       )}
@@ -967,7 +981,7 @@ const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       {data.experience.length > 0 && (
         <section>
           <div className="pl-[25mm] mb-6">
-            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400">02 / {t('preview.experience')}</h3>
+            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400">02 / {pt('preview.experience')}</h3>
           </div>
           <div className="space-y-8">
             {data.experience.map((exp) => (
@@ -994,7 +1008,7 @@ const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       {data.education.length > 0 && (
         <section>
           <div className="pl-[25mm] mb-6">
-            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400">03 / {t('preview.education')}</h3>
+            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400">03 / {pt('preview.education')}</h3>
           </div>
           <div className="space-y-6">
             {data.education.map((edu) => (
@@ -1017,7 +1031,7 @@ const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
       <div className="pl-[25mm] grid grid-cols-2 gap-8">
         {skillsArray.length > 0 && (
           <section>
-            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400 mb-4">04 / {t('preview.skills')}</h3>
+            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400 mb-4">04 / {pt('preview.skills')}</h3>
             <div className="flex flex-wrap gap-2">
               {skillsArray.map((skill, i) => (
                 <span key={i} className="px-2 py-1 bg-slate-900 text-white text-xs font-bold rounded-sm" style={{ backgroundColor: data.themeColor }}>{skill}</span>
@@ -1027,7 +1041,7 @@ const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
         )}
         {(data.languages || []).length > 0 && (
           <section>
-            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400 mb-4">05 / {t('preview.languages')}</h3>
+            <h3 className="font-black uppercase tracking-widest text-sm text-slate-400 mb-4">05 / {pt('preview.languages')}</h3>
             <ul className="space-y-2">
               {data.languages.map((lang, i) => (
                 <li key={i} className="flex justify-between items-center text-sm border-b border-dotted border-slate-300 pb-1">
@@ -1043,7 +1057,7 @@ const TimelineTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const SwissTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const SwissTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[15mm] text-black flex flex-col font-sans antialiased">
     <header className="mb-12">
       <h1 className="text-6xl font-black tracking-tighter leading-none mb-4">{data.fullName || 'Seu Nome'}</h1>
@@ -1130,7 +1144,7 @@ const SwissTemplate = ({ data, skillsArray, t }: TemplateProps) => (
   </div>
 );
 
-const GridTemplate = ({ data, skillsArray, t }: TemplateProps) => (
+const GridTemplate = ({ data, skillsArray }: TemplateProps) => (
   <div className="w-full h-full p-[10mm] bg-slate-50 text-slate-800 flex flex-col font-sans">
     <div className="bg-white p-6 shadow-sm border border-slate-200 rounded-lg mb-4 flex justify-between items-center">
       <div>
@@ -1224,9 +1238,8 @@ const GridTemplate = ({ data, skillsArray, t }: TemplateProps) => (
 // --- Main Component ---
 
 export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template }) => {
-  const { t } = useLanguage();
   const skillsArray = data.skills ? data.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
-  const props = { data, skillsArray, t };
+  const props = { data, skillsArray };
 
   switch (template) {
     case 'classic':

@@ -5,7 +5,7 @@ import {
   ChevronDown, CheckCircle2, List, Lightbulb, Languages, X, ArrowUp, ArrowDown, Palette,
   Layout, Camera, Upload
 } from 'lucide-react';
-import { useLanguage } from '../LanguageContext';
+import { pt } from '../translations-pt';
 
 interface ResumeFormProps {
   data: ResumeData;
@@ -66,7 +66,6 @@ const FormSection = ({
 );
 
 export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
-  const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState<string | null>('personal');
   const [skillInput, setSkillInput] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -257,7 +256,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
       <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
         <h3 className="flex items-center gap-2 text-sm font-bold text-slate-800 uppercase mb-4">
           <Palette className="w-4 h-4 text-purple-600" />
-          {t('form.appearance')}
+          {pt('form.appearance')}
         </h3>
         <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
             <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-sm ring-2 ring-white border border-slate-200 flex-shrink-0 cursor-pointer hover:scale-105 transition-transform group">
@@ -270,8 +269,8 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
               />
             </div>
             <div className="flex-1">
-              <label className="text-sm font-semibold text-slate-900 block">{t('form.color')}</label>
-              <p className="text-xs text-slate-500 mt-1">{t('form.colorDesc')}</p>
+              <label className="text-sm font-semibold text-slate-900 block">{pt('form.color')}</label>
+              <p className="text-xs text-slate-500 mt-1">{pt('form.colorDesc')}</p>
             </div>
         </div>
       </div>
@@ -279,8 +278,8 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
       <div className="space-y-3">
         {/* Personal Info */}
         <FormSection 
-          title={t('form.personal')} 
-          subtitle={t('form.personalSub')}
+          title={pt('form.personal')} 
+          subtitle={pt('form.personalSub')}
           icon={User} 
           isOpen={activeSection === 'personal'} 
           onToggle={() => toggleSection('personal')}
@@ -300,14 +299,14 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                   </div>
                </div>
                <div className="flex-1">
-                 <label className="text-sm font-semibold text-slate-900 block mb-1">{t('form.photoLabel')}</label>
+                 <label className="text-sm font-semibold text-slate-900 block mb-1">{pt('form.photoLabel')}</label>
                  <div className="flex gap-2">
                     <button 
                       onClick={() => fileInputRef.current?.click()}
                       className="text-xs flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-md hover:bg-slate-50 hover:text-purple-600 transition-colors shadow-sm text-slate-600"
                     >
                       <Upload className="w-3.5 h-3.5" />
-                      {data.photo ? t('form.changePhoto') : t('form.addPhoto')}
+                      {data.photo ? pt('form.changePhoto') : pt('form.addPhoto')}
                     </button>
                     {data.photo && (
                       <button 
@@ -315,7 +314,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                         className="text-xs flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded-md hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm text-slate-600"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
-                        {t('form.remove')}
+                        {pt('form.remove')}
                       </button>
                     )}
                  </div>
@@ -326,13 +325,13 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                    accept="image/*"
                    className="hidden"
                  />
-                 <p className="text-[10px] text-slate-400 mt-1.5">{t('form.recPhoto')}</p>
+                 <p className="text-[10px] text-slate-400 mt-1.5">{pt('form.recPhoto')}</p>
                </div>
             </div>
 
             <div className="grid grid-cols-1 gap-5">
               <div>
-                <label className={labelClass}>{t('form.fullName')}</label>
+                <label className={labelClass}>{pt('form.fullName')}</label>
                 <input 
                   type="text" 
                   value={data.fullName}
@@ -342,7 +341,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                 />
               </div>
               <div>
-                <label className={labelClass}>{t('form.jobTitle')}</label>
+                <label className={labelClass}>{pt('form.jobTitle')}</label>
                 <input 
                   type="text" 
                   value={data.title}
@@ -353,7 +352,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className={labelClass}><span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {t('form.email')}</span></label>
+                  <label className={labelClass}><span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {pt('form.email')}</span></label>
                   <input 
                     type="email" 
                     value={data.email}
@@ -363,7 +362,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                   />
                 </div>
                 <div>
-                  <label className={labelClass}><span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {t('form.phone')}</span></label>
+                  <label className={labelClass}><span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {pt('form.phone')}</span></label>
                   <input 
                     type="text" 
                     value={data.phone}
@@ -373,7 +372,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                   />
                 </div>
                 <div>
-                  <label className={labelClass}><span className="flex items-center gap-1"><MapPin className="w-3 h-3"/> {t('form.location')}</span></label>
+                  <label className={labelClass}><span className="flex items-center gap-1"><MapPin className="w-3 h-3"/> {pt('form.location')}</span></label>
                   <input 
                     type="text" 
                     value={data.location}
@@ -383,7 +382,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                   />
                 </div>
                 <div>
-                  <label className={labelClass}><span className="flex items-center gap-1"><Globe className="w-3 h-3"/> {t('form.website')}</span></label>
+                  <label className={labelClass}><span className="flex items-center gap-1"><Globe className="w-3 h-3"/> {pt('form.website')}</span></label>
                   <input 
                     type="text" 
                     value={data.website}
@@ -399,21 +398,21 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
         {/* Summary */}
         <FormSection 
-          title={t('form.summary')} 
-          subtitle={t('form.summarySub')}
+          title={pt('form.summary')} 
+          subtitle={pt('form.summarySub')}
           icon={List} 
           isOpen={activeSection === 'summary'} 
           onToggle={() => toggleSection('summary')}
           isComplete={!!data.summary}
         >
           <div>
-            <label className={labelClass}>{t('form.bioLabel')}</label>
+            <label className={labelClass}>{pt('form.bioLabel')}</label>
             <textarea 
               value={data.summary}
               onChange={(e) => handleChange('summary', e.target.value)}
               rows={5}
               className={`${inputClass} leading-relaxed resize-y min-h-[120px]`}
-              placeholder={t('form.bioPlaceholder')}
+              placeholder={pt('form.bioPlaceholder')}
               spellCheck={true}
             />
           </div>
@@ -421,8 +420,8 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
         {/* Experience */}
         <FormSection 
-          title={t('form.experience')} 
-          subtitle={t('form.experienceSub')}
+          title={pt('form.experience')} 
+          subtitle={pt('form.experienceSub')}
           icon={Briefcase} 
           isOpen={activeSection === 'experience'} 
           onToggle={() => toggleSection('experience')}
@@ -431,7 +430,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
           <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-lg flex gap-3 text-sm text-blue-800 shadow-sm">
             <Lightbulb className="w-5 h-5 shrink-0 text-blue-600 mt-0.5" />
             <p className="leading-relaxed">
-              {t('form.expTip')}
+              {pt('form.expTip')}
             </p>
           </div>
 
@@ -464,7 +463,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className={labelClass}>{t('form.role')}</label>
+                    <label className={labelClass}>{pt('form.role')}</label>
                     <input 
                       value={exp.role}
                       onChange={(e) => handleExperienceChange(exp.id, 'role', e.target.value)}
@@ -473,7 +472,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>{t('form.company')}</label>
+                    <label className={labelClass}>{pt('form.company')}</label>
                     <input 
                       value={exp.company}
                       onChange={(e) => handleExperienceChange(exp.id, 'company', e.target.value)}
@@ -482,7 +481,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>{t('form.period')}</label>
+                    <label className={labelClass}>{pt('form.period')}</label>
                     <input 
                       value={exp.dates}
                       onChange={(e) => handleExperienceChange(exp.id, 'dates', e.target.value)}
@@ -491,7 +490,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>{t('form.location')}</label>
+                    <label className={labelClass}>{pt('form.location')}</label>
                     <input 
                       value={exp.location}
                       onChange={(e) => handleExperienceChange(exp.id, 'location', e.target.value)}
@@ -502,7 +501,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                 </div>
                 
                 <div>
-                  <label className={labelClass}>{t('form.desc')}</label>
+                  <label className={labelClass}>{pt('form.desc')}</label>
                   <textarea 
                     value={exp.description}
                     onChange={(e) => handleExperienceChange(exp.id, 'description', e.target.value)}
@@ -521,15 +520,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
               <div className="bg-white p-2 rounded-full shadow-sm border border-slate-200 group-hover:border-purple-200 group-hover:bg-purple-600 group-hover:text-white transition-all">
                  <Plus className="w-5 h-5" />
               </div>
-              {t('form.addExp')}
+              {pt('form.addExp')}
             </button>
           </div>
         </FormSection>
 
         {/* Education */}
         <FormSection 
-          title={t('form.education')} 
-          subtitle={t('form.educationSub')}
+          title={pt('form.education')} 
+          subtitle={pt('form.educationSub')}
           icon={GraduationCap} 
           isOpen={activeSection === 'education'} 
           onToggle={() => toggleSection('education')}
@@ -564,7 +563,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div className="md:col-span-2">
-                    <label className={labelClass}>{t('form.degree')}</label>
+                    <label className={labelClass}>{pt('form.degree')}</label>
                     <input 
                       value={edu.degree}
                       onChange={(e) => handleEducationChange(edu.id, 'degree', e.target.value)}
@@ -573,7 +572,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>{t('form.school')}</label>
+                    <label className={labelClass}>{pt('form.school')}</label>
                     <input 
                       value={edu.school}
                       onChange={(e) => handleEducationChange(edu.id, 'school', e.target.value)}
@@ -582,7 +581,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>{t('form.gradYear')}</label>
+                    <label className={labelClass}>{pt('form.gradYear')}</label>
                     <input 
                       value={edu.dates}
                       onChange={(e) => handleEducationChange(edu.id, 'dates', e.target.value)}
@@ -593,7 +592,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                 </div>
                 
                 <div>
-                  <label className={labelClass}>{t('form.details')}</label>
+                  <label className={labelClass}>{pt('form.details')}</label>
                   <textarea 
                     value={edu.description}
                     onChange={(e) => handleEducationChange(edu.id, 'description', e.target.value)}
@@ -612,15 +611,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
               <div className="bg-white p-2 rounded-full shadow-sm border border-slate-200 group-hover:border-purple-200 group-hover:bg-purple-600 group-hover:text-white transition-all">
                  <Plus className="w-5 h-5" />
               </div>
-              {t('form.addEdu')}
+              {pt('form.addEdu')}
             </button>
           </div>
         </FormSection>
 
         {/* Languages */}
         <FormSection 
-          title={t('form.languages')} 
-          subtitle={t('form.languagesSub')}
+          title={pt('form.languages')} 
+          subtitle={pt('form.languagesSub')}
           icon={Languages} 
           isOpen={activeSection === 'languages'} 
           onToggle={() => toggleSection('languages')}
@@ -635,7 +634,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
                     <div>
-                      <label className={labelClass}>{t('form.lang')}</label>
+                      <label className={labelClass}>{pt('form.lang')}</label>
                       <input 
                         value={lang.name}
                         onChange={(e) => handleLanguageChange(lang.id, 'name', e.target.value)}
@@ -644,7 +643,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                       />
                     </div>
                     <div>
-                      <label className={labelClass}>{t('form.level')}</label>
+                      <label className={labelClass}>{pt('form.level')}</label>
                       <select
                         value={lang.proficiency}
                         onChange={(e) => handleLanguageChange(lang.id, 'proficiency', e.target.value)}
@@ -676,22 +675,22 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
               <div className="bg-white p-1 rounded-md shadow-sm border border-slate-200 group-hover:border-purple-200">
                  <Plus className="w-4 h-4" />
               </div>
-              {t('form.addLang')}
+              {pt('form.addLang')}
             </button>
           </div>
         </FormSection>
 
         {/* Skills (Tag System) */}
         <FormSection 
-          title={t('form.skills')} 
-          subtitle={t('form.skillsSub')}
+          title={pt('form.skills')} 
+          subtitle={pt('form.skillsSub')}
           icon={CheckCircle2} 
           isOpen={activeSection === 'skills'} 
           onToggle={() => toggleSection('skills')}
           isComplete={data.skills.length > 5}
         >
           <div className="space-y-4">
-            <label className={labelClass}>{t('form.addSkill')}</label>
+            <label className={labelClass}>{pt('form.addSkill')}</label>
             
             <div className="flex gap-2">
               <input 
@@ -708,7 +707,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
                 className="px-5 py-2.5 bg-slate-900 text-white rounded-lg font-medium hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
               >
                 <Plus className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('form.add')}</span>
+                <span className="hidden sm:inline">{pt('form.add')}</span>
               </button>
             </div>
 
@@ -716,7 +715,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
               {getSkillsArray().length === 0 && (
                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 py-4 gap-2">
                     <Layout className="w-6 h-6 opacity-50" />
-                    <span className="text-sm italic">{t('form.emptySkills')}</span>
+                    <span className="text-sm italic">{pt('form.emptySkills')}</span>
                  </div>
               )}
               {getSkillsArray().map((skill, index) => (
@@ -739,7 +738,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
             <div>
                <label className={`${labelClass} mt-4 mb-3 flex items-center gap-2`}>
                  <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
-                 {t('form.suggestions')}
+                 {pt('form.suggestions')}
                </label>
                <div className="flex flex-wrap gap-2 pl-1">
                 {['Leadership', 'Teamwork', 'Excel', 'Problem Solving', 'English', 'Communication', 'Scrum', 'Python', 'Sales'].map(s => (

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { CheckCircle, XCircle, AlertTriangle, FileCheck, Search, Zap, Shield, X, Upload, FileText, Loader2, Image as ImageIcon, Download } from 'lucide-react';
 import { ResumeData } from '../types';
-import { useLanguage } from '../LanguageContext';
+// Removed multilingual support - Portuguese only
 import * as pdfjsLib from 'pdfjs-dist';
 import jsPDF from 'jspdf';
 
@@ -35,7 +35,6 @@ interface ExtractedText {
 }
 
 export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, showAsSection = false }) => {
-  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState<CheckResult[]>([]);
   const [isUploading, setIsUploading] = useState(false);

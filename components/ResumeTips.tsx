@@ -1,52 +1,51 @@
 import React, { useEffect } from 'react';
 import { Lightbulb, Target, AlertTriangle, FileCheck, BrainCircuit, Search, CheckCircle } from 'lucide-react';
-import { useLanguage } from '../LanguageContext';
+// Removed multilingual support - Portuguese only
 
 export const ResumeTips: React.FC = () => {
-  const { t, language } = useLanguage();
 
   const tips = [
     {
       icon: Target,
       color: "text-blue-600",
       bg: "bg-blue-50",
-      title: t('tips.t1'),
-      content: t('tips.c1')
+      title: 'Foque em Resultados',
+      content: 'Destaque o que você conquistou, não apenas suas tarefas diárias. Use números se possível.'
     },
     {
       icon: Search,
       color: "text-purple-600",
       bg: "bg-purple-50",
-      title: t('tips.t2'),
-      content: t('tips.c2')
+      title: 'Palavras-Chave',
+      content: 'Inclua termos técnicos da vaga para passar nos filtros automáticos (ATS).'
     },
     {
       icon: FileCheck,
       color: "text-emerald-600",
       bg: "bg-emerald-50",
-      title: t('tips.t3'),
-      content: t('tips.c3')
+      title: 'Tamanho Ideal',
+      content: '1 página é o ideal para início de carreira. Máximo 2 para profissionais seniores.'
     },
     {
       icon: AlertTriangle,
       color: "text-orange-600",
       bg: "bg-orange-50",
-      title: t('tips.t4'),
-      content: t('tips.c4')
+      title: 'Revisão de Português',
+      content: 'Erros de gramática eliminam candidatos. Revise com atenção ou peça para alguém ler.'
     },
     {
       icon: BrainCircuit,
       color: "text-pink-600",
       bg: "bg-pink-50",
-      title: t('tips.t5'),
-      content: t('tips.c5')
+      title: 'Personalização',
+      content: 'Adapte o objetivo profissional para cada vaga que aplicar, mostrando alinhamento.'
     },
     {
       icon: Lightbulb,
       color: "text-amber-600",
       bg: "bg-amber-50",
-      title: t('tips.t6'),
-      content: t('tips.c6')
+      title: 'Layout Limpo',
+      content: 'Evite gráficos excessivos ou fotos informais. A simplicidade facilita a leitura.'
     }
   ];
 
@@ -55,15 +54,15 @@ export const ResumeTips: React.FC = () => {
     const itemListSchema = {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      "name": t('tips.title'),
-      "description": t('tips.subtitle'),
+      "name": 'Como Criar um Currículo para o Mercado Brasileiro',
+      "description": 'Melhores práticas de RH e recrutamento.',
       "itemListElement": tips.map((tip, index) => ({
         "@type": "ListItem",
         "position": index + 1,
         "name": tip.title,
         "description": tip.content
       })),
-      "inLanguage": language === 'pt' ? 'pt-BR' : language === 'en' ? 'en-US' : 'es-ES'
+      "inLanguage": 'pt-BR'
     };
 
     // Remove existing tips schema script
@@ -84,17 +83,17 @@ export const ResumeTips: React.FC = () => {
       const script = document.querySelector('script[data-tips-schema]');
       if (script) script.remove();
     };
-  }, [tips, language, t]);
+  }, [tips]);
 
   return (
-    <section className="py-16 bg-white no-print border-t border-slate-100" id="dicas-curriculo" aria-label={t('tips.title')}>
+    <section className="py-16 bg-white no-print border-t border-slate-100" id="dicas-curriculo" aria-label="Como Criar um Currículo para o Mercado Brasileiro">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
-            {t('tips.title')}
+            Como Criar um Currículo para o Mercado Brasileiro
           </h2>
           <p className="text-slate-600 max-w-2xl mx-auto mb-4">
-            {t('tips.subtitle')}
+            Melhores práticas de RH e recrutamento.
           </p>
         </div>
 

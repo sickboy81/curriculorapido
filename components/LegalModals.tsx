@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Shield, FileText, AlertTriangle } from 'lucide-react';
-import { useLanguage } from '../LanguageContext';
+// Removed multilingual support - Portuguese only
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,7 +11,6 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, icon: Icon, children }) => {
-  const { t } = useLanguage();
   if (!isOpen) return null;
 
   return (
@@ -46,7 +45,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, icon: Icon, child
             onClick={onClose}
             className="px-5 py-2.5 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors shadow-sm"
           >
-            {t('modals.close')}
+            Entendi
           </button>
         </div>
       </div>
@@ -73,7 +72,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   confirmText,
   isDestructive = false
 }) => {
-  const { t } = useLanguage();
   if (!isOpen) return null;
 
   return (
@@ -95,7 +93,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               onClick={onClose}
               className="px-4 py-2 bg-white text-slate-700 font-medium rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
             >
-              {t('modals.cancel')}
+              Cancelar
             </button>
             <button 
               onClick={() => {
@@ -118,50 +116,35 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 };
 
 export const PrivacyModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  const { t, language } = useLanguage();
   // Using generic English structure if selected, otherwise fallback to existing logic or translations logic.
   // Since this is large text block, ideally we'd have full translation strings, but for brevity here we use what's provided in dictionary or simplified structure.
   
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t('modals.privacyTitle')} icon={Shield}>
-      <p>{language === 'pt' ? 'Última atualização' : 'Last update'}: {new Date().toLocaleDateString()}</p>
+    <Modal isOpen={isOpen} onClose={onClose} title="Política de Privacidade" icon={Shield}>
+      <p>Última atualização: {new Date().toLocaleDateString()}</p>
       
-      {/* Dynamic Content based on language for detailed policies would go here. 
-          For now, relying on the fact that privacy/terms are often static or require specific legal wording per language.
-          We will use the summarized logic from translations.ts for simplicity or render specific components.
-      */}
-      <p className="font-bold mt-4">{t('seo.privacyTitle')}</p>
-      <p>{t('seo.privacyText')}</p>
+      <p className="font-bold mt-4">Privacidade Absoluta (Client-Side)</p>
+      <p>Diferente de outros sites de currículo online, o Currículo Rápido opera com tecnologia Client-Side. Nós não armazenamos seus dados pessoais em servidores, garantindo total segurança.</p>
 
-      <p className="font-bold mt-4">{t('seo.securityTitle')}</p>
-      <p>{t('seo.securityText')}</p>
+      <p className="font-bold mt-4">Segurança de Dados e HTTPS</p>
+      <p>Utilizamos conexões seguras (HTTPS) de ponta a ponta e não utilizamos cookies de rastreamento invasivos. Seus dados de contato e histórico profissional ficam apenas no seu navegador.</p>
       
-      {/* Keeping legacy detailed structure for PT just in case, or simplifying */}
-      {language === 'pt' && (
-        <>
-          <h4 className="text-base font-bold text-slate-900 mt-4">1. Resumo da Privacidade</h4>
-          <p>A sua privacidade é nossa prioridade absoluta. O ponto mais importante que você deve saber é: <strong>Nós não armazenamos seus dados pessoais em nossos servidores de forma permanente.</strong></p>
-          <h4 className="text-base font-bold text-slate-900 mt-4">2. Coleta e Uso de Dados</h4>
-          <p>Este aplicativo funciona primariamente "client-side".</p>
-        </>
-      )}
+      <h4 className="text-base font-bold text-slate-900 mt-4">1. Resumo da Privacidade</h4>
+      <p>A sua privacidade é nossa prioridade absoluta. O ponto mais importante que você deve saber é: <strong>Nós não armazenamos seus dados pessoais em nossos servidores de forma permanente.</strong></p>
+      <h4 className="text-base font-bold text-slate-900 mt-4">2. Coleta e Uso de Dados</h4>
+      <p>Este aplicativo funciona primariamente "client-side".</p>
     </Modal>
   );
 };
 
 export const TermsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  const { t, language } = useLanguage();
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t('modals.termsTitle')} icon={FileText}>
-      <p className="font-bold mt-4">{t('seo.termsTitle')}</p>
-      <p>{t('seo.termsText')}</p>
+    <Modal isOpen={isOpen} onClose={onClose} title="Termos de Uso" icon={FileText}>
+      <p className="font-bold mt-4">Termos de Uso Simplificados</p>
+      <p>O uso do Currículo Rápido é 100% gratuito. Você tem o direito irrevogável de usar os currículos gerados para candidaturas de emprego, processos seletivos e LinkedIn.</p>
 
-      {language === 'pt' && (
-        <>
-         <h4 className="text-base font-bold text-slate-900 mt-4">1. Aceitação</h4>
-         <p>Ao acessar e utilizar o Gerador de Currículos, você aceita e concorda em estar vinculado a estes termos.</p>
-        </>
-      )}
+      <h4 className="text-base font-bold text-slate-900 mt-4">1. Aceitação</h4>
+      <p>Ao acessar e utilizar o Gerador de Currículos, você aceita e concorda em estar vinculado a estes termos.</p>
     </Modal>
   );
 };

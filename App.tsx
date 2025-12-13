@@ -9,14 +9,13 @@ import { ATSChecker } from './components/ATSChecker';
 const SEOContent = lazy(() => import('./components/SEOContent').then(module => ({ default: module.SEOContent })));
 const ResumeTips = lazy(() => import('./components/ResumeTips').then(module => ({ default: module.ResumeTips })));
 const CareerBlog = lazy(() => import('./components/CareerBlog').then(module => ({ default: module.CareerBlog })));
-import { ResumeData, INITIAL_DATA, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from './types';
-import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Globe, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical, FileCheck } from 'lucide-react';
-import { LanguageProvider, useLanguage, Language } from './LanguageContext';
+import { ResumeData, INITIAL_DATA_PT, BLANK_DATA, TemplateType } from './types';
+import { Printer, FileText, LayoutTemplate, Github, Heart, Trash2, Wand2, Download, Loader2, Share2, Facebook, Linkedin, Twitter, Menu, X, MoreVertical, FileCheck } from 'lucide-react';
+// Removed multilingual support - site is focused on Brazil
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const AppContent = () => {
-  const { t, language, setLanguage } = useLanguage();
 
   // Initialize state from localStorage if available, otherwise use defaults
   const [resumeData, setResumeData] = useState<ResumeData>(() => {
@@ -30,7 +29,7 @@ const AppContent = () => {
         console.error('Erro ao carregar dados:', error);
       }
     }
-    // Default to PT if no saved data
+    // Default data
     return INITIAL_DATA_PT;
   });
 
@@ -135,7 +134,7 @@ const AppContent = () => {
   };
 
   const shareUrl = "https://curriculorapido.com.br";
-  const shareText = t('hero.title');
+  const shareText = 'Construa seu futuro com o Currículo Rápido (Grátis)';
 
   const handleShare = (platform: 'whatsapp' | 'facebook' | 'linkedin' | 'twitter') => {
     let url = '';
@@ -161,11 +160,7 @@ const AppContent = () => {
       setResumeData(BLANK_DATA);
       localStorage.setItem('resume_builder_data', JSON.stringify(BLANK_DATA));
     } else if (confirmType === 'example') {
-      let exampleData = INITIAL_DATA_PT;
-      if (language === 'en') exampleData = INITIAL_DATA_EN;
-      if (language === 'es') exampleData = INITIAL_DATA_ES;
-
-      setResumeData(exampleData);
+      setResumeData(INITIAL_DATA_PT);
       localStorage.setItem('resume_builder_data', JSON.stringify(exampleData));
     }
     setConfirmType(null);
@@ -174,16 +169,16 @@ const AppContent = () => {
   const getConfirmProps = () => {
     if (confirmType === 'clear') {
       return {
-        title: t('modals.clearTitle'),
-        message: t('modals.clearMsg'),
-        confirmText: t('modals.clearConfirm'),
+        title: 'Limpar todos os dados?',
+        message: 'Tem certeza que deseja apagar todos os campos? Esta ação não pode ser desfeita.',
+        confirmText: 'Sim, limpar tudo',
         isDestructive: true
       };
     } else {
       return {
-        title: t('modals.exampleTitle'),
-        message: t('modals.exampleMsg'),
-        confirmText: t('modals.exampleConfirm'),
+        title: 'Carregar exemplo?',
+        message: 'Seus dados atuais serão substituídos por um modelo fictício.',
+        confirmText: 'Carregar Exemplo',
         isDestructive: false
       };
     }
@@ -208,22 +203,6 @@ const AppContent = () => {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4">
-              {/* Desktop: Language Selector */}
-              <div className="hidden lg:flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
-                <Globe className="w-4 h-4 text-slate-500 ml-2" />
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value as Language)}
-                  className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-1"
-                >
-                  <option value="pt">PT</option>
-                  <option value="en">EN</option>
-                  <option value="es">ES</option>
-                </select>
-              </div>
-
-
-
               {/* Template Selector - Always Visible but Adaptive */}
               <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200">
                 <LayoutTemplate className="w-4 h-4 text-slate-500 ml-2" />
@@ -232,26 +211,26 @@ const AppContent = () => {
                   onChange={(e) => setTemplate(e.target.value as TemplateType)}
                   className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-2 max-w-[110px] sm:max-w-none"
                 >
-                  <optgroup label={t('templates.groups.classic')}>
-                    <option value="modern">{t('templates.modern')}</option>
-                    <option value="classic">{t('templates.classic')}</option>
-                    <option value="elegant">{t('templates.elegant')}</option>
-                    <option value="executive">{t('templates.executive')}</option>
+                  <optgroup label="Clássicos">
+                    <option value="modern">Moderno</option>
+                    <option value="classic">Clássico</option>
+                    <option value="elegant">Elegante</option>
+                    <option value="executive">Executivo</option>
                   </optgroup>
-                  <optgroup label={t('templates.groups.creative')}>
-                    <option value="creative">{t('templates.creative')}</option>
-                    <option value="bold">{t('templates.bold')}</option>
-                    <option value="tech">{t('templates.tech')}</option>
+                  <optgroup label="Criativos">
+                    <option value="creative">Criativo</option>
+                    <option value="bold">Arrojado</option>
+                    <option value="tech">Tech</option>
                   </optgroup>
-                  <optgroup label={t('templates.groups.structured')}>
-                    <option value="sidebar">{t('templates.sidebar')}</option>
-                    <option value="compact">{t('templates.compact')}</option>
-                    <option value="minimalist">{t('templates.minimalist')}</option>
+                  <optgroup label="Estruturados">
+                    <option value="sidebar">Lateral</option>
+                    <option value="compact">Compacto</option>
+                    <option value="minimalist">Minimalista</option>
                   </optgroup>
-                  <optgroup label={t('templates.groups.new')}>
-                    <option value="timeline">{t('templates.timeline')}</option>
-                    <option value="swiss">{t('templates.swiss')}</option>
-                    <option value="grid">{t('templates.grid')}</option>
+                  <optgroup label="Novos Modelos">
+                    <option value="timeline">Linha do Tempo</option>
+                    <option value="swiss">Suíço</option>
+                    <option value="grid">Grid</option>
                   </optgroup>
                 </select>
               </div>
@@ -266,12 +245,12 @@ const AppContent = () => {
                 {isGeneratingPdf ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="hidden sm:inline">{t('nav.generating')}</span>
+                    <span className="hidden sm:inline">Gerando...</span>
                   </>
                 ) : (
                   <>
                     <Download className="w-4 h-4" />
-                    <span className="hidden sm:inline">{t('nav.download')}</span>
+                    <span className="hidden sm:inline">Baixar PDF</span>
                   </>
                 )}
               </button>
@@ -288,21 +267,6 @@ const AppContent = () => {
                 {/* Mobile Dropdown Menu */}
                 {showMobileMenu && (
                   <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-2 z-50 flex flex-col gap-1">
-                    <div className="px-4 py-2 border-b border-slate-100">
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <Globe className="w-4 h-4" />
-                        <select
-                          value={language}
-                          onChange={(e) => setLanguage(e.target.value as Language)}
-                          className="w-full bg-transparent focus:outline-none cursor-pointer"
-                        >
-                          <option value="pt">Português</option>
-                          <option value="en">English</option>
-                          <option value="es">Español</option>
-                        </select>
-                      </div>
-                    </div>
-
                   </div>
                 )}
               </div>
@@ -316,14 +280,14 @@ const AppContent = () => {
           {/* Intro Section */}
           <div className="text-center mb-8">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
-              {t('hero.title')}
+              Construa seu futuro com o Currículo Rápido (Grátis)
             </h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto" dangerouslySetInnerHTML={{ __html: t('hero.subtitle') }}>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto" dangerouslySetInnerHTML={{ __html: "Utilize nosso <strong>gerador de currículo grátis</strong> para criar um Curriculum Vitae (CV) profissional em PDF pronto para imprimir. Escolha modelos de <strong>currículo simples</strong>, moderno ou para <strong>Jovem Aprendiz</strong>. Funciona no celular e sem cadastro." }}>
             </p>
 
             {/* Social Sharing */}
             <div className="flex items-center justify-center gap-4 mt-6">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('social.share')}</span>
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Compartilhe e ajude amigos:</span>
               <button onClick={() => handleShare('whatsapp')} className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors" title="WhatsApp">
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg>
               </button>
@@ -352,7 +316,7 @@ const AppContent = () => {
                   className="flex-1 py-2.5 px-4 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl transition-colors flex items-center justify-center gap-2 font-medium text-sm border border-purple-200"
                 >
                   <Wand2 className="w-4 h-4" />
-                  {t('nav.example')}
+                  Exemplo
                 </button>
                 <button
                   onClick={() => setConfirmType('clear')}
@@ -360,13 +324,13 @@ const AppContent = () => {
                   className="flex-1 py-2.5 px-4 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 rounded-xl transition-colors flex items-center justify-center gap-2 font-medium text-sm border border-slate-200 hover:border-red-200"
                 >
                   <Trash2 className="w-4 h-4" />
-                  {t('nav.clear')}
+                  Limpar
                 </button>
               </div>
 
               <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" id="form">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
-                  <h2 className="font-semibold text-slate-800">{t('form.title')}</h2>
+                  <h2 className="font-semibold text-slate-800">Editor Currículo Rápido</h2>
                   <p className="text-xs text-slate-500 mt-1">
                     Preencha seus dados e veja seu <strong>curriculum vitae</strong> sendo criado em tempo real. 
                     Todos os campos são opcionais e podem ser editados a qualquer momento.
@@ -394,13 +358,27 @@ const AppContent = () => {
             <div className="lg:col-span-7 xl:col-span-8 lg:sticky lg:top-24">
               <div className="flex flex-col items-center">
                 <div className="mb-4 text-sm text-slate-500 font-medium flex items-center gap-2">
-                  {t('preview.realtime')}
+                  Visualização em tempo real do PDF
                 </div>
                 
                 {/* Template Info Box */}
                 <div className="mb-4 w-full max-w-2xl bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
                   <p className="text-blue-900 leading-relaxed">
-                    <strong>Dica de Template:</strong> O modelo <strong>{t(`templates.${template}`)}</strong> é ideal para{' '}
+                    <strong>Dica de Template:</strong> O modelo <strong>{
+                      template === 'modern' ? 'Moderno' :
+                      template === 'classic' ? 'Clássico' :
+                      template === 'elegant' ? 'Elegante' :
+                      template === 'executive' ? 'Executivo' :
+                      template === 'creative' ? 'Criativo' :
+                      template === 'bold' ? 'Arrojado' :
+                      template === 'tech' ? 'Tech' :
+                      template === 'sidebar' ? 'Lateral' :
+                      template === 'compact' ? 'Compacto' :
+                      template === 'minimalist' ? 'Minimalista' :
+                      template === 'timeline' ? 'Linha do Tempo' :
+                      template === 'swiss' ? 'Suíço' :
+                      template === 'grid' ? 'Grid' : 'Moderno'
+                    }</strong> é ideal para{' '}
                     {template === 'modern' && 'profissionais que buscam um visual contemporâneo e limpo, perfeito para áreas de tecnologia e startups.'}
                     {template === 'classic' && 'setores tradicionais como direito, contabilidade e administração, transmitindo seriedade e profissionalismo.'}
                     {template === 'elegant' && 'executivos e profissionais seniores que precisam transmitir sofisticação e experiência.'}
@@ -530,17 +508,17 @@ const AppContent = () => {
                   onClick={() => setShowPrivacy(true)}
                   className="hover:text-slate-900 transition-colors cursor-pointer"
                 >
-                  {t('footer.privacy')}
+                  Privacidade
                 </button>
                 <button
                   onClick={() => setShowTerms(true)}
                   className="hover:text-slate-900 transition-colors cursor-pointer"
                 >
-                  {t('footer.terms')}
+                  Termos de Uso
                 </button>
               </div>
               <div className="flex items-center gap-1">
-                {t('footer.madeWith')} <Heart className="w-3 h-3 text-red-500 fill-current" />
+                Feito no Brasil com <Heart className="w-3 h-3 text-red-500 fill-current" />
               </div>
             </div>
 
@@ -572,7 +550,7 @@ const AppContent = () => {
             disabled={isGeneratingPdf}
             type="button"
             className="bg-purple-600 text-white p-4 rounded-full shadow-lg shadow-purple-600/30 flex items-center gap-2 hover:bg-purple-700 transition-all active:scale-95 disabled:bg-purple-400"
-            aria-label={t('nav.download')}
+            aria-label="Baixar PDF"
           >
             {isGeneratingPdf ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
           </button>
@@ -596,8 +574,6 @@ const AppContent = () => {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
+    <AppContent />
   );
 }

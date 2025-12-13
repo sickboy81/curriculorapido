@@ -235,6 +235,7 @@ const AppContent = () => {
                     <option value="modern">{t('templates.modern')}</option>
                     <option value="classic">{t('templates.classic')}</option>
                     <option value="elegant">{t('templates.elegant')}</option>
+                    <option value="executive">{t('templates.executive')}</option>
                   </optgroup>
                   <optgroup label={t('templates.groups.creative')}>
                     <option value="creative">{t('templates.creative')}</option>
@@ -402,6 +403,7 @@ const AppContent = () => {
                     {template === 'modern' && 'profissionais que buscam um visual contemporâneo e limpo, perfeito para áreas de tecnologia e startups.'}
                     {template === 'classic' && 'setores tradicionais como direito, contabilidade e administração, transmitindo seriedade e profissionalismo.'}
                     {template === 'elegant' && 'executivos e profissionais seniores que precisam transmitir sofisticação e experiência.'}
+                    {template === 'executive' && 'executivos e líderes que precisam destacar experiência e resultados estratégicos.'}
                     {template === 'creative' && 'designers, publicitários e profissionais de marketing que querem destacar criatividade.'}
                     {template === 'tech' && 'desenvolvedores, engenheiros de software e profissionais de TI que valorizam um visual moderno.'}
                     {template === 'sidebar' && 'quem tem muitas informações para organizar de forma clara e hierárquica.'}
@@ -410,7 +412,7 @@ const AppContent = () => {
                     {template === 'timeline' && 'mostrar evolução de carreira de forma visual e cronológica.'}
                     {template === 'swiss' && 'designers e profissionais que valorizam tipografia e layout precisos, estilo suíço.'}
                     {template === 'grid' && 'organizar informações de forma estruturada e visual, ideal para portfólios e projetos.'}
-                    {!['modern', 'classic', 'elegant', 'creative', 'tech', 'sidebar', 'compact', 'minimalist', 'timeline', 'swiss', 'grid'].includes(template) && 
+                    {!['modern', 'classic', 'elegant', 'executive', 'creative', 'bold', 'tech', 'sidebar', 'compact', 'minimalist', 'timeline', 'swiss', 'grid'].includes(template) && 
                      'diversas áreas profissionais, com layout profissional e otimizado para ATS.'}
                     {' '}Todos os modelos são <strong>compatíveis com sistemas ATS</strong> e podem ser <strong>baixados em PDF</strong> gratuitamente.
                   </p>

@@ -1246,7 +1246,7 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({ data, template }) 
     case 'elegant':
       return <Wrapper><ElegantTemplate {...props} /></Wrapper>;
     case 'bold':
-      return <Wrapper><ModernTemplate {...props} /></Wrapper>; // Fallback since BoldTemplate was missing
+      return <Wrapper><BoldTemplate {...props} /></Wrapper>;
     case 'timeline':
       return <Wrapper><TimelineTemplate {...props} /></Wrapper>;
     case 'swiss':

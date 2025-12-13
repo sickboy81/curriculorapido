@@ -7,7 +7,8 @@ import jsPDF from 'jspdf';
 
 // Configure PDF.js worker
 if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  // Use local worker file from public folder (more reliable than CDN)
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 }
 
 interface ATSCheckerProps {
@@ -45,48 +46,57 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, showAsSectio
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const extractTextFromPDF = async (file: File): Promise<ExtractedText> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    let fullText = '';
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({ 
+        data: arrayBuffer,
+        verbosity: 0 // Suppress warnings
+      });
+      const pdf = await loadingTask.promise;
+      let fullText = '';
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items.map((item: any) => item.str).join(' ');
-      fullText += pageText + ' ';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map((item: any) => item.str).join(' ');
+        fullText += pageText + ' ';
+      }
+
+      // Extract information from text
+      const emailRegex = /[\w\.-]+@[\w\.-]+\.\w+/gi;
+      const phoneRegex = /(\(?\d{2}\)?\s?)?(\d{4,5}[-.\s]?\d{4})/gi;
+      
+      const emails = fullText.match(emailRegex) || [];
+      const phones = fullText.match(phoneRegex) || [];
+
+      // Try to identify sections
+      const lowerText = fullText.toLowerCase();
+      const hasExperience = /experiência|experience|trabalho|work|emprego|job|histórico|histórico profissional/i.test(fullText);
+      const hasEducation = /formação|education|escolaridade|acadêmica|academic|graduação|degree/i.test(fullText);
+      const hasSkills = /habilidades|skills|competências|competencies|conhecimentos/i.test(fullText);
+      const hasLanguages = /idiomas|languages|idioma|language/i.test(fullText);
+
+      // Try to extract summary (usually at the beginning, before experience)
+      let summary = '';
+      const summaryMatch = fullText.match(/(?:resumo|summary|objetivo|objective)[\s\S]{0,300}/i);
+      if (summaryMatch) {
+        summary = summaryMatch[0].substring(0, 300);
+      }
+
+      return {
+        fullText: fullText.trim(),
+        email: emails[0] || undefined,
+        phone: phones[0] || undefined,
+        summary: summary || undefined,
+        hasExperience,
+        hasEducation,
+        hasSkills,
+        hasLanguages
+      };
+    } catch (error) {
+      console.error('Erro ao extrair texto do PDF:', error);
+      throw new Error('Não foi possível extrair texto do PDF. Verifique se o arquivo não está corrompido ou protegido por senha.');
     }
-
-    // Extract information from text
-    const emailRegex = /[\w\.-]+@[\w\.-]+\.\w+/gi;
-    const phoneRegex = /(\(?\d{2}\)?\s?)?(\d{4,5}[-.\s]?\d{4})/gi;
-    
-    const emails = fullText.match(emailRegex) || [];
-    const phones = fullText.match(phoneRegex) || [];
-
-    // Try to identify sections
-    const lowerText = fullText.toLowerCase();
-    const hasExperience = /experiência|experience|trabalho|work|emprego|job|histórico|histórico profissional/i.test(fullText);
-    const hasEducation = /formação|education|escolaridade|acadêmica|academic|graduação|degree/i.test(fullText);
-    const hasSkills = /habilidades|skills|competências|competencies|conhecimentos/i.test(fullText);
-    const hasLanguages = /idiomas|languages|idioma|language/i.test(fullText);
-
-    // Try to extract summary (usually at the beginning, before experience)
-    let summary = '';
-    const summaryMatch = fullText.match(/(?:resumo|summary|objetivo|objective)[\s\S]{0,300}/i);
-    if (summaryMatch) {
-      summary = summaryMatch[0].substring(0, 300);
-    }
-
-    return {
-      fullText: fullText.trim(),
-      email: emails[0] || undefined,
-      phone: phones[0] || undefined,
-      summary: summary || undefined,
-      hasExperience,
-      hasEducation,
-      hasSkills,
-      hasLanguages
-    };
   };
 
   const analyzeText = (extractedText: ExtractedText): CheckResult[] => {
@@ -592,9 +602,10 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, showAsSectio
       setResults(checks);
       setIsOpen(true);
       setAnalysisMode('pdf');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao processar PDF:', error);
-      alert('Erro ao processar o PDF. Certifique-se de que o arquivo não está corrompido e tente novamente.');
+      const errorMessage = error?.message || 'Erro desconhecido';
+      alert(`Erro ao processar o PDF: ${errorMessage}\n\nCertifique-se de que:\n- O arquivo não está corrompido\n- O PDF não está protegido por senha\n- O arquivo é um PDF válido`);
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {

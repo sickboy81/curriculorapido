@@ -509,7 +509,6 @@ const AppContent = () => {
               {/* Export Menu */}
               <ExportMenu
                 resumeData={resumeData}
-                template={template}
                 onImport={(data) => {
                   setResumeData(data);
                   success('Backup importado com sucesso!');

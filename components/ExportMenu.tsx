@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Download, FileText, FileJson, Printer, ChevronDown, Loader2 } from 'lucide-react';
-import { ResumeData, TemplateType } from '../types';
-import { exportToWord, exportToJSON, importFromJSON } from '../utils/exporters';
+import { ResumeData } from '../types';
+import { exportToJSON, importFromJSON } from '../utils/exporters';
 import { analytics } from '../utils/analytics';
 import { Tooltip } from './Tooltip';
 
 interface ExportMenuProps {
   resumeData: ResumeData;
-  template?: TemplateType;
   onImport?: (data: ResumeData) => void;
   onExportPdf?: () => void;
   isGeneratingPdf?: boolean;
@@ -17,7 +16,6 @@ interface ExportMenuProps {
 
 export const ExportMenu: React.FC<ExportMenuProps> = ({
   resumeData,
-  template = 'modern',
   onImport,
   onExportPdf,
   isGeneratingPdf = false,
@@ -25,7 +23,6 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
   error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isExportingWord, setIsExportingWord] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,21 +40,6 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
-
-  const handleExportWord = async () => {
-    try {
-      setIsExportingWord(true);
-      await exportToWord(resumeData, template);
-      analytics.trackResumeExport('word');
-      success?.('Currículo exportado para Word com sucesso!');
-    } catch (err) {
-      error?.('Erro ao exportar para Word. Por favor, tente novamente.');
-      console.error('Word export error:', err);
-    } finally {
-      setIsExportingWord(false);
-      setIsOpen(false);
-    }
-  };
 
   const handleExportJSON = () => {
     try {
@@ -128,23 +110,6 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
               )}
               <span className="text-sm font-medium text-slate-700">
                 {isGeneratingPdf ? 'Gerando PDF...' : 'Baixar PDF'}
-              </span>
-            </button>
-          </Tooltip>
-
-          <Tooltip content="Exporte para Word (.docx) para editar no Microsoft Word ou Google Docs" position="left">
-            <button
-              onClick={handleExportWord}
-              disabled={isExportingWord}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-slate-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:translate-x-1"
-            >
-              {isExportingWord ? (
-                <Loader2 className="w-4 h-4 animate-spin text-slate-500" />
-              ) : (
-                <FileText className="w-4 h-4 text-slate-600" />
-              )}
-              <span className="text-sm font-medium text-slate-700">
-                {isExportingWord ? 'Exportando...' : 'Exportar Word'}
               </span>
             </button>
           </Tooltip>

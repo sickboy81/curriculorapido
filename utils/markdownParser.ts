@@ -82,12 +82,32 @@ export const parseMarkdown = (text: string): string => {
 export const stripMarkdown = (text: string): string => {
   if (!text) return '';
   
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '$1')
-    .replace(/__(.+?)__/g, '$1')
-    .replace(/\*(.+?)\*/g, '$1')
-    .replace(/_(.+?)_/g, '$1')
-    .replace(/^[•\-\*]\s+/gm, '')
-    .replace(/^\d+\.\s+/gm, '');
+  let cleaned = text;
+  
+  // Remove HTML tags if any
+  cleaned = cleaned.replace(/<[^>]*>/g, '');
+  
+  // Remove bold and italic markdown
+  cleaned = cleaned.replace(/\*\*(.+?)\*\*/g, '$1');
+  cleaned = cleaned.replace(/__(.+?)__/g, '$1');
+  cleaned = cleaned.replace(/(?<![•\-\*\d])\*([^*]+?)\*(?![*])/g, '$1');
+  cleaned = cleaned.replace(/(?<!_)_([^_]+?)_(?!_)/g, '$1');
+  
+  // Remove list markers but keep the content, converting to plain text
+  // Bullet points: convert to plain text lines
+  cleaned = cleaned.replace(/^[•\-\*]\s+/gm, '');
+  // Numbered lists: convert to plain text lines
+  cleaned = cleaned.replace(/^\d+\.\s+/gm, '');
+  
+  // Clean up multiple spaces
+  cleaned = cleaned.replace(/\s+/g, ' ');
+  
+  // Trim each line and remove empty lines
+  cleaned = cleaned.split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .join('\n');
+  
+  return cleaned.trim();
 };
 

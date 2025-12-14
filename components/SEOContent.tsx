@@ -13,7 +13,7 @@ export const SEOContent: React.FC = () => {
           <h2 className="text-3xl font-bold text-slate-900 mb-6">
             O Gerador de Curriculum Vitae (CV) Mais Seguro e Gratuito
           </h2>
-          <p className="text-lg text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: "O <strong>Currículo Rápido</strong> foi desenvolvido para impulsionar sua carreira no mercado brasileiro em 2025. Crie documentos profissionais, modelos de currículo prontos para preencher e compatíveis com sistemas ATS (Gupy, Kenoby) sem expor seus dados. Ideal para quem busca <strong>Primeiro Emprego</strong>, <strong>Estágio</strong> ou cargos de liderança." }}>
+          <p className="text-lg text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: "O <strong>Currículo Rápido</strong> foi desenvolvido para impulsionar sua carreira no mercado brasileiro em 2025. Crie documentos profissionais, modelos de currículo prontos para preencher e compatíveis com sistemas ATS (Gupy, Kenoby) sem expor seus dados. Com ferramentas integradas de <strong>verificação ATS</strong>, <strong>análise de vagas</strong>, <strong>exportação para PDF/JSON</strong> e <strong>gerenciamento de múltiplos currículos</strong>. Ideal para quem busca <strong>Primeiro Emprego</strong>, <strong>Estágio</strong> ou cargos de liderança." }}>
           </p>
         </div>
 
@@ -46,8 +46,8 @@ export const SEOContent: React.FC = () => {
               <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-600 mb-4">
                 <Download className="w-8 h-8" />
               </div>
-              <h4 className="font-bold text-slate-800 mb-2">4. Baixe em PDF</h4>
-              <p className="text-sm text-slate-600">Seu currículo está pronto para imprimir. Faça o download gratuito do currículo em PDF de alta qualidade instantaneamente.</p>
+              <h4 className="font-bold text-slate-800 mb-2">4. Baixe ou Exporte</h4>
+              <p className="text-sm text-slate-600">Baixe em PDF ou exporte para JSON para backup. Use o verificador de ATS e análise de vaga para otimizar seu currículo.</p>
             </div>
           </div>
         </div>
@@ -92,8 +92,9 @@ export const SEOContent: React.FC = () => {
             <p className="text-slate-600 leading-relaxed">
               Nossos modelos de currículo são otimizados para serem lidos por recrutadores e robôs de triagem (ATS) comuns no Brasil, aumentando suas chances de entrevista. Nossos <strong>modelos de currículo</strong> são testados e validados para garantir compatibilidade 
               com os principais <strong>sistemas ATS do Brasil</strong>, incluindo <strong>Gupy</strong>, <strong>Kenoby</strong>, 
-              <strong>Vagas.com</strong>, <strong>Indeed</strong> e outros. Isso aumenta significativamente suas chances de passar 
-              pela triagem inicial e chegar até o recrutador. <a href="#dicas-curriculo" className="text-purple-600 hover:text-purple-800 underline">Veja nossas dicas para otimizar seu CV</a> e 
+              <strong>Vagas.com</strong>, <strong>Indeed</strong> e outros. Além disso, oferecemos uma <strong>ferramenta integrada de verificação ATS</strong> 
+              que analisa seu currículo e fornece sugestões de melhoria, além de uma <strong>análise de compatibilidade com vagas</strong> 
+              para personalizar seu CV para cada oportunidade. <a href="#dicas-curriculo" className="text-purple-600 hover:text-purple-800 underline">Veja nossas dicas para otimizar seu CV</a> e 
               maximizar suas oportunidades de entrevista.
             </p>
           </article>
@@ -165,6 +166,38 @@ export const SEOContent: React.FC = () => {
               </div>
               <h4 className="font-bold text-slate-900 mb-2">13 Modelos Profissionais</h4>
               <p className="text-sm text-slate-700">Escolha entre modelos Moderno, Clássico, Executivo, Criativo e mais. Todos otimizados para o mercado brasileiro.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-xl p-6 border border-cyan-200 hover:shadow-lg transition-all">
+              <div className="w-12 h-12 bg-cyan-600 rounded-lg flex items-center justify-center mb-4">
+                <FileCheck2 className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-bold text-slate-900 mb-2">Verificador de ATS</h4>
+              <p className="text-sm text-slate-700">Ferramenta integrada para verificar a compatibilidade do seu currículo com sistemas ATS e receber sugestões de melhoria.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-violet-50 to-violet-100 rounded-xl p-6 border border-violet-200 hover:shadow-lg transition-all">
+              <div className="w-12 h-12 bg-violet-600 rounded-lg flex items-center justify-center mb-4">
+                <FileText className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-bold text-slate-900 mb-2">Exportação Múltipla</h4>
+              <p className="text-sm text-slate-700">Exporte para PDF ou JSON para backup. Importe backups anteriores para continuar editando.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl p-6 border border-rose-200 hover:shadow-lg transition-all">
+              <div className="w-12 h-12 bg-rose-600 rounded-lg flex items-center justify-center mb-4">
+                <CheckCircle className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-bold text-slate-900 mb-2">Análise de Vaga</h4>
+              <p className="text-sm text-slate-700">Cole a descrição da vaga e receba sugestões personalizadas para adaptar seu currículo e aumentar suas chances.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl p-6 border border-teal-200 hover:shadow-lg transition-all">
+              <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center mb-4">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-bold text-slate-900 mb-2">Múltiplos Currículos</h4>
+              <p className="text-sm text-slate-700">Salve e gerencie múltiplos currículos, histórico de versões e compartilhe via link único. Tudo salvo localmente.</p>
             </div>
           </div>
         </div>
@@ -272,6 +305,73 @@ export const SEOContent: React.FC = () => {
                   <strong>palavras-chave</strong> e <strong>qualificações</strong> relevantes. Se seu CV não for compatível com ATS, 
                   ele pode ser rejeitado antes mesmo de chegar a um recrutador humano. Nossos <strong>modelos de currículo</strong> são 
                   desenvolvidos especificamente para serem <strong>lidos corretamente por sistemas ATS</strong>, aumentando suas chances de passar na triagem.
+                </p>
+                <p className="mt-3">
+                  <strong>Dica:</strong> Use nossa ferramenta <strong>Verificador de ATS</strong> integrada para analisar seu currículo e receber 
+                  sugestões de melhorias antes de enviar. Ela verifica se todas as informações essenciais estão presentes e se o formato é 
+                  compatível com sistemas ATS.
+                </p>
+              </div>
+            </details>
+
+            <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
+              <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
+                <span>Posso exportar meu currículo em outros formatos além de PDF?</span>
+                <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
+                <p>
+                  Sim! Além do <strong>PDF</strong> (ideal para envio por email e impressão), você pode exportar seu currículo em:
+                </p>
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li><strong>JSON</strong> - Para fazer backup e restaurar seus dados depois</li>
+                </ul>
+                <p className="mt-3">
+                  Você também pode <strong>importar</strong> backups anteriores em formato JSON para continuar editando um currículo salvo.
+                </p>
+              </div>
+            </details>
+
+            <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
+              <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
+                <span>Como funciona a análise de compatibilidade com vagas?</span>
+                <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
+                <p>
+                  Nossa ferramenta de <strong>Análise de Compatibilidade com Vaga</strong> ajuda você a personalizar seu currículo para cada 
+                  oportunidade de emprego. Basta colar a descrição completa da vaga e nossa ferramenta irá:
+                </p>
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li>Analisar palavras-chave e comparar com seu currículo</li>
+                  <li>Calcular um score de compatibilidade</li>
+                  <li>Sugerir palavras-chave faltantes para adicionar</li>
+                  <li>Indicar melhorias específicas para aumentar suas chances</li>
+                </ul>
+                <p className="mt-3">
+                  <strong>100% gratuito e sem uso de APIs pagas</strong> - toda a análise é feita localmente no seu navegador, 
+                  garantindo privacidade total.
+                </p>
+              </div>
+            </details>
+
+            <details className="group bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
+              <summary className="flex items-center justify-between cursor-pointer p-4 font-bold text-slate-800 hover:bg-slate-100 transition-colors list-none">
+                <span>Posso salvar múltiplos currículos e restaurar versões anteriores?</span>
+                <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 pt-0 text-slate-600 leading-relaxed border-t border-transparent group-open:border-slate-100">
+                <p>
+                  Sim! O Currículo Rápido oferece um sistema completo de gerenciamento:
+                </p>
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li><strong>Múltiplos currículos:</strong> Salve quantos currículos você quiser, cada um com um nome personalizado</li>
+                  <li><strong>Histórico de versões:</strong> Todas as alterações são salvas automaticamente. Você pode visualizar e restaurar versões anteriores a qualquer momento</li>
+                  <li><strong>Compartilhamento:</strong> Gere um link único para compartilhar seu currículo com recrutadores ou colegas</li>
+                  <li><strong>Auto-save:</strong> Seus dados são salvos automaticamente enquanto você edita</li>
+                </ul>
+                <p className="mt-3">
+                  Tudo é armazenado <strong>localmente no seu navegador</strong>, garantindo total privacidade e segurança dos seus dados.
                 </p>
               </div>
             </details>

@@ -2,28 +2,235 @@ import { ResumeData, TemplateType } from '../types';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, Table, TableRow, TableCell, WidthType } from 'docx';
 import { stripMarkdown } from './markdownParser';
 
+// Template-specific export configuration
+interface TemplateExportConfig {
+  headerAlignment: AlignmentType;
+  nameSize: number;
+  nameColor?: string;
+  nameBold: boolean;
+  titleSize: number;
+  titleItalic: boolean;
+  contactSeparator: string;
+  contactSize: number;
+  sectionTitleSize: number;
+  sectionSpacing: { before: number; after: number };
+  experienceLayout: 'classic' | 'modern';
+  educationLayout: 'classic' | 'modern';
+  textSize: { experience: number; education: number; description: number };
+}
+
+const getTemplateConfig = (template: TemplateType, themeColor: string): TemplateExportConfig => {
+  const configs: Record<TemplateType, TemplateExportConfig> = {
+    modern: {
+      headerAlignment: AlignmentType.CENTER,
+      nameSize: 40, // 20pt
+      nameBold: true,
+      titleSize: 32, // 16pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 32, // 16pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 28, education: 28, description: 24 }, // 14pt, 14pt, 12pt
+    },
+    classic: {
+      headerAlignment: AlignmentType.CENTER,
+      nameSize: 38, // 19pt
+      nameBold: true,
+      titleSize: 30, // 15pt
+      titleItalic: true,
+      contactSeparator: '  •  ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'classic',
+      educationLayout: 'classic',
+      textSize: { experience: 26, education: 26, description: 22 }, // 13pt, 13pt, 11pt
+    },
+    bold: {
+      headerAlignment: AlignmentType.LEFT,
+      nameSize: 56, // 28pt
+      nameColor: themeColor,
+      nameBold: true,
+      titleSize: 40, // 20pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 36, // 18pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 28, education: 28, description: 24 }, // 14pt, 14pt, 12pt
+    },
+    sidebar: {
+      headerAlignment: AlignmentType.LEFT,
+      nameSize: 38, // 19pt
+      nameBold: true,
+      titleSize: 32, // 16pt
+      titleItalic: false,
+      contactSeparator: ' • ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 26, education: 26, description: 24 }, // 13pt, 13pt, 12pt
+    },
+    minimalist: {
+      headerAlignment: AlignmentType.CENTER,
+      nameSize: 38, // 19pt
+      nameBold: true,
+      titleSize: 32, // 16pt
+      titleItalic: false,
+      contactSeparator: ' • ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 28, // 14pt
+      sectionSpacing: { before: 150, after: 150 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 26, education: 26, description: 24 }, // 13pt, 13pt, 12pt
+    },
+    executive: {
+      headerAlignment: AlignmentType.LEFT,
+      nameSize: 44, // 22pt
+      nameBold: true,
+      titleSize: 34, // 17pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 26, education: 26, description: 24 }, // 13pt, 13pt, 12pt
+    },
+    creative: {
+      headerAlignment: AlignmentType.CENTER,
+      nameSize: 40, // 20pt
+      nameBold: true,
+      titleSize: 34, // 17pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 28, education: 28, description: 24 }, // 14pt, 14pt, 12pt
+    },
+    tech: {
+      headerAlignment: AlignmentType.LEFT,
+      nameSize: 40, // 20pt
+      nameBold: true,
+      titleSize: 32, // 16pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 28, education: 28, description: 24 }, // 14pt, 14pt, 12pt
+    },
+    compact: {
+      headerAlignment: AlignmentType.LEFT,
+      nameSize: 38, // 19pt
+      nameBold: true,
+      titleSize: 32, // 16pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 28, // 14pt
+      sectionSpacing: { before: 150, after: 150 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 26, education: 26, description: 24 }, // 13pt, 13pt, 12pt
+    },
+    elegant: {
+      headerAlignment: AlignmentType.CENTER,
+      nameSize: 38, // 19pt
+      nameBold: true,
+      titleSize: 30, // 15pt
+      titleItalic: true,
+      contactSeparator: '  •  ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'classic',
+      educationLayout: 'classic',
+      textSize: { experience: 26, education: 26, description: 22 }, // 13pt, 13pt, 11pt
+    },
+    timeline: {
+      headerAlignment: AlignmentType.LEFT,
+      nameSize: 44, // 22pt
+      nameBold: true,
+      titleSize: 34, // 17pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 28, education: 28, description: 24 }, // 14pt, 14pt, 12pt
+    },
+    swiss: {
+      headerAlignment: AlignmentType.LEFT,
+      nameSize: 48, // 24pt
+      nameBold: true,
+      titleSize: 34, // 17pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 28, education: 28, description: 24 }, // 14pt, 14pt, 12pt
+    },
+    grid: {
+      headerAlignment: AlignmentType.CENTER,
+      nameSize: 40, // 20pt
+      nameBold: true,
+      titleSize: 34, // 17pt
+      titleItalic: false,
+      contactSeparator: ' | ',
+      contactSize: 22, // 11pt
+      sectionTitleSize: 30, // 15pt
+      sectionSpacing: { before: 200, after: 200 },
+      experienceLayout: 'modern',
+      educationLayout: 'modern',
+      textSize: { experience: 28, education: 28, description: 24 }, // 14pt, 14pt, 12pt
+    },
+  };
+
+  return configs[template] || configs.modern;
+};
+
 export const exportToWord = async (resumeData: ResumeData, template: TemplateType = 'modern'): Promise<void> => {
   const children: (Paragraph | Table)[] = [];
 
   // Get theme color from resume data or use default based on template
   const themeColor = resumeData.themeColor || getTemplateColor(template);
-
-  // Header - Template-specific formatting
-  const headerAlignment = ['sidebar', 'executive'].includes(template) 
-    ? AlignmentType.LEFT 
-    : AlignmentType.CENTER;
   
+  // Get template-specific configuration
+  const config = getTemplateConfig(template, themeColor);
+  
+  // Name
   children.push(
     new Paragraph({
       children: [
         new TextRun({
           text: resumeData.fullName || 'Nome Completo',
-          bold: true,
-          size: template === 'bold' ? 36 : 32,
+          bold: config.nameBold,
+          size: config.nameSize,
+          color: config.nameColor ? config.nameColor.replace('#', '') : undefined,
         }),
       ],
       heading: HeadingLevel.TITLE,
-      alignment: headerAlignment,
+      alignment: config.headerAlignment,
       spacing: { after: 200 },
     })
   );
@@ -36,17 +243,18 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
           new TextRun({
             text: resumeData.title,
             bold: true,
-            size: 24,
+            italics: config.titleItalic,
+            size: config.titleSize,
             color: themeColor.replace('#', ''),
           }),
         ],
-        alignment: headerAlignment,
-        spacing: { after: 300 },
+        alignment: config.headerAlignment,
+        spacing: { after: 250 },
       })
     );
   }
 
-  // Contact Information - Template-specific layout
+  // Contact Information
   const contactInfo: string[] = [];
   if (resumeData.email) contactInfo.push(resumeData.email);
   if (resumeData.phone) contactInfo.push(resumeData.phone);
@@ -54,50 +262,69 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
   if (resumeData.website) contactInfo.push(resumeData.website);
 
   if (contactInfo.length > 0) {
-    const contactSeparator = ['sidebar', 'minimalist'].includes(template) ? ' • ' : ' | ';
     children.push(
       new Paragraph({
         children: [
           new TextRun({
-            text: contactInfo.join(contactSeparator),
-            size: 20,
+            text: contactInfo.join(config.contactSeparator),
+            size: config.contactSize,
             color: '666666',
           }),
         ],
-        alignment: headerAlignment,
+        alignment: config.headerAlignment,
         spacing: { after: 300 },
       })
     );
   }
 
   // Professional Summary
-  if (resumeData.summary) {
+  if (resumeData.summary && resumeData.summary.trim()) {
     children.push(
       new Paragraph({
-        children: [
+          children: [
             new TextRun({
               text: 'RESUMO PROFISSIONAL',
               bold: true,
-              size: 24,
+              size: config.sectionTitleSize,
               color: themeColor.replace('#', ''),
             }),
         ],
-        spacing: { before: 200, after: 200 },
+        spacing: config.sectionSpacing,
       })
     );
-    // Remove markdown from summary
+    // Remove markdown from summary and convert to clean text
     const cleanSummary = stripMarkdown(resumeData.summary);
-    children.push(
-      new Paragraph({
-        children: [
-          new TextRun({
-            text: cleanSummary,
-            size: 22,
-          }),
-        ],
-        spacing: { after: 300 },
-      })
-    );
+    if (cleanSummary.trim()) {
+      // Split summary into paragraphs if it has line breaks
+      if (cleanSummary.includes('\n')) {
+        const paragraphs = cleanSummary.split('\n').filter(p => p.trim());
+        paragraphs.forEach((para, index) => {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: para.trim(),
+                  size: config.textSize.description,
+                }),
+              ],
+              spacing: { after: index === paragraphs.length - 1 ? 300 : 150 },
+            })
+          );
+        });
+      } else {
+        children.push(
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: cleanSummary.trim(),
+                size: config.textSize.description,
+              }),
+            ],
+            spacing: { after: 300 },
+          })
+        );
+      }
+    }
   }
 
   // Experience
@@ -108,67 +335,127 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
             new TextRun({
               text: 'EXPERIÊNCIA PROFISSIONAL',
               bold: true,
-              size: 24,
+              size: config.sectionTitleSize,
               color: themeColor.replace('#', ''),
             }),
         ],
-        spacing: { before: 200, after: 200 },
+        spacing: config.sectionSpacing,
       })
     );
 
     resumeData.experience.forEach((exp) => {
-      // Role and Company in one line
-      const roleCompany = exp.role + (exp.company ? ` - ${exp.company}` : '');
-      children.push(
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: roleCompany,
-              bold: true,
-              size: 22,
-            }),
-          ],
-          spacing: { after: 80 },
-        })
-      );
-      
-      // Dates and Location in one line if both exist
-      const dateLocation = [exp.dates, exp.location].filter(Boolean).join(' • ');
-      if (dateLocation) {
+      // Template-specific formatting for experience
+      if (config.experienceLayout === 'classic') {
+        // Classic style: Role and dates on same line
         children.push(
           new Paragraph({
             children: [
               new TextRun({
-                text: dateLocation,
-                italics: true,
-                size: 20,
+                text: exp.role,
+                bold: true,
+                size: config.textSize.experience,
+              }),
+              new TextRun({
+                text: `  ${exp.dates || ''}`,
+                size: config.contactSize,
                 color: '666666',
               }),
             ],
-            spacing: { after: 100 },
+            spacing: { after: 80 },
           })
         );
+        if (exp.company) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: exp.company,
+                  italics: true,
+                  size: config.contactSize,
+                  color: themeColor.replace('#', ''),
+                }),
+                ...(exp.location ? [
+                  new TextRun({
+                    text: ` • ${exp.location}`,
+                    italics: true,
+                    size: config.contactSize,
+                    color: '666666',
+                  })
+                ] : []),
+              ],
+              spacing: { after: 100 },
+            })
+          );
+        }
+      } else {
+        // Default style: Role and Company in one line
+        const roleCompany = exp.role + (exp.company ? ` - ${exp.company}` : '');
+        children.push(
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: roleCompany,
+                bold: true,
+                size: config.textSize.experience,
+              }),
+            ],
+            spacing: { after: 80 },
+          })
+        );
+        
+        // Dates and Location in one line if both exist
+        const dateLocation = [exp.dates, exp.location].filter(Boolean).join(' • ');
+        if (dateLocation) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: dateLocation,
+                  italics: config.experienceLayout === 'classic',
+                  size: config.contactSize,
+                  color: '666666',
+                }),
+              ],
+              spacing: { after: 100 },
+            })
+          );
+        }
       }
       
       // Description with markdown removed
-      if (exp.description) {
+      if (exp.description && exp.description.trim()) {
         const cleanDescription = stripMarkdown(exp.description);
-        // Split into paragraphs if there are line breaks
-        const paragraphs = cleanDescription.split('\n').filter(p => p.trim());
-        if (paragraphs.length > 0) {
-          paragraphs.forEach((para, index) => {
+        if (cleanDescription.trim()) {
+          // If the description has multiple lines, split them
+          if (cleanDescription.includes('\n')) {
+            const paragraphs = cleanDescription.split('\n').filter(p => p.trim());
+            paragraphs.forEach((para, index) => {
+              children.push(
+                new Paragraph({
+                  children: [
+                    new TextRun({
+                      text: para.trim(),
+                      size: config.textSize.description,
+                    }),
+                  ],
+                  spacing: { after: index === paragraphs.length - 1 ? 200 : 100 },
+                })
+              );
+            });
+          } else {
+            // Single paragraph
             children.push(
               new Paragraph({
                 children: [
-                  new TextRun({
-                    text: para.trim(),
-                    size: 22,
-                  }),
+                    new TextRun({
+                      text: cleanDescription.trim(),
+                      size: config.textSize.description,
+                    }),
                 ],
-                spacing: { after: index === paragraphs.length - 1 ? 200 : 100 },
+                spacing: { after: 200 },
               })
             );
-          });
+          }
         }
       }
     });
@@ -182,66 +469,122 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
             new TextRun({
               text: 'FORMAÇÃO ACADÊMICA',
               bold: true,
-              size: 24,
+              size: config.sectionTitleSize,
               color: themeColor.replace('#', ''),
             }),
         ],
-        spacing: { before: 200, after: 200 },
+        spacing: config.sectionSpacing,
       })
     );
 
     resumeData.education.forEach((edu) => {
-      // Degree and School in one line
-      const degreeSchool = edu.degree + (edu.school ? ` - ${edu.school}` : '');
-      children.push(
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: degreeSchool,
-              bold: true,
-              size: 22,
-            }),
-          ],
-          spacing: { after: 80 },
-        })
-      );
-      
-      // Dates
-      if (edu.dates) {
+      // Template-specific formatting for education
+      if (config.educationLayout === 'classic') {
+        // Classic style: School first, then degree
+        if (edu.school) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: edu.school,
+                  bold: true,
+                  size: config.textSize.education,
+                }),
+                ...(edu.dates ? [
+                  new TextRun({
+                    text: `  ${edu.dates}`,
+                    size: config.contactSize,
+                    color: '666666',
+                  })
+                ] : []),
+              ],
+              spacing: { after: 80 },
+            })
+          );
+        }
+        if (edu.degree) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: edu.degree,
+                  italics: true,
+                  size: config.contactSize,
+                  color: themeColor.replace('#', ''),
+                }),
+              ],
+              spacing: { after: edu.description ? 100 : 200 },
+            })
+          );
+        }
+      } else {
+        // Default style: Degree and School in one line
+        const degreeSchool = edu.degree + (edu.school ? ` - ${edu.school}` : '');
         children.push(
           new Paragraph({
             children: [
               new TextRun({
-                text: edu.dates,
-                italics: true,
-                size: 20,
-                color: '666666',
+                text: degreeSchool,
+                bold: true,
+                size: config.textSize.education,
               }),
             ],
-            spacing: { after: edu.description ? 100 : 200 },
+            spacing: { after: 80 },
           })
         );
+        
+        // Dates
+        if (edu.dates) {
+          children.push(
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: edu.dates,
+                  italics: config.educationLayout === 'classic',
+                  size: config.contactSize,
+                  color: '666666',
+                }),
+              ],
+              spacing: { after: edu.description ? 100 : 200 },
+            })
+          );
+        }
       }
       
       // Description with markdown removed
-      if (edu.description) {
+      if (edu.description && edu.description.trim()) {
         const cleanDescription = stripMarkdown(edu.description);
-        // Split into paragraphs if there are line breaks
-        const paragraphs = cleanDescription.split('\n').filter(p => p.trim());
-        if (paragraphs.length > 0) {
-          paragraphs.forEach((para, index) => {
+        if (cleanDescription.trim()) {
+          // If the description has multiple lines, split them
+          if (cleanDescription.includes('\n')) {
+            const paragraphs = cleanDescription.split('\n').filter(p => p.trim());
+            paragraphs.forEach((para, index) => {
+              children.push(
+                new Paragraph({
+                  children: [
+                    new TextRun({
+                  text: para.trim(),
+                  size: config.textSize.description,
+                }),
+                  ],
+                  spacing: { after: index === paragraphs.length - 1 ? 200 : 100 },
+                })
+              );
+            });
+          } else {
+            // Single paragraph
             children.push(
               new Paragraph({
                 children: [
                   new TextRun({
-                    text: para.trim(),
-                    size: 20,
+                    text: cleanDescription.trim(),
+                    size: config.textSize.description,
                   }),
                 ],
-                spacing: { after: index === paragraphs.length - 1 ? 200 : 100 },
+                spacing: { after: 200 },
               })
             );
-          });
+          }
         }
       }
     });
@@ -257,11 +600,11 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
             new TextRun({
               text: 'HABILIDADES',
               bold: true,
-              size: 24,
+              size: config.sectionTitleSize,
               color: themeColor.replace('#', ''),
             }),
           ],
-          spacing: { before: 200, after: 200 },
+          spacing: config.sectionSpacing,
         })
       );
       children.push(
@@ -269,7 +612,7 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
           children: [
             new TextRun({
               text: skillsArray.join(', '),
-              size: 22,
+              size: config.textSize.description,
             }),
           ],
           spacing: { after: 300 },
@@ -286,11 +629,11 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
             new TextRun({
               text: 'IDIOMAS',
               bold: true,
-              size: 24,
+              size: config.sectionTitleSize,
               color: themeColor.replace('#', ''),
             }),
         ],
-        spacing: { before: 200, after: 200 },
+        spacing: config.sectionSpacing,
       })
     );
 
@@ -300,7 +643,7 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
           children: [
             new TextRun({
               text: `${lang.name} - ${lang.proficiency}`,
-              size: 22,
+              size: config.textSize.description,
             }),
           ],
           spacing: { after: 100 },
@@ -309,29 +652,44 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
     });
   }
 
-  // Create document
+  // Create document with proper margins
   const doc = new Document({
     sections: [
       {
-        properties: {},
+        properties: {
+          page: {
+            margin: {
+              top: 1440, // 2.5cm
+              right: 1440,
+              bottom: 1440,
+              left: 1440,
+            },
+          },
+        },
         children: children,
       },
     ],
   });
 
   // Generate and download
-  const blob = await Packer.toBlob(doc);
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  const safeName = resumeData.fullName
-    ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()
-    : 'curriculo';
-  link.download = `${safeName}_cv.docx`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  try {
+    const blob = await Packer.toBlob(doc);
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const safeName = resumeData.fullName
+      ? resumeData.fullName.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase()
+      : 'curriculo';
+    // Include template name in filename to help user identify which template was used
+    link.download = `${safeName}_${template}_cv.docx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Erro ao gerar documento Word:', error);
+    throw new Error('Falha ao gerar documento Word. Verifique o console para mais detalhes.');
+  }
 };
 
 export const exportToJSON = (resumeData: ResumeData): void => {

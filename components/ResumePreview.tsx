@@ -229,8 +229,8 @@ const ClassicTemplate = ({ data, skillsArray }: TemplateProps) => (
 );
 
 const SidebarTemplate = ({ data, skillsArray }: TemplateProps) => (
-  <div className="w-full h-full text-slate-800 flex font-sans">
-    <aside className="w-[35%] text-white p-6 flex flex-col gap-6 print:text-white" style={{ backgroundColor: '#0f172a' }}>
+  <div className="w-full h-full min-h-[297mm] text-slate-800 flex font-sans">
+    <aside className="w-[35%] h-full min-h-[297mm] text-white p-6 flex flex-col gap-6 print:text-white" style={{ backgroundColor: '#0f172a' }}>
       {data.photo && (
         <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-slate-700 shadow-md">
           <img src={data.photo} alt={data.fullName} className="w-full h-full object-cover" />
@@ -283,7 +283,7 @@ const SidebarTemplate = ({ data, skillsArray }: TemplateProps) => (
         </div>
       )}
     </aside>
-    <div className="flex-1 p-8 space-y-8 bg-white">
+    <div className="flex-1 h-full min-h-[297mm] p-8 space-y-8 bg-white">
       {data.summary && (
         <section>
           <h3 className="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">

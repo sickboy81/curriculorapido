@@ -439,3 +439,4 @@ Análise de descrição de vaga:
 - Extração de palavras-chave
 - Cálculo de score de compatibilidade
 
+

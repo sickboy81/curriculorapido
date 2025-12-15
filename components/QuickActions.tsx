@@ -129,3 +129,4 @@ HABILIDADES: ${resumeData.skills || ''}
   );
 };
 
+

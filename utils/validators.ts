@@ -74,3 +74,4 @@ export const getCharacterCount = (text: string): number => {
   return text.length;
 };
 
+

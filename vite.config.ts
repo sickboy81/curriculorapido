@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['pwa-icon.svg', 'robots.txt'],
+        includeAssets: ['pwa-icon.svg', 'robots.txt', 'ads.txt'],
         manifest: {
           name: 'Currículo Rápido',
           short_name: 'Currículo',

@@ -440,3 +440,6 @@ Análise de descrição de vaga:
 - Cálculo de score de compatibilidade
 
 
+
+
+

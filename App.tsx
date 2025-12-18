@@ -29,6 +29,13 @@ import { QuickActions } from './components/QuickActions';
 import { ResumeTipsInline } from './components/ResumeTipsInline';
 import { ResumeValidator } from './components/ResumeValidator';
 import { AccessibilityHelper } from './components/AccessibilityHelper';
+import { useSEO } from './hooks/useSEO';
+
+// Import pages
+import { Sobre } from './components/pages/Sobre';
+import { Contato } from './components/pages/Contato';
+import { Privacidade } from './components/pages/Privacidade';
+import { Termos } from './components/pages/Termos';
 
 // Lazy load heavy SEO components for better performance
 const SEOContent = lazy(() => import('./components/SEOContent').then(module => ({ default: module.SEOContent })));
@@ -41,6 +48,15 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const AppContent = () => {
+  // SEO para página inicial
+  useSEO({
+    title: 'Currículo Rápido | Criar Currículo Online Grátis PDF (Modelos 2025)',
+    description: 'O melhor gerador de currículo grátis do Brasil (2025). Crie seu Curriculum Vitae (CV) em PDF para imprimir. Modelos de currículo prontos (Simples, Moderno, Jovem Aprendiz). Sem cadastro e funciona no celular. Baixe agora grátis!',
+    canonical: 'https://curriculorapido.com.br/',
+    ogTitle: 'Currículo Rápido | Criar Currículo Online Grátis PDF',
+    ogDescription: 'Crie seu Curriculum Vitae profissional em minutos com o Currículo Rápido. Escolha modelos prontos, preencha e baixe em PDF. 100% Gratuito.',
+    ogImage: 'https://curriculorapido.com.br/preview-image.jpg'
+  });
 
   // Initialize state from localStorage if available, otherwise use defaults
   const [resumeData, setResumeData] = useState<ResumeData>(() => {
@@ -813,7 +829,7 @@ const AppContent = () => {
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-slate-900">Currículo Rápido</span> &copy; {new Date().getFullYear()}
               </div>
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-6 flex-wrap justify-center">
                 <button
                   onClick={() => setShowKeyboardShortcuts(true)}
                   className="hover:text-slate-900 transition-colors cursor-pointer flex items-center gap-1"
@@ -822,18 +838,30 @@ const AppContent = () => {
                   <Keyboard className="w-4 h-4" />
                   <span className="hidden sm:inline">Atalhos</span>
                 </button>
-                <button
-                  onClick={() => setShowPrivacy(true)}
+                <a
+                  href="/sobre"
+                  className="hover:text-slate-900 transition-colors cursor-pointer"
+                >
+                  Sobre
+                </a>
+                <a
+                  href="/contato"
+                  className="hover:text-slate-900 transition-colors cursor-pointer"
+                >
+                  Contato
+                </a>
+                <a
+                  href="/privacidade"
                   className="hover:text-slate-900 transition-colors cursor-pointer"
                 >
                   Privacidade
-                </button>
-                <button
-                  onClick={() => setShowTerms(true)}
+                </a>
+                <a
+                  href="/termos"
                   className="hover:text-slate-900 transition-colors cursor-pointer"
                 >
                   Termos de Uso
-                </button>
+                </a>
               </div>
               <div className="flex items-center gap-1">
                 Feito no Brasil com <Heart className="w-3 h-3 text-red-500 fill-current" />
@@ -963,6 +991,24 @@ const AppContent = () => {
 };
 
 export default function App() {
+  // Simple routing based on pathname
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+  
+  // Route to different pages
+  if (pathname === '/sobre') {
+    return <Sobre />;
+  }
+  if (pathname === '/contato') {
+    return <Contato />;
+  }
+  if (pathname === '/privacidade') {
+    return <Privacidade />;
+  }
+  if (pathname === '/termos') {
+    return <Termos />;
+  }
+  
+  // Default route - main app
   return (
     <ErrorBoundary>
       <AppContent />

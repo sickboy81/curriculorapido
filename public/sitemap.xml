@@ -37,22 +37,5 @@
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://curriculorapido.com.br/termos" />
   </url>
   <!-- SEO Sections -->
-  <url>
-    <loc>https://curriculorapido.com.br/#dicas-carreira</loc>
-    <lastmod>2025-12-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://curriculorapido.com.br/#dicas-curriculo</loc>
-    <lastmod>2025-12-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://curriculorapido.com.br/#seo-content</loc>
-    <lastmod>2025-12-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
+
 </urlset>

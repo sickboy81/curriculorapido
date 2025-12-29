@@ -163,7 +163,7 @@ const ClassicTemplate = ({ data, skillsArray }: TemplateProps) => (
       {data.summary && (
         <section>
           <h3 className="text-base font-bold uppercase border-b border-black mb-3">{pt('preview.profile')}</h3>
-            <MarkdownText text={data.summary} className="text-sm leading-relaxed text-justify" />
+          <MarkdownText text={data.summary} className="text-sm leading-relaxed text-justify" />
         </section>
       )}
       {data.experience.length > 0 && (
@@ -604,7 +604,7 @@ const TechTemplate = ({ data, skillsArray }: TemplateProps) => (
       </div>
       {data.photo && (
         <div className="w-24 h-24 border-2 border-black p-1">
-          <img src={data.photo} alt="user" className="w-full h-full object-cover grayscale" />
+          <img src={data.photo} alt={data.fullName || "User photo"} className="w-full h-full object-cover grayscale" />
         </div>
       )}
     </header>

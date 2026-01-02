@@ -187,3 +187,4 @@ Cada template é um componente React que recebe `ResumeData` e renderiza o layou
 
 
 
+

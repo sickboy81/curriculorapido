@@ -47,8 +47,22 @@ export const Privacy = () => {
 
                         <h2>3. Publicidade e Cookies</h2>
                         <p>
-                            Utilizamos o Google AdSense para exibir anúncios. O Google pode usar cookies para veicular anúncios com base em suas visitas anteriores a este ou a outros sites.
-                            Você pode optar por não receber publicidade personalizada acessando as Configurações de anúncios do Google.
+                            Utilizamos o Google AdSense para exibir anúncios em nosso site. O Google AdSense é um serviço de publicidade fornecido pelo Google Inc. que utiliza cookies e tecnologias similares para veicular anúncios relevantes aos usuários.
+                        </p>
+                        <p>
+                            <strong>Como funcionam os anúncios:</strong>
+                        </p>
+                        <ul className="list-disc list-inside space-y-2 ml-4">
+                            <li>O Google pode usar cookies para personalizar anúncios com base em suas visitas anteriores a este ou a outros sites</li>
+                            <li>Os anúncios são exibidos de forma clara e identificada como publicidade</li>
+                            <li>Não incentivamos cliques em anúncios e não manipulamos a experiência do usuário para aumentar cliques</li>
+                            <li>Os anúncios são posicionados de forma a não interferir na navegação ou no conteúdo principal do site</li>
+                        </ul>
+                        <p>
+                            <strong>Controle de publicidade:</strong> Você pode optar por não receber publicidade personalizada acessando as <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">Configurações de anúncios do Google</a>. Você também pode desativar cookies de terceiros nas configurações do seu navegador.
+                        </p>
+                        <p>
+                            <strong>Informações coletadas pelo AdSense:</strong> O Google pode coletar informações sobre sua visita ao nosso site e outros sites para fornecer anúncios relevantes. Essas informações são tratadas de acordo com a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">Política de Privacidade do Google</a>.
                         </p>
 
                         <h2>4. Analytics</h2>

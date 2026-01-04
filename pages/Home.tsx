@@ -317,6 +317,6 @@ export const Home = () => {
             <div id="resume-to-pdf" className="pdf-generation-container">
                 <ResumePreview data={resumeData} template={template} />
             </div>
-        </>
+        </div>
     );
 };

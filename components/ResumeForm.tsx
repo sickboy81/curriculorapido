@@ -37,7 +37,7 @@ const FormSection = ({
   children,
   isComplete = false
 }: React.PropsWithChildren<FormSectionProps>) => (
-  <div className={`bg-white rounded-xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-purple-500 shadow-lg ring-1 ring-purple-100' : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'}`}>
+  <div className={`bg-white rounded-xl border transition-all duration-300 ${isOpen ? 'border-purple-500 shadow-lg ring-1 ring-purple-100' : 'border-slate-200 hover:border-slate-300 hover:shadow-sm overflow-hidden'}`}>
     <button 
       onClick={onToggle} 
       className={`w-full flex items-center justify-between p-5 transition-colors ${isOpen ? 'bg-slate-50' : 'bg-white hover:bg-slate-50'}`}

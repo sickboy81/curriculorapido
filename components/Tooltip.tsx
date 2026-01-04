@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 interface TooltipProps {
@@ -28,8 +28,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
     let top = 0;
     let left = 0;
 
-    // Offset para distância do elemento
-    const offset = 8;
+    // Espaçamento entre o ícone e o tooltip
+    const gap = 8;
 
     switch (position) {
       case 'top':
@@ -37,7 +37,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
         left = rect.left + scrollX + rect.width / 2;
         break;
       case 'bottom':
-        top = rect.bottom + scrollY + offset;
+        top = rect.bottom + scrollY + gap;
         left = rect.left + scrollX + rect.width / 2;
         break;
       case 'left':
@@ -45,8 +45,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
         left = rect.left + scrollX;
         break;
       case 'right':
+        // Posiciona verticalmente no centro do ícone
         top = rect.top + scrollY + rect.height / 2;
-        left = rect.right + scrollX + offset;
+        // Posiciona horizontalmente logo após o ícone
+        left = rect.right + scrollX + gap;
         break;
     }
 
@@ -62,47 +64,20 @@ export const Tooltip: React.FC<TooltipProps> = ({
     setIsVisible(false);
   };
 
-  const getTransformClasses = () => {
-    switch (position) {
-      case 'top':
-        return '-translate-x-1/2 -translate-y-[calc(100%+4px)]';
-      case 'bottom':
-        return '-translate-x-1/2';
-      case 'left':
-        return '-translate-x-[calc(100%+4px)] -translate-y-1/2';
-      case 'right':
-        return '-translate-y-1/2';
-      default:
-        return '-translate-x-1/2 -translate-y-[calc(100%+4px)]';
-    }
-  };
-
-  const getArrowClasses = () => {
-    switch (position) {
-      case 'top':
-        return 'top-full left-1/2 -translate-x-1/2 -mt-[3px] border-l-transparent border-r-transparent border-b-transparent border-t-slate-900';
-      case 'bottom':
-        return 'bottom-full left-1/2 -translate-x-1/2 -mb-[3px] border-l-transparent border-r-transparent border-t-transparent border-b-slate-900';
-      case 'left':
-        return 'left-full top-1/2 -translate-y-1/2 -ml-[3px] border-t-transparent border-b-transparent border-r-transparent border-l-slate-900';
-      case 'right':
-        return 'right-full top-1/2 -translate-y-1/2 -mr-[3px] border-t-transparent border-b-transparent border-l-transparent border-r-slate-900';
-      default:
-        return 'top-full left-1/2 -translate-x-1/2 -mt-[3px] border-l-transparent border-r-transparent border-b-transparent border-t-slate-900';
-    }
-  };
-
   const tooltipContent = isVisible && (
     <div
       role="tooltip"
-      className={`fixed z-[99999] px-3 py-1.5 text-xs text-white bg-slate-900 rounded-lg shadow-xl whitespace-nowrap pointer-events-none ${getTransformClasses()}`}
+      className="fixed z-[99999] px-3 py-2 text-xs text-white bg-slate-900 rounded-lg shadow-xl whitespace-nowrap pointer-events-none"
       style={{
         top: `${coords.top}px`,
         left: `${coords.left}px`,
+        transform: position === 'right' ? 'translateY(-50%)' : 
+                   position === 'left' ? 'translate(-100%, -50%)' :
+                   position === 'bottom' ? 'translateX(-50%)' :
+                   'translate(-50%, calc(-100% - 8px))',
       }}
     >
       {content}
-      <span className={`absolute w-0 h-0 border-[5px] ${getArrowClasses()}`} />
     </div>
   );
 

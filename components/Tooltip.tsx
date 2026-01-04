@@ -57,21 +57,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
     if (show) {
       updatePosition();
     }
-  }, [show]);
-
-  const tooltip = show && (
-    <span
-      role="tooltip"
-      className="fixed z-[99999] px-2 py-1 text-xs text-white bg-slate-800 rounded shadow-lg whitespace-nowrap pointer-events-none"
-      style={{
-        top: `${coords.top}px`,
-        left: position === 'right' ? `${coords.left}px` : `${coords.left}px`,
-        transform: position === 'right' || position === 'left' ? 'translateY(-50%)' : 'translateX(-50%)',
-      }}
-    >
-      {content}
-    </span>
-  );
+  }, [show, position]);
 
   return (
     <>
@@ -80,12 +66,26 @@ export const Tooltip: React.FC<TooltipProps> = ({
         className={`relative inline-block ${className}`}
         onMouseEnter={() => {
           setShow(true);
+          setTimeout(updatePosition, 0);
         }}
         onMouseLeave={() => setShow(false)}
       >
         {children}
       </span>
-      {show && typeof document !== 'undefined' && createPortal(tooltip, document.body)}
+      {show && typeof document !== 'undefined' && createPortal(
+        <span
+          role="tooltip"
+          className="fixed z-[99999] px-2 py-1 text-xs text-white bg-slate-800 rounded shadow-lg whitespace-nowrap pointer-events-none"
+          style={{
+            top: `${coords.top}px`,
+            left: `${coords.left}px`,
+            transform: position === 'right' || position === 'left' ? 'translateY(-50%)' : 'translateX(-50%)',
+          }}
+        >
+          {content}
+        </span>,
+        document.body
+      )}
     </>
   );
 };

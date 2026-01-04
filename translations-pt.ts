@@ -1,6 +1,10 @@
 // Portuguese-only translations (site focused on Brazil)
 export const pt = (key: string): string => {
   const texts: Record<string, string> = {
+    // Hero Section
+    'hero.title': 'Crie Seu Currículo Profissional em Minutos',
+    'hero.subtitle': 'O melhor <strong>gerador de currículo grátis do Brasil</strong>. Crie seu <strong>curriculum vitae profissional</strong> em PDF, sem cadastro e sem limites. Modelos prontos, compatíveis com <strong>ATS</strong> e otimizados para o mercado brasileiro.',
+    
     // Blog
     'blog.sectionTitle': 'Dicas de Carreira & Currículo',
     'blog.sectionSubtitle': 'Artigos práticos para acelerar sua recolocação profissional.',

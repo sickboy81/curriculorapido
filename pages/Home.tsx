@@ -10,7 +10,7 @@ const SEOContent = lazy(() => import('../components/SEOContent').then(module => 
 const ResumeTips = lazy(() => import('../components/ResumeTips').then(module => ({ default: module.ResumeTips })));
 const CareerBlog = lazy(() => import('../components/CareerBlog').then(module => ({ default: module.CareerBlog })));
 import { ResumeData, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from '../types';
-import { Trash2, Wand2, Heart } from 'lucide-react';
+import { Trash2, Wand2, Heart, Download, Loader2 } from 'lucide-react';
 import { useLanguage, Language } from '../LanguageContext';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';

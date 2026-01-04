@@ -1,5 +1,4 @@
-import React, { useState, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState } from 'react';
 
 interface TooltipProps {
   content: string;
@@ -11,87 +10,38 @@ interface TooltipProps {
 export const Tooltip: React.FC<TooltipProps> = ({
   content,
   children,
-  position = 'top',
+  position = 'right',
   className = '',
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, left: 0 });
-  const triggerRef = useRef<HTMLSpanElement>(null);
-
-  const updatePosition = () => {
-    if (!triggerRef.current) return;
-
-    const rect = triggerRef.current.getBoundingClientRect();
-    const scrollY = window.scrollY || window.pageYOffset;
-    const scrollX = window.scrollX || window.pageXOffset;
-
-    let top = 0;
-    let left = 0;
-
-    // Espaçamento entre o ícone e o tooltip
-    const gap = 8;
-
-    switch (position) {
-      case 'top':
-        top = rect.top + scrollY;
-        left = rect.left + scrollX + rect.width / 2;
-        break;
-      case 'bottom':
-        top = rect.bottom + scrollY + gap;
-        left = rect.left + scrollX + rect.width / 2;
-        break;
-      case 'left':
-        top = rect.top + scrollY + rect.height / 2;
-        left = rect.left + scrollX;
-        break;
-      case 'right':
-        // Posiciona verticalmente no centro do ícone
-        top = rect.top + scrollY + rect.height / 2;
-        // Posiciona horizontalmente logo após o ícone
-        left = rect.right + scrollX + gap;
-        break;
-    }
-
-    setCoords({ top, left });
-  };
-
-  const handleMouseEnter = () => {
-    setIsVisible(true);
-    updatePosition();
-  };
-
-  const handleMouseLeave = () => {
-    setIsVisible(false);
-  };
-
-  const tooltipContent = isVisible && (
-    <div
-      role="tooltip"
-      className="fixed z-[99999] px-3 py-2 text-xs text-white bg-slate-900 rounded-lg shadow-xl whitespace-nowrap pointer-events-none"
-      style={{
-        top: `${coords.top}px`,
-        left: `${coords.left}px`,
-        transform: position === 'right' ? 'translateY(-50%)' : 
-                   position === 'left' ? 'translate(-100%, -50%)' :
-                   position === 'bottom' ? 'translateX(-50%)' :
-                   'translate(-50%, calc(-100% - 8px))',
-      }}
-    >
-      {content}
-    </div>
-  );
+  const [show, setShow] = useState(false);
 
   return (
-    <>
-      <span
-        ref={triggerRef}
-        className={`inline-block ${className}`}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {children}
-      </span>
-      {isVisible && createPortal(tooltipContent, document.body)}
-    </>
+    <span 
+      className={`relative inline-block ${className}`}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+      style={{ position: 'relative' }}
+    >
+      {children}
+      {show && (
+        <span
+          role="tooltip"
+          className="absolute z-[9999] px-2 py-1 text-xs text-white bg-slate-800 rounded shadow-lg whitespace-nowrap"
+          style={{
+            left: position === 'right' ? 'calc(100% + 6px)' : undefined,
+            right: position === 'left' ? 'calc(100% + 6px)' : undefined,
+            top: position === 'right' || position === 'left' ? '50%' : undefined,
+            transform: position === 'right' || position === 'left' ? 'translateY(-50%)' : 
+                       position === 'bottom' ? 'translateX(-50%)' : 'translateX(-50%)',
+            bottom: position === 'top' ? 'calc(100% + 6px)' : undefined,
+            top: position === 'bottom' ? 'calc(100% + 6px)' : undefined,
+            left: position === 'top' || position === 'bottom' ? '50%' : undefined,
+            pointerEvents: 'none',
+          }}
+        >
+          {content}
+        </span>
+      )}
+    </span>
   );
 };

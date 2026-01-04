@@ -28,22 +28,25 @@ export const Tooltip: React.FC<TooltipProps> = ({
     let top = 0;
     let left = 0;
 
+    // Offset para distância do elemento
+    const offset = 8;
+
     switch (position) {
       case 'top':
-        top = rect.top + scrollY - 8;
+        top = rect.top + scrollY;
         left = rect.left + scrollX + rect.width / 2;
         break;
       case 'bottom':
-        top = rect.bottom + scrollY + 8;
+        top = rect.bottom + scrollY + offset;
         left = rect.left + scrollX + rect.width / 2;
         break;
       case 'left':
         top = rect.top + scrollY + rect.height / 2;
-        left = rect.left + scrollX - 8;
+        left = rect.left + scrollX;
         break;
       case 'right':
         top = rect.top + scrollY + rect.height / 2;
-        left = rect.right + scrollX + 8;
+        left = rect.right + scrollX + offset;
         break;
     }
 

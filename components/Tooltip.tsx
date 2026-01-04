@@ -65,15 +65,15 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const getTransformClasses = () => {
     switch (position) {
       case 'top':
-        return '-translate-x-1/2 -translate-y-full';
+        return '-translate-x-1/2 -translate-y-[calc(100%+4px)]';
       case 'bottom':
         return '-translate-x-1/2';
       case 'left':
-        return '-translate-x-full -translate-y-1/2';
+        return '-translate-x-[calc(100%+4px)] -translate-y-1/2';
       case 'right':
         return '-translate-y-1/2';
       default:
-        return '-translate-x-1/2 -translate-y-full';
+        return '-translate-x-1/2 -translate-y-[calc(100%+4px)]';
     }
   };
 

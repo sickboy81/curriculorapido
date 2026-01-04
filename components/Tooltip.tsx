@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
 interface TooltipProps {
   content: string;
   children: React.ReactNode;
   position?: 'top' | 'bottom' | 'left' | 'right';
-  delay?: number;
   className?: string;
 }
 
@@ -12,132 +11,58 @@ export const Tooltip: React.FC<TooltipProps> = ({
   content,
   children,
   position = 'top',
-  delay = 200,
   className = '',
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const updatePosition = () => {
-    if (!triggerRef.current || !tooltipRef.current) return;
-
-    const triggerRect = triggerRef.current.getBoundingClientRect();
-    const tooltipRect = tooltipRef.current.getBoundingClientRect();
-    const scrollY = window.scrollY;
-    const scrollX = window.scrollX;
-
-    let top = 0;
-    let left = 0;
-
+  const getPositionClasses = () => {
     switch (position) {
       case 'top':
-        top = triggerRect.top + scrollY - tooltipRect.height - 8;
-        left = triggerRect.left + scrollX + (triggerRect.width / 2);
-        break;
+        return 'bottom-full left-1/2 -translate-x-1/2 mb-2';
       case 'bottom':
-        top = triggerRect.bottom + scrollY + 8;
-        left = triggerRect.left + scrollX + (triggerRect.width / 2);
-        break;
+        return 'top-full left-1/2 -translate-x-1/2 mt-2';
       case 'left':
-        top = triggerRect.top + scrollY + (triggerRect.height / 2);
-        left = triggerRect.left + scrollX - tooltipRect.width - 8;
-        break;
+        return 'right-full top-1/2 -translate-y-1/2 mr-2';
       case 'right':
-        top = triggerRect.top + scrollY + (triggerRect.height / 2);
-        left = triggerRect.right + scrollX + 8;
-        break;
+        return 'left-full top-1/2 -translate-y-1/2 ml-2';
+      default:
+        return 'bottom-full left-1/2 -translate-x-1/2 mb-2';
     }
-
-    // Keep tooltip within viewport
-    const padding = 8;
-    if (top < scrollY + padding) {
-      top = scrollY + padding;
-    }
-    if (left < scrollX + padding) {
-      left = scrollX + padding;
-    }
-    if (left + tooltipRect.width > scrollX + window.innerWidth - padding) {
-      left = scrollX + window.innerWidth - tooltipRect.width - padding;
-    }
-
-    setTooltipPosition({ top, left });
   };
 
-  const showTooltip = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+  const getArrowClasses = () => {
+    switch (position) {
+      case 'top':
+        return 'top-full left-1/2 -translate-x-1/2 -mt-1 border-l-transparent border-r-transparent border-b-transparent border-t-slate-900';
+      case 'bottom':
+        return 'bottom-full left-1/2 -translate-x-1/2 -mb-1 border-l-transparent border-r-transparent border-t-transparent border-b-slate-900';
+      case 'left':
+        return 'left-full top-1/2 -translate-y-1/2 -ml-1 border-t-transparent border-b-transparent border-r-transparent border-l-slate-900';
+      case 'right':
+        return 'right-full top-1/2 -translate-y-1/2 -mr-1 border-t-transparent border-b-transparent border-l-transparent border-r-slate-900';
+      default:
+        return 'top-full left-1/2 -translate-x-1/2 -mt-1 border-l-transparent border-r-transparent border-b-transparent border-t-slate-900';
     }
-    timeoutRef.current = setTimeout(() => {
-      setIsVisible(true);
-      // Calcula posição apenas uma vez quando mostra
-      requestAnimationFrame(updatePosition);
-    }, delay);
   };
-
-  const hideTooltip = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setIsVisible(false);
-  };
-
-  useEffect(() => {
-    if (isVisible) {
-      updatePosition();
-      // Removido listeners de scroll/resize para evitar movimento constante
-    }
-  }, [isVisible]);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
 
   return (
-    <>
-      <span
-        ref={triggerRef}
-        onMouseEnter={showTooltip}
-        onMouseLeave={hideTooltip}
-        onFocus={showTooltip}
-        onBlur={hideTooltip}
-        className={`inline-block align-middle ${className}`}
-        style={{ cursor: 'help' }}
-      >
-        {children}
-      </span>
+    <span 
+      className={`relative inline-block ${className}`}
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
+    >
+      {children}
       {isVisible && (
-        <div
-          ref={tooltipRef}
+        <span
           role="tooltip"
-          className="fixed z-[9999] px-3 py-1.5 text-sm text-white bg-slate-900 rounded-lg shadow-xl pointer-events-none whitespace-nowrap transition-all duration-200 opacity-100"
-          style={{
-            top: `${tooltipPosition.top}px`,
-            left: `${tooltipPosition.left}px`,
-            transform: position === 'top' || position === 'bottom' ? 'translateX(-50%)' : position === 'left' ? 'translateY(-50%)' : 'translateY(-50%)',
-          }}
+          className={`absolute z-[9999] px-3 py-1.5 text-xs text-white bg-slate-900 rounded-lg shadow-xl whitespace-nowrap pointer-events-none ${getPositionClasses()}`}
         >
           {content}
-          <div
-            className={`absolute w-2 h-2 bg-slate-900 transform rotate-45 ${
-              position === 'top'
-                ? 'bottom-[-4px] left-1/2 -translate-x-1/2'
-                : position === 'bottom'
-                ? 'top-[-4px] left-1/2 -translate-x-1/2'
-                : position === 'left'
-                ? 'right-[-4px] top-1/2 -translate-y-1/2'
-                : 'left-[-4px] top-1/2 -translate-y-1/2'
-            }`}
+          <span
+            className={`absolute w-0 h-0 border-4 ${getArrowClasses()}`}
           />
-        </div>
+        </span>
       )}
-    </>
+    </span>
   );
 };
-

@@ -3,7 +3,8 @@ import { ResumeForm } from '../components/ResumeForm';
 import { ResumePreview } from '../components/ResumePreview';
 import { PrivacyModal, TermsModal, ConfirmModal } from '../components/LegalModals';
 import { AdPlaceholder } from '../components/AdPlaceholder';
-import { Header } from '../components/Header'; // Import logic-less Header
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 
 // Lazy load heavy SEO components for better performance
 const SEOContent = lazy(() => import('../components/SEOContent').then(module => ({ default: module.SEOContent })));
@@ -279,15 +280,7 @@ export const Home = () => {
                 </Suspense>
             </main>
 
-            {/* Footer - Should be global? Or here? 
-          Since MainLayout concept was simplified away, we can put it here OR use a wrapper in App.tsx. 
-          For now, keeping it here to be quick, but ideally it should be in App.tsx (MainLayout).
-          Let's put it here for Home, and in other pages manually, OR refactor App.tsx to have it.
-          I'll plan to put it in App.tsx wrapper.
-          So, no footer here. 
-          Wait, the footer is large and has logic. 
-          I will extract Footer too.
-      */}
+            <Footer t={t} />
 
             {/* Modals */}
             <PrivacyModal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} />

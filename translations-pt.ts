@@ -96,6 +96,46 @@ export const pt = (key: string): string => {
     
     // Social
     'social.share': 'Compartilhe e ajude amigos:',
+    
+    // Navigation
+    'nav.example': 'Exemplo',
+    'nav.clear': 'Limpar',
+    'nav.template': 'Modelo',
+    'nav.download': 'Baixar PDF',
+    'nav.generating': 'Gerando...',
+    'nav.language': 'Idioma',
+    
+    // Templates
+    'templates.modern': 'Moderno',
+    'templates.classic': 'Clássico',
+    'templates.elegant': 'Elegante',
+    'templates.creative': 'Criativo',
+    'templates.bold': 'Bold',
+    'templates.tech': 'Tech',
+    'templates.sidebar': 'Sidebar',
+    'templates.compact': 'Compacto',
+    'templates.minimalist': 'Minimalista',
+    'templates.timeline': 'Timeline',
+    'templates.swiss': 'Swiss',
+    'templates.grid': 'Grid',
+    'templates.groups.classic': 'Clássicos',
+    'templates.groups.creative': 'Criativos',
+    'templates.groups.structured': 'Estruturados',
+    'templates.groups.new': 'Novos',
+    
+    // Form
+    'form.title': 'Dados do Currículo',
+    
+    // Preview
+    'preview.realtime': 'Visualização em Tempo Real',
+    
+    // Modals
+    'modals.clearTitle': 'Limpar Currículo',
+    'modals.clearMsg': 'Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.',
+    'modals.clearConfirm': 'Limpar',
+    'modals.exampleTitle': 'Carregar Exemplo',
+    'modals.exampleMsg': 'Deseja carregar dados de exemplo? Seus dados atuais serão substituídos.',
+    'modals.exampleConfirm': 'Carregar Exemplo',
   };
   
   return texts[key] || key;

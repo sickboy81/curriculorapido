@@ -1,19 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/ads.txt",
-      "destination": "/ads.txt"
-    },
-    {
-      "source": "/sitemap.xml",
-      "destination": "/sitemap.xml"
-    },
-    {
-      "source": "/robots.txt",
-      "destination": "/robots.txt"
-    },
-    {
-      "source": "/((?!assets/.*|.*\\.(js|css|json|ico|png|jpg|jpeg|svg|woff|woff2|ttf|eot|webp|gif|pdf|txt|xml)).*)",
+      "source": "/((?!assets|.*\\.(js|css|json|ico|png|jpg|jpeg|svg|woff|woff2|ttf|eot|webp|gif|pdf|txt|xml|webmanifest|sw\\.js|registerSW\\.js|workbox-.*\\.js)).*)",
       "destination": "/index.html"
     }
   ],

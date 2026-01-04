@@ -72,7 +72,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
     }
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);
-      setTimeout(updatePosition, 0);
+      // Calcula posição apenas uma vez quando mostra
+      requestAnimationFrame(updatePosition);
     }, delay);
   };
 
@@ -86,22 +87,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   useEffect(() => {
     if (isVisible) {
       updatePosition();
-      let rafId: number;
-      const handleScroll = () => {
-        cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(updatePosition);
-      };
-      const handleResize = () => {
-        cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(updatePosition);
-      };
-      window.addEventListener('scroll', handleScroll, true);
-      window.addEventListener('resize', handleResize);
-      return () => {
-        cancelAnimationFrame(rafId);
-        window.removeEventListener('scroll', handleScroll, true);
-        window.removeEventListener('resize', handleResize);
-      };
+      // Removido listeners de scroll/resize para evitar movimento constante
     }
   }, [isVisible]);
 

@@ -15,29 +15,33 @@ export const Tooltip: React.FC<TooltipProps> = ({
 }) => {
   const [show, setShow] = useState(false);
 
+  const getPositionStyle = () => {
+    switch (position) {
+      case 'right':
+        return { left: 'calc(100% + 8px)', top: '50%', transform: 'translateY(-50%)' };
+      case 'left':
+        return { right: 'calc(100% + 8px)', top: '50%', transform: 'translateY(-50%)' };
+      case 'top':
+        return { bottom: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)' };
+      case 'bottom':
+        return { top: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)' };
+      default:
+        return { left: 'calc(100% + 8px)', top: '50%', transform: 'translateY(-50%)' };
+    }
+  };
+
   return (
     <span 
       className={`relative inline-block ${className}`}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
-      style={{ position: 'relative' }}
     >
       {children}
       {show && (
         <span
           role="tooltip"
-          className="absolute z-[9999] px-2 py-1 text-xs text-white bg-slate-800 rounded shadow-lg whitespace-nowrap"
-          style={{
-            left: position === 'right' ? 'calc(100% + 6px)' : undefined,
-            right: position === 'left' ? 'calc(100% + 6px)' : undefined,
-            top: position === 'right' || position === 'left' ? '50%' : undefined,
-            transform: position === 'right' || position === 'left' ? 'translateY(-50%)' : 
-                       position === 'bottom' ? 'translateX(-50%)' : 'translateX(-50%)',
-            bottom: position === 'top' ? 'calc(100% + 6px)' : undefined,
-            top: position === 'bottom' ? 'calc(100% + 6px)' : undefined,
-            left: position === 'top' || position === 'bottom' ? '50%' : undefined,
-            pointerEvents: 'none',
-          }}
+          className="absolute z-[9999] px-2 py-1 text-xs text-white bg-slate-800 rounded shadow-lg whitespace-nowrap pointer-events-none"
+          style={getPositionStyle()}
         >
           {content}
         </span>

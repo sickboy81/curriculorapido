@@ -121,7 +121,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
         onMouseLeave={hideTooltip}
         onFocus={showTooltip}
         onBlur={hideTooltip}
-        className={className}
+        className={`inline-block ${className}`}
       >
         {children}
       </div>

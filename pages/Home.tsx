@@ -173,7 +173,7 @@ export const Home = () => {
     const modalProps = getConfirmProps();
 
     return (
-        <>
+        <div className="min-h-screen flex flex-col bg-slate-50">
             <Header
                 language={language}
                 setLanguage={setLanguage}

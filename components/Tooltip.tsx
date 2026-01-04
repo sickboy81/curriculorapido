@@ -18,40 +18,46 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const [coords, setCoords] = useState({ top: 0, left: 0 });
   const ref = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    if (show && ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      const scrollY = window.scrollY || window.pageYOffset;
-      const scrollX = window.scrollX || window.pageXOffset;
+  const updatePosition = () => {
+    if (!ref.current) return;
 
-      let top = 0;
-      let left = 0;
+    const rect = ref.current.getBoundingClientRect();
+    const scrollY = window.scrollY || window.pageYOffset;
+    const scrollX = window.scrollX || window.pageXOffset;
 
-      switch (position) {
-        case 'right':
-          top = rect.top + scrollY + rect.height / 2;
-          left = rect.right + scrollX + 8;
-          break;
-        case 'left':
-          top = rect.top + scrollY + rect.height / 2;
-          left = rect.left + scrollX - 8;
-          break;
-        case 'top':
-          top = rect.top + scrollY - 8;
-          left = rect.left + scrollX + rect.width / 2;
-          break;
-        case 'bottom':
-          top = rect.bottom + scrollY + 8;
-          left = rect.left + scrollX + rect.width / 2;
-          break;
-        default:
-          top = rect.top + scrollY + rect.height / 2;
-          left = rect.right + scrollX + 8;
-      }
+    let top = 0;
+    let left = 0;
 
-      setCoords({ top, left });
+    switch (position) {
+      case 'right':
+        top = rect.top + scrollY + rect.height / 2;
+        left = rect.right + scrollX + 8;
+        break;
+      case 'left':
+        top = rect.top + scrollY + rect.height / 2;
+        left = rect.left + scrollX - 8;
+        break;
+      case 'top':
+        top = rect.top + scrollY - 8;
+        left = rect.left + scrollX + rect.width / 2;
+        break;
+      case 'bottom':
+        top = rect.bottom + scrollY + 8;
+        left = rect.left + scrollX + rect.width / 2;
+        break;
+      default:
+        top = rect.top + scrollY + rect.height / 2;
+        left = rect.right + scrollX + 8;
     }
-  }, [show, position]);
+
+    setCoords({ top, left });
+  };
+
+  useEffect(() => {
+    if (show) {
+      updatePosition();
+    }
+  }, [show]);
 
   const tooltip = show && (
     <span
@@ -59,7 +65,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       className="fixed z-[99999] px-2 py-1 text-xs text-white bg-slate-800 rounded shadow-lg whitespace-nowrap pointer-events-none"
       style={{
         top: `${coords.top}px`,
-        left: position === 'right' ? `${coords.left}px` : position === 'left' ? `${coords.left}px` : `${coords.left}px`,
+        left: position === 'right' ? `${coords.left}px` : `${coords.left}px`,
         transform: position === 'right' || position === 'left' ? 'translateY(-50%)' : 'translateX(-50%)',
       }}
     >
@@ -72,7 +78,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
       <span 
         ref={ref}
         className={`relative inline-block ${className}`}
-        onMouseEnter={() => setShow(true)}
+        onMouseEnter={() => {
+          setShow(true);
+        }}
         onMouseLeave={() => setShow(false)}
       >
         {children}

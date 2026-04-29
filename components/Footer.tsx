@@ -61,6 +61,12 @@ export const Footer: React.FC<FooterProps> = ({ t }) => {
                         <a href="/contato" className="hover:text-slate-900 transition-colors cursor-pointer">
                             Contato
                         </a>
+                        <a href="/guias" className="hover:text-slate-900 transition-colors cursor-pointer">
+                            Guias
+                        </a>
+                        <a href="/politica-editorial" className="hover:text-slate-900 transition-colors cursor-pointer">
+                            Política Editorial
+                        </a>
                     </div>
                     <div className="flex items-center gap-1">
                         {t('footer.madeWith')} <Heart className="w-3 h-3 text-red-500 fill-current" />

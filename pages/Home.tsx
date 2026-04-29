@@ -276,6 +276,14 @@ export const Home = () => {
                 </div>
 
                 {/* Blog & SEO Section - Lazy Loaded */}
+                <div className="mt-10 mb-4 text-center">
+                    <a
+                        href="/guias"
+                        className="inline-flex items-center rounded-xl border border-purple-200 bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 hover:bg-purple-100 transition-colors"
+                    >
+                        Ver biblioteca completa de guias de currículo
+                    </a>
+                </div>
                 <Suspense fallback={<div className="py-16 bg-slate-50 border-t border-slate-200"><div className="text-center text-slate-600">Carregando conteúdo...</div></div>}>
                     <CareerBlog />
                 </Suspense>

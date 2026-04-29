@@ -126,12 +126,12 @@ export const CareerBlog: React.FC = () => {
         "name": "Currículo Rápido",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://curriculorapido.com.br/pwa-icon.svg"
+          "url": "https://www.curriculorapido.com.br/pwa-icon.svg"
         }
       },
       "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": `https://curriculorapido.com.br/#article-${article.id}`
+        "@id": `https://www.curriculorapido.com.br/#article-${article.id}`
       },
       "articleSection": article.tags.join(", "),
       "keywords": article.tags.join(", "),

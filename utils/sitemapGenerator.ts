@@ -26,7 +26,7 @@ ${urlsXml}
 };
 
 export const getDefaultSitemapUrls = (): SitemapUrl[] => {
-  const baseUrl = 'https://curriculorapido.com.br';
+  const baseUrl = 'https://www.curriculorapido.com.br';
   const today = new Date().toISOString().split('T')[0];
   
   return [

@@ -134,6 +134,39 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, '.'),
       }
+    },
+    build: {
+      cssCodeSplit: true,
+      sourcemap: false,
+      minify: 'esbuild',
+      chunkSizeWarningLimit: 600,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('jspdf') || id.includes('html2canvas') || id.includes('docx')) {
+                return 'pdf-vendor';
+              }
+              if (id.includes('react-router')) {
+                return 'router';
+              }
+              if (id.includes('react-helmet-async')) {
+                return 'helmet';
+              }
+              if (id.includes('lucide-react')) {
+                return 'icons';
+              }
+              if (id.includes('react-dom')) {
+                return 'react-dom';
+              }
+              if (id.includes('react')) {
+                return 'react';
+              }
+              return 'vendor';
+            }
+          }
+        }
+      }
     }
   };
 });

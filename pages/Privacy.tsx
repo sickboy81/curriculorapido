@@ -2,6 +2,7 @@ import React from 'react';
 import { Shield } from 'lucide-react';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
+import { SeoHead } from '../components/SeoHead';
 import { useLanguage } from '../LanguageContext';
 
 export const Privacy = () => {
@@ -9,6 +10,10 @@ export const Privacy = () => {
 
     return (
         <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col">
+            <SeoHead
+                title="Política de Privacidade | Currículo Rápido"
+                description="Saiba como o Currículo Rápido trata privacidade, cookies, anúncios e dados processados localmente no navegador."
+            />
             <Header language={language} setLanguage={setLanguage} t={t} />
 
             <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">

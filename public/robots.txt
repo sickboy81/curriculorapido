@@ -1,9 +1,28 @@
+# Currículo Rápido - https://curriculorapido.com.br
 User-agent: *
 Allow: /
 Disallow: /assets/
 Disallow: /registerSW.js
 Disallow: /sw.js
 Disallow: /workbox-*.js
+Disallow: /*?*
+
+User-agent: Googlebot
+Allow: /
+Allow: /assets/*.css
+Allow: /assets/*.js
+Allow: /assets/*.svg
+Allow: /assets/*.png
+Allow: /assets/*.webp
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
 
 Sitemap: https://curriculorapido.com.br/sitemap.xml
-
+Host: https://curriculorapido.com.br

@@ -2,6 +2,7 @@ import React from 'react';
 import { Mail, MessageCircle } from 'lucide-react';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
+import { SeoHead } from '../components/SeoHead';
 import { useLanguage } from '../LanguageContext';
 
 export const Contact = () => {
@@ -9,6 +10,10 @@ export const Contact = () => {
 
     return (
         <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col">
+            <SeoHead
+                title="Contato | Currículo Rápido"
+                description="Fale com o time do Currículo Rápido para enviar dúvidas, sugestões ou relatar problemas na plataforma."
+            />
             <Header language={language} setLanguage={setLanguage} t={t} />
 
             <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">

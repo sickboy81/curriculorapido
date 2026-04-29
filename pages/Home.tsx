@@ -5,6 +5,7 @@ import { PrivacyModal, TermsModal, ConfirmModal } from '../components/LegalModal
 import { AdPlaceholder } from '../components/AdPlaceholder';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
+import { SeoHead } from '../components/SeoHead';
 
 // Lazy load heavy SEO components for better performance
 const SEOContent = lazy(() => import('../components/SEOContent').then(module => ({ default: module.SEOContent })));
@@ -13,8 +14,6 @@ const CareerBlog = lazy(() => import('../components/CareerBlog').then(module => 
 import { ResumeData, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from '../types';
 import { Trash2, Wand2, Heart, Download, Loader2 } from 'lucide-react';
 import { useLanguage, Language } from '../LanguageContext';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 export const Home = () => {
     const { t, language, setLanguage } = useLanguage();
@@ -73,7 +72,11 @@ export const Home = () => {
             setIsGeneratingPdf(true);
 
             try {
-                // Get the print area
+                const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+                    import('jspdf'),
+                    import('html2canvas'),
+                ]);
+
                 const printArea = document.querySelector('.print-area') as HTMLElement;
                 if (!printArea) {
                     throw new Error('Print area not found');
@@ -174,6 +177,10 @@ export const Home = () => {
 
     return (
         <div className="min-h-screen flex flex-col bg-slate-50">
+            <SeoHead
+                title="Currículo Rápido | Criar Currículo Online Grátis PDF (Modelos 2025)"
+                description="O melhor gerador de currículo grátis do Brasil. Crie seu currículo em PDF para imprimir com modelos profissionais, sem cadastro e direto no celular."
+            />
             <Header
                 language={language}
                 setLanguage={setLanguage}

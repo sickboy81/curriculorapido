@@ -1,41 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://curriculorapido.com.br/</loc>
-    <lastmod>2026-01-02</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://curriculorapido.com.br/" />
   </url>
-  <!-- Legal Pages -->
   <url>
     <loc>https://curriculorapido.com.br/sobre</loc>
-    <lastmod>2026-01-02</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://curriculorapido.com.br/sobre" />
   </url>
   <url>
     <loc>https://curriculorapido.com.br/contato</loc>
-    <lastmod>2026-01-02</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://curriculorapido.com.br/contato" />
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://curriculorapido.com.br/privacidade</loc>
-    <lastmod>2026-01-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://curriculorapido.com.br/privacidade" />
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://curriculorapido.com.br/termos</loc>
-    <lastmod>2026-01-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://curriculorapido.com.br/termos" />
+    <lastmod>2026-04-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
-  <!-- SEO Sections -->
-
 </urlset>

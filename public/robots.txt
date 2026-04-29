@@ -1,4 +1,4 @@
-# Currículo Rápido - https://curriculorapido.com.br
+# Currículo Rápido - https://www.curriculorapido.com.br
 User-agent: *
 Allow: /
 Disallow: /assets/
@@ -24,5 +24,5 @@ Disallow: /
 User-agent: CCBot
 Disallow: /
 
-Sitemap: https://curriculorapido.com.br/sitemap.xml
-Host: https://curriculorapido.com.br
+Sitemap: https://www.curriculorapido.com.br/sitemap.xml
+Host: https://www.curriculorapido.com.br

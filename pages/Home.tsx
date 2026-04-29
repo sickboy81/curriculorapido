@@ -137,7 +137,7 @@ export const Home = () => {
         }
     };
 
-    const shareUrl = "https://curriculorapido.com.br";
+    const shareUrl = "https://www.curriculorapido.com.br";
     const shareText = t('hero.title');
 
     const onConfirmAction = () => {

@@ -1,17 +1,6 @@
 {
   "redirects": [
     {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.curriculorapido.com.br"
-        }
-      ],
-      "destination": "https://curriculorapido.com.br/$1",
-      "permanent": true
-    },
-    {
       "source": "/",
       "has": [
         {

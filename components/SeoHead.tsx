@@ -8,7 +8,7 @@ type SeoHeadProps = {
   noindex?: boolean;
 };
 
-const SITE_URL = 'https://curriculorapido.com.br';
+const SITE_URL = 'https://www.curriculorapido.com.br';
 
 export const SeoHead = ({ title, description, noindex = false }: SeoHeadProps) => {
   const location = useLocation();

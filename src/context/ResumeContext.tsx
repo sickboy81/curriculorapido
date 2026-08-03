@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ResumeData, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from '../types';
-import { useLanguage } from '../LanguageContext';
+import { ResumeData, INITIAL_DATA_PT, TemplateType } from '../../types';
+import { useLanguage } from '../../LanguageContext';
 
 interface ResumeContextType {
     resumeData: ResumeData;

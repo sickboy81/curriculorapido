@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, ChevronRight, Clock, Star } from 'lucide-react';
 import { pt } from '../translations-pt';
+import { analytics } from '../utils/analytics';
 
 export const CareerBlog: React.FC = () => {
   const [expandedArticle, setExpandedArticle] = useState<number | null>(null);

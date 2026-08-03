@@ -4,7 +4,7 @@ import { stripMarkdown } from './markdownParser';
 
 // Template-specific export configuration
 interface TemplateExportConfig {
-  headerAlignment: AlignmentType;
+  headerAlignment: (typeof AlignmentType)[keyof typeof AlignmentType];
   nameSize: number;
   nameColor?: string;
   nameBold: boolean;
@@ -411,7 +411,7 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
               children: [
                 new TextRun({
                   text: dateLocation,
-                  italics: config.experienceLayout === 'classic',
+                  italics: false,
                   size: config.contactSize,
                   color: '666666',
                 }),
@@ -540,7 +540,7 @@ export const exportToWord = async (resumeData: ResumeData, template: TemplateTyp
               children: [
                 new TextRun({
                   text: edu.dates,
-                  italics: config.educationLayout === 'classic',
+                  italics: false,
                   size: config.contactSize,
                   color: '666666',
                 }),
@@ -748,4 +748,3 @@ function getTemplateColor(template: TemplateType): string {
   };
   return colors[template] || '#7c3aed';
 }
-

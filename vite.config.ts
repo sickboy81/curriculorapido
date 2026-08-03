@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+import { staticSeoPages } from './plugins/static-seo-pages';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
@@ -22,6 +23,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
+      staticSeoPages(),
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['pwa-icon.svg', 'robots.txt', 'ads.txt', 'sitemap.xml'],

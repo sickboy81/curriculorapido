@@ -1,6 +1,6 @@
 import React from 'react';
 import { Heart } from 'lucide-react';
-import { AdPlaceholder } from '../components/AdPlaceholder';
+import { AdPlaceholder } from './AdPlaceholder';
 
 interface FooterProps {
     t: (key: string) => string;
@@ -17,7 +17,7 @@ export const Footer: React.FC<FooterProps> = ({ t }) => {
                             <h4 className="font-bold text-slate-900 mb-2">Sobre o Currículo Rápido</h4>
                             <p className="leading-relaxed">
                                 O <strong>melhor gerador de currículo grátis do Brasil</strong>. Crie seu <strong>curriculum vitae profissional</strong>
-                                em minutos, sem cadastro e sem limites. Nossos <strong>modelos de currículo 2025</strong> são otimizados para
+                                em minutos, sem cadastro e sem limites. Nossos <strong>modelos de currículo</strong> são otimizados para
                                 <strong>sistemas ATS</strong> e <strong>recrutadores</strong>.
                             </p>
                         </div>
@@ -73,10 +73,7 @@ export const Footer: React.FC<FooterProps> = ({ t }) => {
                     </div>
                 </div>
 
-                {/* Footer Ad Slot */}
-                <div className="mt-8">
-                    <AdPlaceholder slotId="footer-ad-responsive" className="bg-transparent border-slate-200" />
-                </div>
+                <AdPlaceholder placement="footer" className="mt-8" />
             </div>
         </footer>
     );

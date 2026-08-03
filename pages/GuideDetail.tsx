@@ -7,6 +7,7 @@ import { SeoHead } from '../components/SeoHead';
 import { useLanguage } from '../LanguageContext';
 import { guides, guidesBySlug } from '../data/guides';
 import { Helmet } from 'react-helmet-async';
+import { AdPlaceholder } from '../components/AdPlaceholder';
 
 export const GuideDetail = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -21,7 +22,7 @@ export const GuideDetail = () => {
 
   return (
     <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col">
-      <SeoHead title={`${guide.title} | Currículo Rápido`} description={guide.description} />
+      <SeoHead title={`${guide.title} | Currículo Rápido`} description={guide.description} type="article" />
       <Helmet>
         <script type="application/ld+json">
           {JSON.stringify({
@@ -146,6 +147,8 @@ export const GuideDetail = () => {
             </div>
           </section>
         </article>
+
+        <AdPlaceholder placement="guide" className="mt-8" />
       </main>
 
       <Footer t={t} />

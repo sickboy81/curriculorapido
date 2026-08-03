@@ -267,6 +267,7 @@ export const analyzeJobMatch = async (
       suggestions: [],
       matchScore: 0,
       missingKeywords: [],
+      matchedKeywords: [],
       strengths: [],
       improvements: ['Descrição da vaga muito curta. Forneça uma descrição mais detalhada para uma análise melhor.']
     };
@@ -396,4 +397,3 @@ export const analyzeJobMatch = async (
     suggestions
   };
 };
-

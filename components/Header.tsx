@@ -51,8 +51,6 @@ export const Header: React.FC<HeaderProps> = ({
                             className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-1"
                         >
                             <option value="pt">PT</option>
-                            <option value="en">EN</option>
-                            <option value="es">ES</option>
                         </select>
                     </div>
 
@@ -132,8 +130,6 @@ export const Header: React.FC<HeaderProps> = ({
                                             className="w-full bg-transparent focus:outline-none cursor-pointer"
                                         >
                                             <option value="pt">Português</option>
-                                            <option value="en">English</option>
-                                            <option value="es">Español</option>
                                         </select>
                                     </div>
                                 </div>

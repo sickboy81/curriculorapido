@@ -11,7 +11,7 @@ import { SeoHead } from '../components/SeoHead';
 const SEOContent = lazy(() => import('../components/SEOContent').then(module => ({ default: module.SEOContent })));
 const ResumeTips = lazy(() => import('../components/ResumeTips').then(module => ({ default: module.ResumeTips })));
 const CareerBlog = lazy(() => import('../components/CareerBlog').then(module => ({ default: module.CareerBlog })));
-import { ResumeData, INITIAL_DATA_PT, INITIAL_DATA_EN, INITIAL_DATA_ES, BLANK_DATA, TemplateType } from '../types';
+import { ResumeData, INITIAL_DATA_PT, BLANK_DATA, TemplateType } from '../types';
 import { Trash2, Wand2, Heart, Download, Loader2 } from 'lucide-react';
 import { useLanguage, Language } from '../LanguageContext';
 
@@ -145,12 +145,8 @@ export const Home = () => {
             setResumeData(BLANK_DATA);
             localStorage.setItem('resume_builder_data', JSON.stringify(BLANK_DATA));
         } else if (confirmType === 'example') {
-            let exampleData = INITIAL_DATA_PT;
-            if (language === 'en') exampleData = INITIAL_DATA_EN;
-            if (language === 'es') exampleData = INITIAL_DATA_ES;
-
-            setResumeData(exampleData);
-            localStorage.setItem('resume_builder_data', JSON.stringify(exampleData));
+            setResumeData(INITIAL_DATA_PT);
+            localStorage.setItem('resume_builder_data', JSON.stringify(INITIAL_DATA_PT));
         }
         setConfirmType(null);
     };
@@ -178,7 +174,7 @@ export const Home = () => {
     return (
         <div className="min-h-screen flex flex-col bg-slate-50">
             <SeoHead
-                title="Currículo Rápido | Criar Currículo Online Grátis PDF (Modelos 2025)"
+                title="Currículo Rápido | Criar Currículo Online Grátis em PDF"
                 description="O melhor gerador de currículo grátis do Brasil. Crie seu currículo em PDF para imprimir com modelos profissionais, sem cadastro e direto no celular."
             />
             <Header
@@ -249,9 +245,8 @@ export const Home = () => {
                             <ResumeForm data={resumeData} onChange={setResumeData} />
                         </div>
 
-                        <div className="mt-6">
-                            <AdPlaceholder slotId="sidebar-ad-1" format="rectangle" />
-                        </div>
+                        <AdPlaceholder placement="editor" className="mt-6" />
+
                     </div>
 
                     {/* Right Column: Preview */}
@@ -268,9 +263,8 @@ export const Home = () => {
                                 </div>
                             </div>
 
-                            <div className="w-full mt-6 max-w-2xl">
-                                <AdPlaceholder slotId="preview-bottom-ad" format="auto" />
-                            </div>
+                            <AdPlaceholder placement="preview" className="mt-6 w-full max-w-2xl" />
+
                         </div>
                     </div>
                 </div>

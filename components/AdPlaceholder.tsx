@@ -1,108 +1,96 @@
 import React, { useEffect, useRef } from 'react';
 
+type AdPlacement = 'editor' | 'preview' | 'footer' | 'guide';
+
 interface AdPlaceholderProps {
-  slotId?: string;
-  format?: 'auto' | 'fluid' | 'rectangle';
+  placement: AdPlacement;
   className?: string;
-  label?: string;
 }
 
-// Declaração global para TypeScript
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle?: unknown[];
   }
 }
 
-// IMPORTANTE: Defina como true apenas após a aprovação do AdSense
-const ADSENSE_APPROVED = false; // Mude para true quando o site for aprovado
+const ADSENSE_ENABLED = import.meta.env.VITE_ADSENSE_ENABLED === 'true';
+const ADSENSE_CLIENT = import.meta.env.VITE_ADSENSE_CLIENT?.trim();
+const AD_SLOTS: Record<AdPlacement, string | undefined> = {
+  editor: import.meta.env.VITE_ADSENSE_EDITOR_SLOT?.trim(),
+  preview: import.meta.env.VITE_ADSENSE_PREVIEW_SLOT?.trim(),
+  footer: import.meta.env.VITE_ADSENSE_FOOTER_SLOT?.trim(),
+  guide: import.meta.env.VITE_ADSENSE_GUIDE_SLOT?.trim(),
+};
+const VALID_SLOT = /^\d{6,}$/;
 
-export const AdPlaceholder: React.FC<AdPlaceholderProps> = ({ 
-  slotId, 
-  format = "auto",
-  className = "",
-  label = "Publicidade"
-}) => {
+const getSlotId = (placement: AdPlacement) => AD_SLOTS[placement];
+
+const loadAdSenseScript = () => new Promise<void>((resolve, reject) => {
+  const existing = document.querySelector<HTMLScriptElement>('script[src*="pagead/js/adsbygoogle.js"]');
+  if (existing) {
+    if (existing.dataset.loaded === 'true' || window.adsbygoogle) resolve();
+    else {
+      existing.addEventListener('load', () => resolve(), { once: true });
+      existing.addEventListener('error', () => reject(new Error('AdSense script failed to load')), { once: true });
+    }
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.async = true;
+  script.crossOrigin = 'anonymous';
+  script.dataset.adsenseLoader = 'true';
+  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(ADSENSE_CLIENT!)}`;
+  script.addEventListener('load', () => {
+    script.dataset.loaded = 'true';
+    resolve();
+  }, { once: true });
+  script.addEventListener('error', () => reject(new Error('AdSense script failed to load')), { once: true });
+  document.head.appendChild(script);
+});
+
+/**
+ * Slots are enabled only with a valid approved AdSense configuration. Keep a
+ * clear visual separation from editor controls and download actions.
+ */
+export const AdPlaceholder: React.FC<AdPlaceholderProps> = ({ placement, className = '' }) => {
   const adRef = useRef<HTMLDivElement>(null);
-  const adClient = "ca-pub-7650087188632188";
+  const slotId = getSlotId(placement);
+  const isConfigured = ADSENSE_ENABLED && Boolean(ADSENSE_CLIENT) && Boolean(slotId && VALID_SLOT.test(slotId));
 
   useEffect(() => {
-    // Só carrega anúncios se o AdSense estiver aprovado e houver slotId
-    if (!ADSENSE_APPROVED || !slotId || typeof window === 'undefined') return;
+    if (!isConfigured || !slotId || !adRef.current) return;
 
-    const initializeAd = () => {
-      try {
-        // Verifica se o script do AdSense está carregado
-        if (!window.adsbygoogle) {
-          window.adsbygoogle = [];
-        }
+    let cancelled = false;
+    loadAdSenseScript()
+      .then(() => {
+        if (cancelled || !adRef.current || adRef.current.dataset.initialized === 'true') return;
+        const ins = document.createElement('ins');
+        ins.className = 'adsbygoogle';
+        ins.style.display = 'block';
+        ins.setAttribute('data-ad-client', ADSENSE_CLIENT!);
+        ins.setAttribute('data-ad-slot', slotId);
+        ins.setAttribute('data-ad-format', 'auto');
+        ins.setAttribute('data-full-width-responsive', 'true');
+        adRef.current.appendChild(ins);
+        adRef.current.dataset.initialized = 'true';
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      })
+      .catch(() => {
+        // Ad delivery must never break the editorial page or the application.
+      });
 
-        // Inicializa o anúncio apenas uma vez
-        if (adRef.current && !adRef.current.querySelector('.adsbygoogle')) {
-          // Cria o elemento ins para o anúncio
-          const ins = document.createElement('ins');
-          ins.className = 'adsbygoogle';
-          ins.style.display = 'block';
-          ins.setAttribute('data-ad-client', adClient);
-          ins.setAttribute('data-ad-slot', slotId);
-          ins.setAttribute('data-ad-format', format);
-          ins.setAttribute('data-full-width-responsive', 'true');
-          
-          adRef.current.appendChild(ins);
-          
-          // Inicializa o anúncio
-          window.adsbygoogle.push({});
-        }
-      } catch (error) {
-        console.error('Erro ao carregar anúncio AdSense:', error);
-      }
+    return () => {
+      cancelled = true;
     };
+  }, [isConfigured, slotId]);
 
-    // Se o script já está carregado, inicializa imediatamente
-    if (window.adsbygoogle) {
-      initializeAd();
-    } else {
-      // Aguarda o carregamento do script
-      const checkScript = setInterval(() => {
-        if (window.adsbygoogle) {
-          clearInterval(checkScript);
-          initializeAd();
-        }
-      }, 100);
-
-      // Timeout após 5 segundos
-      setTimeout(() => {
-        clearInterval(checkScript);
-      }, 5000);
-    }
-  }, [slotId, format, adClient]);
-
-  // Se o AdSense não estiver aprovado, não mostra nada para evitar violações
-  if (!ADSENSE_APPROVED) {
-    // Não renderiza nada enquanto aguarda aprovação
-    // Isso evita tentar exibir anúncios antes da aprovação (violação de política)
-    return null;
-  }
-
-  // Se não houver slotId após aprovação, mostra placeholder
-  if (!slotId) {
-    return (
-      <div className={`w-full bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center text-slate-400 p-4 min-h-[100px] overflow-hidden ${className}`}>
-        <span className="text-xs font-bold uppercase tracking-widest mb-1">{label}</span>
-        <span className="text-[10px] text-center px-4">
-          Configure o slotId para exibir anúncios do AdSense
-        </span>
-      </div>
-    );
-  }
+  if (!isConfigured) return null;
 
   return (
-    <div 
-      ref={adRef} 
-      className={`w-full ${className}`}
-      style={{ minHeight: format === 'rectangle' ? '250px' : '100px' }}
-    >
-      {/* O elemento ins será inserido aqui pelo useEffect */}
-    </div>
+    <aside aria-label="Publicidade" className={`w-full ${className}`}>
+      <p className="mb-2 text-center text-xs font-medium uppercase tracking-widest text-slate-400">Publicidade</p>
+      <div ref={adRef} className="min-h-[100px]" />
+    </aside>
   );
 };

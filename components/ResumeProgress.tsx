@@ -4,9 +4,10 @@ import { CheckCircle2, Circle } from 'lucide-react';
 
 interface ResumeProgressProps {
   resumeData: ResumeData;
+  compact?: boolean;
 }
 
-export const ResumeProgress: React.FC<ResumeProgressProps> = ({ resumeData }) => {
+export const ResumeProgress: React.FC<ResumeProgressProps> = ({ resumeData, compact = false }) => {
   const calculateProgress = (): number => {
     let completed = 0;
     let total = 0;
@@ -65,6 +66,7 @@ export const ResumeProgress: React.FC<ResumeProgressProps> = ({ resumeData }) =>
     { label: 'Formação', checked: resumeData.education.length > 0 },
     { label: 'Habilidades', checked: (resumeData.skills?.split(',').filter(s => s.trim()).length || 0) >= 3 },
   ];
+  const nextItem = checkItems.find((item) => !item.checked);
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
@@ -88,8 +90,7 @@ export const ResumeProgress: React.FC<ResumeProgressProps> = ({ resumeData }) =>
         <p className="text-xs text-slate-500 mt-1 text-center">{getProgressText()}</p>
       </div>
 
-      {/* Checklist */}
-      <div className="space-y-2">
+      {compact ? <p className="rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600"><strong>Próximo passo:</strong> {nextItem ? `complete ${nextItem.label.toLowerCase()}` : 'revise e baixe seu currículo.'}</p> : <div className="space-y-2">
         {checkItems.map((item, index) => (
           <div key={index} className="flex items-center gap-2 text-sm">
             {item.checked ? (
@@ -102,7 +103,7 @@ export const ResumeProgress: React.FC<ResumeProgressProps> = ({ resumeData }) =>
             </span>
           </div>
         ))}
-      </div>
+      </div>}
     </div>
   );
 };

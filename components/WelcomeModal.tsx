@@ -1,0 +1,10 @@
+import React from 'react';
+import { FilePenLine, Sparkles, X } from 'lucide-react';
+
+interface WelcomeModalProps { isOpen: boolean; onBlank: () => void; onExample: () => void; onClose: () => void; }
+export const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onBlank, onExample, onClose }) => {
+  if (!isOpen) return null;
+  return <div className="fixed inset-0 z-[90] flex items-end justify-center bg-slate-950/55 p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <div className="relative w-full max-w-xl overflow-hidden rounded-3xl bg-white shadow-2xl"><div className="bg-gradient-to-br from-violet-700 to-indigo-800 px-6 py-8 text-white"><button type="button" onClick={onClose} className="absolute right-4 top-4 rounded-lg p-2 text-white/80 hover:bg-white/10" aria-label="Fechar"><X className="h-5 w-5" /></button><div className="mb-3 inline-flex rounded-xl bg-white/15 p-3"><FilePenLine className="h-7 w-7" /></div><h2 id="welcome-title" className="text-2xl font-extrabold">Vamos criar seu currículo?</h2><p className="mt-2 text-sm text-violet-100">Escolha como quer começar. Você poderá editar tudo e trocar de modelo depois.</p></div><div className="grid gap-3 p-5 sm:grid-cols-2"><button type="button" onClick={onBlank} className="rounded-2xl border-2 border-violet-600 bg-violet-600 p-5 text-left text-white transition hover:bg-violet-700"><FilePenLine className="mb-4 h-6 w-6" /><strong className="block">Começar do zero</strong><span className="mt-1 block text-sm text-violet-100">Preencha cada seção no seu ritmo.</span></button><button type="button" onClick={onExample} className="rounded-2xl border border-slate-200 bg-white p-5 text-left text-slate-800 transition hover:border-violet-300 hover:bg-violet-50"><Sparkles className="mb-4 h-6 w-6 text-violet-600" /><strong className="block">Ver um exemplo</strong><span className="mt-1 block text-sm text-slate-500">Use um currículo preenchido como referência.</span></button></div><p className="px-5 pb-5 text-center text-xs text-slate-500">Sem cadastro. Seus dados ficam neste dispositivo.</p></div>
+  </div>;
+};

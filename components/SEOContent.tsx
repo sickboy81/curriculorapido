@@ -13,7 +13,7 @@ export const SEOContent: React.FC = () => {
           <h2 className="text-3xl font-bold text-slate-900 mb-6">
             O Gerador de Curriculum Vitae (CV) Mais Seguro e Gratuito
           </h2>
-          <p className="text-lg text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: "O <strong>Currículo Rápido</strong> foi desenvolvido para impulsionar sua carreira no mercado brasileiro em 2025. Crie documentos profissionais, modelos de currículo prontos para preencher e compatíveis com sistemas ATS (Gupy, Kenoby) sem expor seus dados. Com ferramentas integradas de <strong>verificação ATS</strong>, <strong>análise de vagas</strong>, <strong>exportação para PDF/JSON</strong> e <strong>gerenciamento de múltiplos currículos</strong>. Ideal para quem busca <strong>Primeiro Emprego</strong>, <strong>Estágio</strong> ou cargos de liderança." }}>
+          <p className="text-lg text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: "O <strong>Currículo Rápido</strong> foi desenvolvido para candidatos do mercado brasileiro. Crie documentos profissionais, use modelos prontos com estrutura clara para sistemas ATS e mantenha os dados no seu navegador. A ferramenta inclui <strong>verificação ATS</strong>, <strong>análise de vagas</strong>, <strong>exportação para PDF/JSON</strong> e <strong>gerenciamento de múltiplos currículos</strong>." }}>
           </p>
         </div>
 
@@ -90,12 +90,8 @@ export const SEOContent: React.FC = () => {
               <h3 className="text-xl font-bold text-slate-800">Compatibilidade ATS (Brasil)</h3>
             </div>
             <p className="text-slate-600 leading-relaxed">
-              Nossos modelos de currículo são otimizados para serem lidos por recrutadores e robôs de triagem (ATS) comuns no Brasil, aumentando suas chances de entrevista. Nossos <strong>modelos de currículo</strong> são testados e validados para garantir compatibilidade 
-              com os principais <strong>sistemas ATS do Brasil</strong>, incluindo <strong>Gupy</strong>, <strong>Kenoby</strong>, 
-              <strong>Vagas.com</strong>, <strong>Indeed</strong> e outros. Além disso, oferecemos uma <strong>ferramenta integrada de verificação ATS</strong> 
-              que analisa seu currículo e fornece sugestões de melhoria, além de uma <strong>análise de compatibilidade com vagas</strong> 
-              para personalizar seu CV para cada oportunidade. <a href="#dicas-curriculo" className="text-purple-600 hover:text-purple-800 underline">Veja nossas dicas para otimizar seu CV</a> e 
-              maximizar suas oportunidades de entrevista.
+              Nossos modelos priorizam uma estrutura clara para leitura por recrutadores e sistemas de triagem (ATS) comuns no Brasil. A apresentação é revisada para manter títulos, dados e experiências organizados, inclusive em plataformas como <strong>Gupy</strong>, <strong>Kenoby</strong> e <strong>Vagas.com</strong>. Além disso, oferecemos uma <strong>ferramenta integrada de verificação ATS</strong>
+              com sugestões de melhoria e uma <strong>análise de compatibilidade com vagas</strong> para ajudar você a adaptar o CV a cada oportunidade. <a href="#dicas-curriculo" className="text-purple-600 hover:text-purple-800 underline">Veja nossas dicas para otimizar seu CV</a> antes de enviar a candidatura.
             </p>
           </article>
 
@@ -141,7 +137,7 @@ export const SEOContent: React.FC = () => {
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <h4 className="font-bold text-slate-900 mb-2">Compatível com ATS</h4>
-              <p className="text-sm text-slate-700">Modelos otimizados para sistemas ATS como Gupy, Kenoby e Vagas.com, aumentando suas chances de entrevista.</p>
+              <p className="text-sm text-slate-700">Modelos com estrutura clara para leitura inicial em sistemas como Gupy, Kenoby e Vagas.com.</p>
             </div>
 
             <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border border-orange-200 hover:shadow-lg transition-all">
@@ -302,9 +298,8 @@ export const SEOContent: React.FC = () => {
                 <p>
                   <strong>ATS (Applicant Tracking System)</strong> é um software usado por empresas para fazer a triagem inicial de candidatos. 
                   Sistemas como <strong>Gupy</strong>, <strong>Kenoby</strong> e <strong>Vagas.com</strong> escaneiam currículos procurando por 
-                  <strong>palavras-chave</strong> e <strong>qualificações</strong> relevantes. Se seu CV não for compatível com ATS, 
-                  ele pode ser rejeitado antes mesmo de chegar a um recrutador humano. Nossos <strong>modelos de currículo</strong> são 
-                  desenvolvidos especificamente para serem <strong>lidos corretamente por sistemas ATS</strong>, aumentando suas chances de passar na triagem.
+                  <strong>palavras-chave</strong> e <strong>qualificações</strong> relevantes. Cada empresa configura critérios próprios de triagem. Nossos <strong>modelos de currículo</strong> foram
+                  desenvolvidos para manter uma estrutura <strong>simples e legível por sistemas ATS</strong>, sem garantir resultado em processos seletivos.
                 </p>
                 <p className="mt-3">
                   <strong>Dica:</strong> Use nossa ferramenta <strong>Verificador de ATS</strong> integrada para analisar seu currículo e receber 

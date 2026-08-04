@@ -32,7 +32,7 @@ export const About = () => {
                                 <h2 className="text-2xl font-bold text-slate-900 mb-4">Por que criamos esta ferramenta?</h2>
                                 <p className="text-slate-600 leading-relaxed mb-4">
                                     Percebemos que muitos candidatos perdem oportunidades não por falta de qualificação, mas por não terem um currículo bem formatado.
-                                    Ferramentas existentes muitas vezes cobra ou exigem cadastros complexos.
+                                    Ferramentas existentes muitas vezes cobram ou exigem cadastros complexos.
                                 </p>
                                 <p className="text-slate-600 leading-relaxed">
                                     O <strong>Currículo Rápido</strong> nasceu para ser a solução: simples, direta, profissional e 100% gratuita.

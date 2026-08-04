@@ -10,6 +10,8 @@ import { Contact } from './pages/Contact';
 import { Guides } from './pages/Guides';
 import { GuideDetail } from './pages/GuideDetail';
 import { EditorialPolicy } from './pages/EditorialPolicy';
+import { ConsentProvider } from './utils/consent';
+import { ConsentUi } from './components/ConsentManager';
 
 // Canonical URL Component wrapper
 const CanonicalUrl = () => {
@@ -21,6 +23,7 @@ const CanonicalUrl = () => {
 function App() {
   return (
     <HelmetProvider>
+      <ConsentProvider>
       <LanguageProvider>
         <Router>
           <Routes>
@@ -37,6 +40,8 @@ function App() {
           </Routes>
         </Router>
       </LanguageProvider>
+      <ConsentUi />
+      </ConsentProvider>
     </HelmetProvider>
   );
 }

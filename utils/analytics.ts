@@ -16,7 +16,7 @@ export const trackEvent = (
     [key: string]: any;
   }
 ) => {
-  if (typeof window !== 'undefined' && window.gtag) {
+  if (typeof window !== 'undefined' && hasConsent('analytics') && window.gtag) {
     window.gtag('event', eventName, eventParams);
   }
   
@@ -159,3 +159,4 @@ export const analytics = {
 
 
 
+import { hasConsent } from './consent';

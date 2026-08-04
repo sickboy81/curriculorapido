@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Globe, Download, Loader2, LayoutTemplate, Menu, X, MoreVertical } from 'lucide-react';
+import { FileText, Download, Loader2, LayoutTemplate, X, MoreVertical } from 'lucide-react';
 import { Language } from '../LanguageContext';
 import { TemplateType } from '../types';
 
@@ -16,8 +16,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-    language,
-    setLanguage,
     showTools = false,
     template,
     setTemplate,
@@ -41,19 +39,6 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-4">
-                    {/* Desktop: Language Selector */}
-                    <div className="hidden lg:flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
-                        <Globe className="w-4 h-4 text-slate-500 ml-2" />
-                        <select
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value as Language)}
-                            aria-label={t('nav.language') || "Selecionar Idioma"}
-                            className="bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer py-1 pr-1"
-                        >
-                            <option value="pt">PT</option>
-                        </select>
-                    </div>
-
                     {showTools && setTemplate && (
                         <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200">
                             <LayoutTemplate className="w-4 h-4 text-slate-500 ml-2" />
@@ -120,19 +105,6 @@ export const Header: React.FC<HeaderProps> = ({
                         {/* Mobile Dropdown Menu */}
                         {showMobileMenu && (
                             <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-2 z-50 flex flex-col gap-1">
-                                <div className="px-4 py-2 border-b border-slate-100">
-                                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                                        <Globe className="w-4 h-4" />
-                                        <select
-                                            value={language}
-                                            onChange={(e) => setLanguage(e.target.value as Language)}
-                                            aria-label={t('nav.language') || "Selecionar Idioma"}
-                                            className="w-full bg-transparent focus:outline-none cursor-pointer"
-                                        >
-                                            <option value="pt">Português</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 {!showTools && (
                                     <a href="/" className="px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 block">Voltar ao Início</a>
                                 )}

@@ -1,12 +1,14 @@
 import React from 'react';
 import { Heart } from 'lucide-react';
 import { AdPlaceholder } from './AdPlaceholder';
+import { useConsent } from '../utils/consent';
 
 interface FooterProps {
     t: (key: string) => string;
 }
 
 export const Footer: React.FC<FooterProps> = ({ t }) => {
+    const { openPreferences } = useConsent();
     return (
         <footer className="bg-white border-t border-slate-200 py-10 mt-auto" role="contentinfo">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,9 +18,9 @@ export const Footer: React.FC<FooterProps> = ({ t }) => {
                         <div>
                             <h4 className="font-bold text-slate-900 mb-2">Sobre o Currículo Rápido</h4>
                             <p className="leading-relaxed">
-                                O <strong>melhor gerador de currículo grátis do Brasil</strong>. Crie seu <strong>curriculum vitae profissional</strong>
-                                em minutos, sem cadastro e sem limites. Nossos <strong>modelos de currículo</strong> são otimizados para
-                                <strong>sistemas ATS</strong> e <strong>recrutadores</strong>.
+                                O <strong>Currículo Rápido</strong> permite criar um <strong>curriculum vitae profissional</strong>
+                                sem cadastro. Os <strong>modelos de currículo</strong> priorizam estrutura clara para
+                                <strong>recrutadores</strong> e sistemas de triagem.
                             </p>
                         </div>
                         <div>
@@ -48,7 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ t }) => {
                     <div className="flex items-center gap-2">
                         <span className="font-semibold text-slate-900">Currículo Rápido</span> &copy; {new Date().getFullYear()}
                     </div>
-                    <div className="flex items-center gap-6">
+                    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center">
                         <a href="/privacidade" className="hover:text-slate-900 transition-colors cursor-pointer">
                             {t('footer.privacy')}
                         </a>
@@ -67,6 +69,7 @@ export const Footer: React.FC<FooterProps> = ({ t }) => {
                         <a href="/politica-editorial" className="hover:text-slate-900 transition-colors cursor-pointer">
                             Política Editorial
                         </a>
+                        <button type="button" onClick={openPreferences} className="hover:text-slate-900 transition-colors">Preferências de privacidade</button>
                     </div>
                     <div className="flex items-center gap-1">
                         {t('footer.madeWith')} <Heart className="w-3 h-3 text-red-500 fill-current" />

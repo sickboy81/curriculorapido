@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ResumeData, Experience, Education, Language } from '../types';
 import { 
   Plus, Trash2, MapPin, Briefcase, GraduationCap, User, Phone, Globe, Mail, 
-  ChevronDown, CheckCircle2, List, Lightbulb, Languages, X, ArrowUp, ArrowDown, Palette,
+  ChevronDown, CheckCircle2, List, Lightbulb, Languages, X, ArrowUp, ArrowDown,
   Layout, Camera, Upload, Loader2
 } from 'lucide-react';
 import { pt } from '../translations-pt';
@@ -19,6 +19,7 @@ interface ResumeFormProps {
 
 // Helper interface for FormSection props
 interface FormSectionProps {
+  sectionId: string;
   title: string;
   subtitle?: string;
   icon: React.ElementType;
@@ -29,6 +30,7 @@ interface FormSectionProps {
 
 // Helper component for collapsible sections
 const FormSection = ({ 
+  sectionId,
   title, 
   subtitle,
   icon: Icon, 
@@ -37,9 +39,12 @@ const FormSection = ({
   children,
   isComplete = false
 }: React.PropsWithChildren<FormSectionProps>) => (
-  <div className={`bg-white rounded-xl border transition-all duration-300 ${isOpen ? 'border-purple-500 shadow-lg ring-1 ring-purple-100' : 'border-slate-200 hover:border-slate-300 hover:shadow-sm overflow-hidden'}`}>
+  <div id={`resume-section-${sectionId}`} className={`scroll-mt-28 bg-white rounded-xl border transition-all duration-300 ${isOpen ? 'border-purple-500 shadow-lg ring-1 ring-purple-100' : 'border-slate-200 hover:border-slate-300 hover:shadow-sm overflow-hidden'}`}>
     <button 
+      type="button"
       onClick={onToggle} 
+      aria-expanded={isOpen}
+      aria-controls={`resume-panel-${sectionId}`}
       className={`w-full flex items-center justify-between p-5 transition-colors ${isOpen ? 'bg-slate-50' : 'bg-white hover:bg-slate-50'}`}
     >
       <div className="flex items-center gap-4">
@@ -62,7 +67,7 @@ const FormSection = ({
       </div>
     </button>
     
-    <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[3000px] opacity-100 translate-y-0' : 'max-h-0 opacity-0 translate-y-[-10px] overflow-hidden'}`}>
+    <div id={`resume-panel-${sectionId}`} className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[3000px] opacity-100 translate-y-0' : 'max-h-0 opacity-0 translate-y-[-10px] overflow-hidden'}`}>
       <div className="p-5 sm:p-6 border-t border-slate-100 bg-white">
         {children}
       </div>
@@ -78,6 +83,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
   const toggleSection = (section: string) => {
     setActiveSection(activeSection === section ? null : section);
+  };
+
+  const sectionSteps = [
+    { id: 'personal', label: 'Dados' }, { id: 'summary', label: 'Resumo' }, { id: 'experience', label: 'Experiência' },
+    { id: 'education', label: 'Formação' }, { id: 'languages', label: 'Idiomas' }, { id: 'skills', label: 'Habilidades' },
+  ];
+  const openSection = (section: string) => {
+    setActiveSection(section);
+    requestAnimationFrame(() => document.getElementById(`resume-section-${section}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   };
 
   const handleChange = (field: keyof ResumeData, value: any) => {
@@ -347,35 +361,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
   return (
     <div className="space-y-6">
-      
-      {/* Design / Appearance Section */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-        <h3 className="flex items-center gap-2 text-sm font-bold text-slate-800 uppercase mb-4">
-          <Palette className="w-4 h-4 text-purple-600" />
-          {pt('form.appearance')}
-        </h3>
-        <Tooltip content="Clique no círculo para escolher uma cor personalizada para o tema do seu currículo" position="right">
-          <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-purple-200 transition-colors">
-            <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-sm ring-2 ring-white border border-slate-200 flex-shrink-0 cursor-pointer hover:scale-110 transition-transform group hover:shadow-md">
-              <input 
-                type="color" 
-                value={data.themeColor || '#7c3aed'}
-                onChange={(e) => handleChange('themeColor', e.target.value)}
-                className="absolute inset-0 w-[150%] h-[150%] -top-1/4 -left-1/4 cursor-pointer p-0 border-0"
-                title="Escolha a cor do tema"
-              />
-            </div>
-            <div className="flex-1">
-              <label className="text-sm font-semibold text-slate-900 block">{pt('form.color')}</label>
-              <p className="text-xs text-slate-500 mt-1">{pt('form.colorDesc')}</p>
-            </div>
-          </div>
-        </Tooltip>
-      </div>
+
+      <nav aria-label="Etapas do currículo" className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
+        {sectionSteps.map((step, index) => <button key={step.id} type="button" onClick={() => openSection(step.id)} aria-current={activeSection === step.id ? 'step' : undefined} className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold transition ${activeSection === step.id ? 'border-violet-600 bg-violet-600 text-white' : 'border-slate-200 bg-white text-slate-600 hover:border-violet-300'}`}>{index + 1}. {step.label}</button>)}
+      </nav>
 
       <div className="space-y-3">
         {/* Personal Info */}
         <FormSection 
+          sectionId="personal"
           title={pt('form.personal')} 
           subtitle={pt('form.personalSub')}
           icon={User} 
@@ -548,6 +542,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
         {/* Summary */}
         <FormSection 
+          sectionId="summary"
           title={pt('form.summary')} 
           subtitle={pt('form.summarySub')}
           icon={List} 
@@ -568,6 +563,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
         {/* Experience */}
         <FormSection 
+          sectionId="experience"
           title={pt('form.experience')} 
           subtitle={pt('form.experienceSub')}
           icon={Briefcase} 
@@ -696,6 +692,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
         {/* Education */}
         <FormSection 
+          sectionId="education"
           title={pt('form.education')} 
           subtitle={pt('form.educationSub')}
           icon={GraduationCap} 
@@ -790,6 +787,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
         {/* Languages */}
         <FormSection 
+          sectionId="languages"
           title={pt('form.languages')} 
           subtitle={pt('form.languagesSub')}
           icon={Languages} 
@@ -858,6 +856,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onChange }) => {
 
         {/* Skills (Tag System) */}
         <FormSection 
+          sectionId="skills"
           title={pt('form.skills')} 
           subtitle={pt('form.skillsSub')}
           icon={CheckCircle2} 

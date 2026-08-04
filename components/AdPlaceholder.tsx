@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useConsent } from '../utils/consent';
 
 type AdPlacement = 'editor' | 'preview' | 'footer' | 'guide';
 
@@ -55,8 +56,9 @@ const loadAdSenseScript = () => new Promise<void>((resolve, reject) => {
  */
 export const AdPlaceholder: React.FC<AdPlaceholderProps> = ({ placement, className = '' }) => {
   const adRef = useRef<HTMLDivElement>(null);
+  const { consent } = useConsent();
   const slotId = getSlotId(placement);
-  const isConfigured = ADSENSE_ENABLED && Boolean(ADSENSE_CLIENT) && Boolean(slotId && VALID_SLOT.test(slotId));
+  const isConfigured = Boolean(consent?.advertising) && ADSENSE_ENABLED && Boolean(ADSENSE_CLIENT) && Boolean(slotId && VALID_SLOT.test(slotId));
 
   useEffect(() => {
     if (!isConfigured || !slotId || !adRef.current) return;

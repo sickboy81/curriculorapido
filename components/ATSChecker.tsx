@@ -388,7 +388,7 @@ export const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, showAsSectio
       <div className="flex flex-col gap-2">
         <button
           onClick={handleCheckClick}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-md hover:shadow-lg font-medium text-sm"
+          className="flex w-full items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-md hover:shadow-lg font-medium text-sm"
         >
           <FileCheck className="w-4 h-4" />
           <span>Verificar ATS</span>

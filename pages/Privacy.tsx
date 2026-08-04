@@ -52,7 +52,7 @@ export const Privacy = () => {
 
                         <h2>3. Publicidade e Cookies</h2>
                         <p>
-                            Utilizamos o Google AdSense para exibir anúncios em nosso site. O Google AdSense é um serviço de publicidade fornecido pelo Google Inc. que utiliza cookies e tecnologias similares para veicular anúncios relevantes aos usuários.
+                            O Google AdSense pode exibir anúncios somente quando você autoriza a categoria “Publicidade” no painel de preferências. O serviço utiliza cookies e tecnologias similares para veicular anúncios relevantes aos usuários.
                         </p>
                         <p>
                             <strong>Como funcionam os anúncios:</strong>
@@ -72,8 +72,7 @@ export const Privacy = () => {
 
                         <h2>4. Analytics</h2>
                         <p>
-                            Utilizamos Google Analytics para entender como nosso site é usado (páginas visitadas, tempo de permanência).
-                            Esses dados são anônimos e não ligados à sua identidade pessoal do currículo.
+                            O Google Analytics é carregado somente quando você autoriza a categoria “Analytics” no painel de preferências. Ele ajuda a entender páginas visitadas e desempenho do site; os dados do currículo continuam sendo processados localmente.
                         </p>
 
                         <h2>5. Contato</h2>
